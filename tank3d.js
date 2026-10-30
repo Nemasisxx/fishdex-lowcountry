@@ -1,3 +1,4 @@
+import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js';
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 const host=document.getElementById('tank-canvas');
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x238eb2);scene.fog=new THREE.FogExp2(0x2398b5,.021);
@@ -100,11 +101,13 @@ function makeFish(s){
  if(stripe)for(let k=0;k<4;k++){const band=new THREE.Mesh(new THREE.TorusGeometry(p.height*.29,.023,6,28),mat(0x314b56));band.rotation.y=Math.PI/2;band.position.x=-p.length*.2+k*p.length*.13;band.scale.set(1,p.height/.72,p.depth/.48);bodyGroup.add(band)}
  return {root,tailPivot,bodyGroup,profile:p};
 }
+const glbLoader=new GLTFLoader();
+const assetMap={'red drum':'red-drum','redfish':'red-drum','spotted seatrout':'spotted-seatrout','speckled trout':'spotted-seatrout','sheepshead':'sheepshead','southern flounder':'flounder','summer flounder':'flounder','flounder':'flounder','snook':'snook','common snook':'snook'};
 let swimmers=[],generation=0;
 function clearFish(){swimmers.forEach(o=>scene.remove(o.root));swimmers=[]}
 window.renderFishTank3D=function(fish){
  ++generation;clearFish();
- fish.slice(0,5).forEach((s,i)=>{const o=makeFish(s);o.root.position.set(-4+i*2.2,1.65-(i%3)*1.15,-2+(i%3)*1.5);o.baseY=o.root.position.y;o.phase=i*1.8;o.speed=.012+i*.003;o.direction=i%2?1:-1;o.root.rotation.y=o.direction===1?0:Math.PI;scene.add(o.root);swimmers.push(o)});
+ fish.slice(0,5).forEach((s,i)=>{const o=makeFish(s);const key=assetMap[s.name.toLowerCase()];if(key){const current=generation;glbLoader.load('models/'+key+'.glb',gltf=>{if(current!==generation)return;const model=gltf.scene;model.rotation.y=0;o.bodyGroup.clear();o.bodyGroup.add(model);o.tailPivot=new THREE.Group();const tail=model.getObjectByName('tail');if(tail){const parent=tail.parent;const world=new THREE.Vector3();tail.getWorldPosition(world);parent.remove(tail);o.tailPivot.position.copy(world);tail.position.sub(world);o.tailPivot.add(tail);o.bodyGroup.add(o.tailPivot)}o.loadedGLB=true},()=>{},()=>{})} o.root.position.set(-4+i*2.2,1.65-(i%3)*1.15,-2+(i%3)*1.5);o.baseY=o.root.position.y;o.phase=i*1.8;o.speed=.012+i*.003;o.direction=i%2?1:-1;o.root.rotation.y=o.direction===1?0:Math.PI;scene.add(o.root);swimmers.push(o)});
 };
 let frame=0;
 function animate(){
