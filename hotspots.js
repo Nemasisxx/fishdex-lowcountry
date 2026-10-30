@@ -149,29 +149,49 @@ function addPersonal(){
  map.getContainer().style.cursor=personalPinArmed?'crosshair':'';
  if(status)status.textContent=personalPinArmed?'Tap or click the exact spot on the map to save it.':'';
 }
+let locationWatchId=null;
+function updateActiveLocation(position,follow){
+ const {latitude,longitude,accuracy}=position.coords;
+ if(activeLocationMarker)activeLocationMarker.remove();
+ if(activeLocationCircle)activeLocationCircle.remove();
+ activeLocationCircle=L.circle([latitude,longitude],{radius:accuracy,color:'#38bdf8',weight:1,fillOpacity:.10,interactive:false}).addTo(map);
+ activeLocationMarker=L.circleMarker([latitude,longitude],{radius:8,color:'#fff',weight:2,fillColor:'#0284c7',fillOpacity:1}).addTo(map);
+ activeLocationMarker.bindPopup('◎ Your approximate current location (accuracy ±'+Math.round(accuracy)+' m)');
+ if(follow)map.setView([latitude,longitude],Math.max(map.getZoom(),14));
+ const status=document.getElementById('hotspot-location-status');
+ if(status)status.textContent=(locationWatchId!==null?'● Live tracking active':'Location found')+' · Accuracy ±'+Math.round(accuracy)+' m · Location is not saved or uploaded.';
+}
+function stopActiveTracking(){
+ if(locationWatchId!==null&&navigator.geolocation)navigator.geolocation.clearWatch(locationWatchId);
+ locationWatchId=null;
+ const controls=document.getElementById('hotspot-tracking-controls');if(controls)controls.hidden=true;
+ const status=document.getElementById('hotspot-location-status');if(status)status.textContent='Live tracking stopped. Your last location marker remains on the map.';
+}
 function setupPersonalLocation(){
  map.on('click',event=>{
   if(!personalPinArmed)return;
   personalPinArmed=false;document.getElementById('hotspot-add-personal').textContent='📍 Pin a new spot';map.getContainer().style.cursor='';
   savePersonalAt(event.latlng.lat,event.latlng.lng);
  });
+ document.getElementById('hotspot-stop-tracking')?.addEventListener('click',stopActiveTracking);
  document.getElementById('hotspot-my-location')?.addEventListener('click',()=>{
   const status=document.getElementById('hotspot-location-status');
   if(!navigator.geolocation){status.textContent='Your browser does not support location access.';return}
-  status.textContent='Requesting your location permission…';
-  navigator.geolocation.getCurrentPosition(position=>{
-   const {latitude,longitude,accuracy}=position.coords;
-   if(activeLocationMarker)activeLocationMarker.remove();
-   if(activeLocationCircle)activeLocationCircle.remove();
-   activeLocationCircle=L.circle([latitude,longitude],{radius:accuracy,color:'#38bdf8',weight:1,fillOpacity:.10,interactive:false}).addTo(map);
-   activeLocationMarker=L.circleMarker([latitude,longitude],{radius:8,color:'#fff',weight:2,fillColor:'#0284c7',fillOpacity:1}).addTo(map);
-   activeLocationMarker.bindPopup('◎ Your approximate current location (accuracy ±'+Math.round(accuracy)+' m)').openPopup();
-   map.setView([latitude,longitude],Math.max(map.getZoom(),14));
-   status.textContent='Current location found (accuracy ±'+Math.round(accuracy)+' m). Location is not saved or shared by FishDex.';
-  },error=>{
-   status.textContent=error.code===1?'Location permission denied. Allow location access in your browser settings.':error.code===2?'Could not determine your location. Check device location services.':'Location request timed out. Try again.';
-  },{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+  if(locationWatchId!==null){status.textContent='Live tracking is already active. Use Stop tracking to turn it off.';return}
+  const choice=window.confirm('FishDex Location Tracking\\n\\nOK: Always track while this page is open. Your map position updates as you move.\\n\\nCancel: Choose a one-time location instead.');
+  const errorMessage=error=>{status.textContent=error.code===1?'Location permission denied. Enable it in browser settings.':error.code===2?'Location unavailable. Check your device GPS.':'Location request timed out. Try again.';if(error.code===1)stopActiveTracking()};
+  if(choice){
+   status.textContent='Starting live tracking… Your browser may ask for location permission.';
+   const controls=document.getElementById('hotspot-tracking-controls');if(controls)controls.hidden=false;
+   locationWatchId=navigator.geolocation.watchPosition(position=>updateActiveLocation(position,document.getElementById('hotspot-follow-location')?.checked!==false),errorMessage,{enableHighAccuracy:true,timeout:20000,maximumAge:5000});
+  }else{
+   const once=window.confirm('Show your current location once?\\n\\nOK: Use location once.\\nCancel: Not now.');
+   if(!once)return;
+   status.textContent='Requesting one-time location…';
+   navigator.geolocation.getCurrentPosition(position=>updateActiveLocation(position,true),errorMessage,{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+  }
  });
+ window.addEventListener('pagehide',stopActiveTracking);
 }
 function tackleFor(species){
  const el=document.getElementById('hotspot-tackle');el.replaceChildren();
