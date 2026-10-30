@@ -204,7 +204,7 @@ async function loadConditions(){
  const note=document.createElement('small');note.textContent='NOAA predictions are for Charleston Harbor, not real-time measurements or every fishing spot. Do not use this graph for boating or navigation decisions.';el.append(note);
 }
 let map,markers=[],initialized=false,resizeObserver=null;
-function refreshMap(){if(!map)return;requestAnimationFrame(()=>{map.invalidateSize({pan:false});if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});});}
+function refreshMap(){if(!map)return;requestAnimationFrame(()=>{map.invalidateSize({pan:false});});}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // These circles are approximate access-area opportunity indicators, NOT verified fish locations.
 let opportunityLayer=null,opportunityTide=null,opportunityWind=null,opportunityUpdated=0;
