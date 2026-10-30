@@ -85,6 +85,7 @@
 <div class="section-intro"><h2>📍 Hotspot Map</h2><p>Explore fishing access across the South Carolina Lowcountry. Species are habitat suggestions, not verified catches.</p></div>
 <div class="hotspot-stage">
  <div id="hotspot-map" aria-label="Interactive Charleston public fishing access map"></div>
+ <div class="fishdex-field-tools" id="fishdex-field-tools"><button type="button" id="fishdex-field-toggle" aria-expanded="false">🎣 Fishing Tools ▾</button><div id="fishdex-field-panel" hidden><strong>Fishing intelligence</strong><label><input type="checkbox" id="fishdex-depth-enabled"> Tap map for NOAA chart depth</label><label><input type="checkbox" id="fishdex-oysters-enabled"> Show mapped oyster reefs</label><label><input type="checkbox" id="fishdex-weather-enabled"> Show wind & weather</label><label><input type="checkbox" id="fishdex-catch-enabled"> Tap map to log a catch</label><p id="fishdex-field-status" aria-live="polite">Choose a tool. Depth and oyster coverage vary by location.</p><div id="fishdex-weather-info" hidden></div><div id="fishdex-catch-history"></div></div></div>
  <div class="fishdex-map-layer-menu" id="fishdex-map-layer-menu"><button type="button" id="fishdex-layer-toggle" aria-expanded="false" aria-controls="fishdex-layer-content">🗺️ Map Layers ▾</button><div id="fishdex-layer-content" hidden><strong>Map style & water detail</strong><label for="hotspot-basemap">Choose a map layer</label><select id="hotspot-basemap"><option value="streets">Street map</option><option value="satellite" selected>Satellite imagery</option><option value="nautical">Water depth / NOAA nautical charts</option><option value="terrain">Land topography (terrain)</option><option value="coastal-dem">NOAA coastal depth relief</option><option value="sonar">NOAA surveyed sonar relief</option></select><p>NOAA depth and sonar coverage varies by location. Sonar is limited to surveyed areas; missing coverage is not a map error.</p></div></div>
  <nav class="hotspot-bubbles" aria-label="Map tools"><button type="button" id="hotspot-menu-toggle" class="hotspot-menu-toggle" aria-expanded="false" aria-controls="hotspot-menu-items" aria-label="Open map tools"><span class="hotspot-menu-symbol">☰</span><span class="hotspot-menu-label">Map tools</span></button><div id="hotspot-menu-items" class="hotspot-menu-items" aria-hidden="true"><button type="button" class="hotspot-bubble" id="hotspot-quick-mode" aria-label="Switch to Bite Zones only">🎯 <span>Zones only</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="filters" aria-expanded="false" aria-controls="hotspot-panel-filters">⚙️ <span>Filters</span></button>
@@ -115,6 +116,17 @@
 .hotspot-stage>.hotspot-floating-panel[hidden]{display:none!important}
 @media(max-width:700px){.hotspot-stage>.hotspot-bubbles{max-height:98px;overflow-y:auto}.hotspot-stage>.hotspot-floating-panel{top:112px}}
 </style>
+<script>
+(function(){
+ function setup(){
+  const b=document.getElementById('fishdex-field-toggle'),p=document.getElementById('fishdex-field-panel');
+  if(!b||!p)return;
+  b.addEventListener('click',e=>{e.stopPropagation();p.hidden=!p.hidden;b.setAttribute('aria-expanded',String(!p.hidden))});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){p.hidden=true;b.setAttribute('aria-expanded','false')}});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+})();
+</script>
 <script>
 (function(){
  function setupLayers(){
@@ -194,6 +206,14 @@
 .hotspot-bubbles.is-open .hotspot-menu-items{pointer-events:auto!important}
 .hotspot-bubbles.is-open .hotspot-menu-items>.hotspot-bubble{pointer-events:auto!important;z-index:10001}
 .hotspot-stage>.hotspot-floating-panel:not([hidden]){z-index:10002!important;pointer-events:auto!important}
+.fishdex-field-tools{position:absolute;top:64px;right:14px;z-index:10999;width:min(280px,calc(100% - 28px));font-size:13px;color:white}
+#fishdex-field-toggle{display:block;margin-left:auto;background:#0a3548;color:white;border:2px solid #91e8f6;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer}
+#fishdex-field-panel{background:#0b2e40;border:1px solid #4d8497;border-radius:12px;padding:13px;margin-top:8px;box-shadow:0 8px 24px #001724aa;max-height:55vh;overflow:auto}
+#fishdex-field-panel[hidden]{display:none!important}
+#fishdex-field-panel label{display:block;margin:10px 0;line-height:1.4;cursor:pointer}
+#fishdex-field-panel p{font-size:12px;color:#c7e1e9}
+#fishdex-weather-info,#fishdex-catch-history{font-size:12px;line-height:1.5;margin-top:9px}
+@media(max-width:600px){.fishdex-field-tools{right:8px;top:60px;width:min(225px,calc(100% - 16px))}}
 /* Dedicated top-right map layer control, separate from bottom map tools. */
 .fishdex-map-layer-menu{position:absolute;top:14px;right:14px;z-index:11000;width:min(280px,calc(100% - 28px));font-size:13px}
 #fishdex-layer-toggle{display:block;margin-left:auto;border:2px solid #91e8f6;background:#0a3548;color:#fff;padding:11px 15px;border-radius:12px;font-weight:750;cursor:pointer;box-shadow:0 5px 20px #00172499}
