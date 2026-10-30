@@ -5,13 +5,46 @@
  * Species associations are HABITAT suggestions, never reported catches.
  */
 (()=>{'use strict';
+// Habitat-based possibilities, not catch records. Specific waterbody and structure
+// profiles are assigned per access point below; launches describe nearby water, not the ramp.
 const S={
- estuary:['Red Drum','Spotted Seatrout','Southern Flounder','Sheepshead','Black Drum','Pinfish'],
- creek:['Red Drum','Spotted Seatrout','Southern Flounder','Black Drum','Pinfish'],
- structure:['Red Drum','Spotted Seatrout','Southern Flounder','Sheepshead','Black Drum','Pinfish'],
- surf:['Red Drum','Southern Flounder','Bluefish','Spanish Mackerel','Pinfish'],
- harbor:['Red Drum','Spotted Seatrout','Southern Flounder','Sheepshead','Black Drum','Bluefish','Spanish Mackerel','Pinfish'],
- freshwater:['Largemouth Bass','Bluegill']
+ harborPier:['Sheepshead','Black Drum','Red Drum','Spotted Seatrout','Atlantic Croaker','Spot','Pinfish','Silver Perch','Southern Flounder','Bluefish','Spanish Mackerel','Atlantic Spadefish'],
+ oceanPier:['Whiting','Southern Kingfish','Northern Kingfish','Gulf Kingfish','Spot','Atlantic Croaker','Bluefish','Spanish Mackerel','Florida Pompano','Red Drum','Southern Flounder','Pinfish','Ladyfish'],
+ tidalBridge:['Red Drum','Spotted Seatrout','Sheepshead','Black Drum','Southern Flounder','Atlantic Croaker','Spot','Pinfish','Silver Perch'],
+ marshCreek:['Red Drum','Spotted Seatrout','Southern Flounder','Black Drum','Atlantic Croaker','Spot','Pinfish','Striped Mullet','Silver Perch'],
+ marshPier:['Red Drum','Spotted Seatrout','Sheepshead','Black Drum','Pinfish','Atlantic Croaker','Spot','Southern Flounder'],
+ riverbank:['Red Drum','Black Drum','Atlantic Croaker','Spot','Southern Flounder','Striped Mullet','Hardhead Catfish','Spotted Seatrout'],
+ harborBank:['Red Drum','Black Drum','Sheepshead','Atlantic Croaker','Spot','Bluefish','Spanish Mackerel','Atlantic Spadefish','Pinfish'],
+ oceanSurf:['Southern Kingfish','Northern Kingfish','Gulf Kingfish','Florida Pompano','Red Drum','Bluefish','Spanish Mackerel','Atlantic Croaker','Spot','Southern Flounder','Ladyfish'],
+ inletSurf:['Red Drum','Southern Flounder','Bluefish','Spanish Mackerel','Florida Pompano','Southern Kingfish','Atlantic Croaker','Ladyfish','Crevalle Jack'],
+ tidalRiver:['Red Drum','Spotted Seatrout','Black Drum','Southern Flounder','Atlantic Croaker','Spot','Striped Mullet','Hardhead Catfish'],
+ backCreek:['Red Drum','Spotted Seatrout','Southern Flounder','Black Drum','Pinfish','Striped Mullet','Atlantic Croaker'],
+ brackishUpper:['Red Drum','Black Drum','Atlantic Croaker','Striped Mullet','Hardhead Catfish','Southern Flounder','Largemouth Bass','Bluegill'],
+ soundFlats:['Red Drum','Spotted Seatrout','Southern Flounder','Black Drum','Pinfish','Bluefish','Spanish Mackerel','Ladyfish'],
+ deepChannel:['Red Drum','Black Drum','Sheepshead','Atlantic Croaker','Spot','Southern Flounder','Bluefish','Spanish Mackerel','Atlantic Spadefish'],
+ barrierCreek:['Red Drum','Spotted Seatrout','Southern Flounder','Sheepshead','Black Drum','Pinfish','Ladyfish','Crevalle Jack'],
+ freshwater:['Largemouth Bass','Bluegill','Redear Sunfish','Channel Catfish']
+};
+const profileByName={
+ 'Mount Pleasant Pier':'harborPier','Folly Beach Fishing Pier':'oceanPier',
+ 'Pitt Street Bridge':'tidalBridge','Shem Creek Park':'marshCreek',
+ 'Brittlebank Park':'riverbank','James Island County Park Fishing Dock':'marshPier',
+ 'Palmetto Islands County Park Fishing Pier':'marshPier','Northbridge Park':'brackishUpper',
+ 'Sunrise Park (Melton Peter Demetre Park)':'harborBank',
+ 'Folly Beach County Park':'inletSurf','Kiawah Beachwalker Park':'oceanSurf',
+ 'Roxbury Park Paddle Launch':'backCreek','Wide Awake Park Paddle Launch':'tidalRiver',
+ 'Flynn Drive Boat Ramp':'brackishUpper','Charleston Maritime Center Paddle Launch':'deepChannel',
+ 'Awendaw Canoe Launch':'backCreek','Still Landing':'backCreek','Elmwood Landing':'backCreek',
+ 'Penny Creek Boat Landing':'brackishUpper','Willtown Bluff Boat Landing':'brackishUpper',
+ 'Dawhoo Boat Landing':'tidalRiver','Steamboat Boat Landing':'barrierCreek',
+ 'Toogoodoo Boat Landing':'backCreek','Cherry Point Boat Landing':'barrierCreek',
+ 'John P. Limehouse Boat Landing':'tidalRiver','Pierpont Boat Landing':'brackishUpper',
+ 'W.O. Thomas Jr. Boat Landing':'brackishUpper','Riverland Terrace Boat Landing':'deepChannel',
+ 'Wappoo Cut Boat Landing':'deepChannel','Sol Legare Boat Landing':'tidalRiver',
+ 'Folly River Boat Landing':'barrierCreek',"Remley's Point Boat Landing":'deepChannel',
+ 'Shem Creek Boat Landing':'marshCreek','Gadsdenville Boat Landing':'soundFlats',
+ 'Paradise Boat Landing':'tidalRiver','Garris Landing':'soundFlats',
+ 'Buck Hall Landing':'soundFlats','Robert E. Ashley Landing':'barrierCreek'
 };
 const spots=[
  ['Mount Pleasant Pier',32.8023,-79.9055,'pier','Mount Pleasant','harbor','Dedicated fishing pier; fishing pass may be required.'],
@@ -52,7 +85,7 @@ const spots=[
  ['Garris Landing',32.939817,-79.657506,'launch','Awendaw','estuary','Intracoastal Waterway access; verify refuge and launch rules.'],
  ['Buck Hall Landing',33.038489,-79.560997,'launch','McClellanville','estuary','Intracoastal Waterway access.'],
  ['Robert E. Ashley Landing',33.080797,-79.459699,'launch','McClellanville','creek','Jeremy Creek watercraft access.']
-].map(([name,lat,lng,type,area,habitat,note])=>({name,lat,lng,type,area,habitat,note,species:S[habitat]}));
+].map(([name,lat,lng,type,area,habitat,note])=>({name,lat,lng,type,area,habitat,note,profile:profileByName[name]||'tidalRiver',species:S[profileByName[name]||'tidalRiver']}));
 const TACKLE={
  'Red Drum':['Live or cut mullet, shrimp, paddle-tail soft plastics','Medium spinning tackle, 15–30 lb braid, fluorocarbon leader','Work marsh edges, oyster points and creek mouths on moving water.'],
  'Spotted Seatrout':['Paddle-tail swimbaits, suspending twitchbaits, live shrimp','Light/medium spinning setup with fluorocarbon leader','Target current seams and grass edges; retrieve steadily.'],
@@ -173,7 +206,7 @@ function draw(){
   const body=document.createElement('div');body.className='hotspot-accordion-body';
   const info=document.createElement('p');info.textContent=s.area+' · '+({pier:'Fishing pier',shore:'Shore access',launch:'Watercraft launch'}[s.type]);
   const note=document.createElement('p');note.textContent=s.note;
-  const match=document.createElement('p');match.textContent=species==='all'?'Potential habitat species: '+s.species.join(', '):'Potential '+species+' habitat (not a verified catch)';
+  const match=document.createElement('p');match.textContent=species==='all'?'Possible nearby species (habitat-based): '+s.species.join(', '):'Potential '+species+' habitat (not a verified catch)';
   const focus=document.createElement('button');focus.type='button';focus.textContent='Show on map';
   focus.onclick=()=>{map.setView([s.lat,s.lng],14);marker.openPopup();document.getElementById('hotspot-map').scrollIntoView({behavior:'smooth',block:'center'})};
   body.append(info,note,match,focus);item.append(heading,body);list.append(item);
