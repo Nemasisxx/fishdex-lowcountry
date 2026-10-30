@@ -1,5 +1,18 @@
 # FishDex: 99-species 3D model sourcing audit
 
+## Multi-source free asset strategy (approved 2026-10-30)
+
+Use **multiple independent free libraries** to cover all 99 species. No single pack is assumed complete. Source priority: exact-species licensed textured model > close anatomical reference requiring explicit correction > stylized temporary preview. Never label an unrelated fish as an exact species.
+
+- [Quaternius Animated Cute Fish](https://quaternius.com/packs/cutefish.html): 52 **assets** (includes fishing rods/lures), CC0, animated/textured, FBX/OBJ/Blend; not 52 verified FishDex species.
+- [Quaternius Animated Fish](https://quaternius.com/packs/animatedfish.html): 7 aquatic models, CC0, animated, FBX/OBJ/Blend. Same pack mirrored on OpenGameArt; **do not double count**.
+- [OpenGameArt Fish (Animated)](https://opengameart.org/content/fish-animated): separate CC0 rigged, textured, animated fish ZIP.
+- [OpenGameArt Fish](https://opengameart.org/content/fish-1): separate CC0 rigged Blender fish with Swim animation.
+- [Sketchfab downloadable search](https://sketchfab.com/search?type=models&q=fish&features=downloadable): per-model licensing; inspect species, download rights, attribution and quality.
+- [Poly Pizza](https://poly.pizza/): mixed CC0/CC BY licenses; verify each specific model.
+
+**Not yet imported:** these are verified public source pages, not 99 validated species files. Conversion, mesh quality review, and browser test required before deployment.
+
 This is a **lead inventory**, not a list of 99 downloadable files. Exact names below are listed in the commercial 100 Fish & Sea Creatures Collection v5; appearance, license, and file availability still require inspection after purchase. All other rows remain unsourced. Do not treat scientific CT scans as textured game-ready assets.
 
 FREE-ONLY POLICY (2026-10-30): Do not purchase, recommend paid assets as implementation candidates, or publish models without verified reuse rights. Prior commercial pack named matches below are historical leads ONLY, not approved sources. Free sources: https://quaternius.com/packs/animatedfish.html (7 CC0 animated stylized fish); https://opengameart.org/content/animated-fish (same pack, not additional species); https://github.com/Ariescar/gobkit-free-assets (CC0 animated GLBs, shark and anglerfish but not exact FishDex species); https://sketchfab.com/search?type=models&q=fish&features=downloadable (check license per asset). Other discovery: https://sketchfab.com/mp3mp3/collections/fish-6c0b6a51ce6244b7b653fce4cf4774ef (136-model collection, many CC0 but mostly unrelated species); https://www.meshy.ai/tags/fish (community models; verify exact species and licenses).
