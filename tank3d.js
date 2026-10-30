@@ -43,7 +43,24 @@ function fin(points,color,opacity=1){
 }
 function makeFish(s){
  const p=fishProfile(s),root=new THREE.Group(),bodyGroup=new THREE.Group();root.add(bodyGroup);
- const body=new THREE.Mesh(new THREE.SphereGeometry(1,28,20),mat(p.color));body.scale.set(p.length*.45,p.height*.53,p.depth*.65);bodyGroup.add(body);
+ const bodyGeometry=new THREE.SphereGeometry(1,48,32);
+ const body=new THREE.Mesh(bodyGeometry,new THREE.MeshPhysicalMaterial({color:p.color,metalness:.16,roughness:.43,clearcoat:.42,clearcoatRoughness:.35}));
+ body.scale.set(p.length*.45,p.height*.53,p.depth*.65);bodyGroup.add(body);
+ const lateral=new THREE.Group();bodyGroup.add(lateral);
+ // Subtle 3D scale plates and reflective flank markings on both sides.
+ for(const side of [-1,1])for(let row=-2;row<=2;row++)for(let col=-8;col<=8;col++){
+  const nx=col/10,ny=row/6,dist=nx*nx+ny*ny;if(dist>.84)continue;
+  const plate=new THREE.Mesh(new THREE.SphereGeometry(1,6,5),new THREE.MeshStandardMaterial({color:p.color,roughness:.56,metalness:.18,transparent:true,opacity:.42}));
+  plate.scale.set(.092,.058,.012);
+  plate.position.set(nx*p.length*.43,ny*p.height*.52,side*p.depth*.65*Math.sqrt(1-dist));
+  lateral.add(plate);
+ }
+ const mouth=new THREE.Mesh(new THREE.TorusGeometry(Math.max(.055,p.height*.115),.012,6,16,Math.PI),mat(0x394b50));
+ mouth.rotation.y=Math.PI/2;mouth.position.set(p.length*.48,-p.height*.10,0);bodyGroup.add(mouth);
+ for(const side of [-1,1]){
+  const gill=new THREE.Mesh(new THREE.TorusGeometry(p.height*.21,.009,5,20,Math.PI*.82),mat(0x4a6566));
+  gill.rotation.y=Math.PI/2;gill.position.set(p.length*.19,-.01,side*p.depth*.49);bodyGroup.add(gill);
+ }
  const underside=new THREE.Mesh(new THREE.SphereGeometry(1,20,12),mat(p.belly));underside.scale.set(p.length*.34,p.height*.22,p.depth*.57);underside.position.y=-p.height*.21;bodyGroup.add(underside);
  const headX=p.length*.32,tailX=-p.length*.46;
  const snout=new THREE.Mesh(new THREE.ConeGeometry(p.height*.24,p.length*.32,18),mat(p.color));snout.rotation.z=-Math.PI/2;snout.position.x=headX;snout.scale.z=p.depth/Math.max(p.height,.15);bodyGroup.add(snout);
@@ -53,14 +70,32 @@ function makeFish(s){
  const tailPivot=new THREE.Group();tailPivot.position.x=tailX;bodyGroup.add(tailPivot);
  const tailHeight=p.kind==='shark'?p.height*1.3:p.kind==='eel'?p.height*.8:p.height*.85;
  const tail=fin([[0,0],[-p.length*.27,tailHeight*.65],[-p.length*.18,0],[-p.length*.27,-tailHeight*.65]],p.tail);tailPivot.add(tail);
+ const tailRib=new THREE.Mesh(new THREE.CylinderGeometry(.016,.026,p.length*.20,8),mat(p.tail));tailRib.rotation.z=Math.PI/2;tailRib.position.x=-p.length*.08;tailPivot.add(tailRib);
  if(p.kind!=='ray'&&p.kind!=='eel'){
  const dorsal=fin([[-p.length*.18,p.height*.39],[-p.length*.11,p.height*.89],[p.length*.10,p.height*.51],[p.length*.2,p.height*.35]],p.tail);bodyGroup.add(dorsal);
  const lower=fin([[-p.length*.22,-p.height*.32],[-p.length*.12,-p.height*.68],[p.length*.04,-p.height*.38]],p.tail,.92);bodyGroup.add(lower);
  for(const side of [-1,1]){const pec=fin([[0,0],[-p.length*.16,-p.height*.43],[p.length*.10,-p.height*.17]],p.tail,.85);pec.position.set(p.length*.14,-p.height*.08,side*p.depth*.61);pec.rotation.y=side*.35;bodyGroup.add(pec)}
  }
  if(p.kind==='ray'){body.scale.set(p.length*.35,p.height*.65,p.depth*.5);const wings=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),mat(p.color,THREE.DoubleSide));wings.scale.set(p.length*.45,p.height*.3,p.depth*.58);bodyGroup.add(wings);tail.scale.set(1.8,.2,1)}
+ if(/spotted|speckled|trout|croaker|grouper|snapper|flounder|sunfish|bass|puffer/.test(s.name.toLowerCase())){
+  const dots=new THREE.Group();bodyGroup.add(dots);
+  for(const side of [-1,1])for(let i=0;i<45;i++){
+   const x=(Math.sin(i*29.7)*.8),y=Math.cos(i*13.4)*.66;
+   if(x*x+y*y>.83)continue;
+   const dot=new THREE.Mesh(new THREE.SphereGeometry(.018+(i%3)*.007,6,6),mat(0x374c45));
+   dot.position.set(x*p.length*.42,y*p.height*.47,side*p.depth*.66*Math.sqrt(1-x*x-y*y));dots.add(dot);
+  }
+ }
  if(p.kind==='catfish'){for(const side of [-1,1]){const whisker=fin([[p.length*.42,-.04],[p.length*.66,-.17],[p.length*.47,-.12]],p.tail);whisker.position.z=side*p.depth*.3;bodyGroup.add(whisker)}}
  if(p.kind==='fast'||p.kind==='shark')bodyGroup.scale.set(1,.9,1);
+ if(p.kind==='shark'){
+  const upper=fin([[-p.length*.13,p.height*.34],[-p.length*.05,p.height*1.25],[p.length*.12,p.height*.34]],p.tail);
+  bodyGroup.add(upper);
+ }
+ if(p.kind==='eel'){tail.scale.set(1.4,.65,1);body.scale.y=.6}
+ if(p.kind==='flat'){bodyGroup.rotation.x=.19;body.scale.z=.34}
+ if(p.kind==='round'){body.scale.set(p.length*.40,p.height*.65,p.depth*.65)}
+ if(p.kind==='deep'){body.scale.y*=1.12}
  const stripe=/sheepshead|striped bass|tiger shark/.test(s.name.toLowerCase());
  if(stripe)for(let k=0;k<4;k++){const band=new THREE.Mesh(new THREE.TorusGeometry(p.height*.29,.023,6,28),mat(0x314b56));band.rotation.y=Math.PI/2;band.position.x=-p.length*.2+k*p.length*.13;band.scale.set(1,p.height/.72,p.depth/.48);bodyGroup.add(band)}
  return {root,tailPivot,bodyGroup,profile:p};
@@ -80,8 +115,8 @@ function animate(){
  const target=o.direction===1?0:Math.PI;let diff=((target-o.root.rotation.y+Math.PI*3)%(Math.PI*2))-Math.PI;o.root.rotation.y+=diff*.035;
  o.root.position.y=o.baseY+Math.sin(frame*.018+o.phase)*.25;
  o.root.position.z+=Math.sin(frame*.012+o.phase)*.006;
- o.tailPivot.rotation.y=Math.sin(frame*.22+o.phase)*.48;
- o.bodyGroup.rotation.y=Math.sin(frame*.22+o.phase)*.035;
+ o.tailPivot.rotation.y=Math.sin(frame*.22+o.phase)*.65;
+ o.bodyGroup.rotation.y=Math.sin(frame*.22+o.phase)*.075;
  o.root.rotation.z=Math.sin(frame*.017+o.phase)*.035;
  });
  bubbles.forEach(b=>{b.mesh.position.y+=b.speed;if(b.mesh.position.y>3.4)b.mesh.position.y=-3.25});
