@@ -394,8 +394,7 @@ function draw(){
  }
  document.getElementById('hotspot-count').textContent=shown.length+' of '+spots.length+' access points';
  if(!shown.length){const p=document.createElement('p');p.textContent='No matching access points in this initial dataset. This does not mean the species is absent from the Lowcountry.';list.append(p)}
- if(markers.length>1&&showAccess)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});
- else if(markers.length&&showAccess)map.setView(markers[0].getLatLng(),13);
+ // Preserve the user's current map view and initial Charleston center.
 }
 function init(){
  if(initialized){setTimeout(refreshMap,60);setTimeout(refreshMap,350);return}
@@ -450,8 +449,6 @@ document.addEventListener('DOMContentLoaded',()=>{
  window.addEventListener('hashchange',()=>{if(location.hash==='#hotspots'){setTimeout(init,100);setTimeout(refreshMap,400)}});
  if(location.hash==='#hotspots')setTimeout(init,250);
 });
-})();
-
 let tidePinMarker=null,tidePinArmed=false,tidePinRequest=0,tideStationsCache=null;
 function tideDistance(a,b,c,d){const rad=Math.PI/180,x=(c-a)*rad,y=(d-b)*rad;return 6371*2*Math.asin(Math.sqrt(Math.sin(x/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(y/2)**2))}
 async function tideStationFor(lat,lng){
@@ -516,3 +513,4 @@ function setupTidePin(){
   showPinnedTides(lat,lng);
  });
 }
+})();
