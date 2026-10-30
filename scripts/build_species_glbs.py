@@ -44,9 +44,61 @@ def body_mesh(L,H,D,C):
   colors.append([min(255,int(c*factor)) for c in C[:3]]+[255])
  m.visual.vertex_colors=np.array(colors,dtype=np.uint8)
  return m
+def red_drum_body(L,H,D):
+ # Higher-density longitudinal mesh with smooth continuous anatomy and metallic color gradation.
+ stations=100;radial=48;vertices=[];colors=[];faces=[]
+ for i in range(stations):
+  u=i/(stations-1);x=(-.52+1.05*u)*L
+  # Peduncle at tail; deep shoulders behind head; wedge-shaped snout.
+  if u<.13: profile=.14+.65*u/.13
+  elif u<.38: profile=.79+.21*(u-.13)/.25
+  elif u<.72: profile=1-.25*(u-.38)/.34
+  else: profile=max(.045,.75*(1-(u-.72)/.28)**.72)
+  for j in range(radial):
+   a=2*math.pi*j/radial; y=math.sin(a)*H*.5*profile;z=math.cos(a)*D*.5*profile
+   vertices.append([x,y,z])
+   upper=(math.sin(a)+1)/2
+   # Copper back, pearly silver-gold belly; subtle banding and scales.
+   base=np.array([205,181,138])*(1-upper)+np.array([118,115,91])*upper
+   glimmer=6*math.sin(i*1.9+j*.65)+3*math.sin(i*3.3-j*1.1)
+   base=np.clip(base+glimmer,0,255)
+   colors.append([*base.astype(int),255])
+ for i in range(stations-1):
+  for j in range(radial):
+   a=i*radial+j;b=i*radial+(j+1)%radial;c=(i+1)*radial+j;d=(i+1)*radial+(j+1)%radial
+   faces.extend([[a,c,b],[b,c,d]])
+ m=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
+ m.visual.vertex_colors=np.array(colors,dtype=np.uint8)
+ return m
+def add_red_drum(scene,p):
+ L,H,D=p['length'],p['height'],p['depth']
+ def add(m,n):scene.add_geometry(m,geom_name=n)
+ add(red_drum_body(L,H,D),'body')
+ fin=[142,111,81,255]
+ # Strong forked caudal fin attached at narrow peduncle.
+ add(plate([[-L*.51,0,0],[-L*.70,H*.40,0],[-L*.65,H*.11,0],[-L*.65,-H*.11,0],[-L*.70,-H*.40,0]],fin,.014),'tail')
+ add(plate([[-L*.30,H*.27,0],[-L*.23,H*.64,0],[-L*.11,H*.52,0],[L*.02,H*.51,0],[L*.18,H*.33,0]],fin,.012),'spiny-dorsal')
+ add(plate([[L*.06,H*.30,0],[L*.19,H*.46,0],[L*.31,H*.22,0]],fin,.012),'soft-dorsal')
+ add(plate([[-L*.21,-H*.28,0],[-L*.12,-H*.50,0],[L*.08,-H*.33,0]],fin,.012),'anal')
+ for side in [-1,1]:
+  add(uv_sphere([.054,.054,.018],[L*.355,H*.10,side*D*.29],[22,24,20,255]),'eye'+str(side))
+  add(uv_sphere([.018,.018,.008],[L*.367,H*.114,side*D*.305],[245,245,230,255]),'eye-highlight'+str(side))
+  add(plate([[L*.14,-H*.06,side*D*.34],[-L*.13,-H*.38,side*D*.34],[L*.12,-H*.27,side*D*.34]],fin,.012),'pectoral'+str(side))
+  # Signature black ocellated spot at upper caudal peduncle.
+  add(uv_sphere([.075,.064,.011],[-L*.39,H*.13,side*D*.15],[28,31,25,255]),'tail-spot'+str(side))
+  add(uv_sphere([.023,.018,.009],[-L*.38,H*.15,side*D*.163],[88,81,65,255]),'spot-glint'+str(side))
+  # Gill line, small mouth, and lateral-line ridge.
+  add(uv_sphere([.012,H*.29,.009],[L*.24,-H*.01,side*D*.30],[92,84,68,255]),'gill'+str(side))
+  add(uv_sphere([L*.23,.009,.008],[-L*.03,H*.02,side*D*.42],[167,151,116,255]),'lateral-line'+str(side))
+ add(plate([[L*.48,-H*.08,0],[L*.55,-H*.10,0],[L*.50,-H*.13,0]],[85,69,59,255],.009),'mouth')
 def make(name,p):
  L,H,D=p['length'],p['height'],p['depth'];C=p['color'];fin=[max(0,int(v*.8)) for v in C[:3]]+[255]
  scene=trimesh.Scene()
+ if name=='red-drum':
+  add_red_drum(scene,p)
+  out=os.path.join(OUT,name+'.glb');data=scene.export(file_type='glb')
+  with open(out,'wb') as f:f.write(data)
+  print(name,len(data),'bytes');return
  def add(m,key):scene.add_geometry(m,geom_name=key)
  add(body_mesh(L,H,D,C),'body')
  # Tail peduncle connects the caudal fin directly to the body.
