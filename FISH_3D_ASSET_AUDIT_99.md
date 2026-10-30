@@ -2,18 +2,18 @@
 
 This is a **lead inventory**, not a list of 99 downloadable files. Exact names below are listed in the commercial 100 Fish & Sea Creatures Collection v5; appearance, license, and file availability still require inspection after purchase. All other rows remain unsourced. Do not treat scientific CT scans as textured game-ready assets.
 
-Primary candidate: https://superhivemarket.com/products/100-fish-sea-creatures-collection-v5 ($299 advertised 2026-10-30; Blender/FBX/OBJ, 4K diffuse). Other discovery: https://sketchfab.com/mp3mp3/collections/fish-6c0b6a51ce6244b7b653fce4cf4774ef (136-model collection, many CC0 but mostly unrelated species); https://www.meshy.ai/tags/fish (community models; verify exact species and licenses).
+FREE-ONLY POLICY (2026-10-30): Do not purchase, recommend paid assets as implementation candidates, or publish models without verified reuse rights. Prior commercial pack named matches below are historical leads ONLY, not approved sources. Free sources: https://quaternius.com/packs/animatedfish.html (7 CC0 animated stylized fish); https://opengameart.org/content/animated-fish (same pack, not additional species); https://github.com/Ariescar/gobkit-free-assets (CC0 animated GLBs, shark and anglerfish but not exact FishDex species); https://sketchfab.com/search?type=models&q=fish&features=downloadable (check license per asset). Other discovery: https://sketchfab.com/mp3mp3/collections/fish-6c0b6a51ce6244b7b653fce4cf4774ef (136-model collection, many CC0 but mostly unrelated species); https://www.meshy.ai/tags/fish (community models; verify exact species and licenses).
 
 | # | FishDex species | Candidate | Status |
 |---|---|---|---|
-| 1 | Red Drum | 100 Fish pack: Red Drum | Named candidate; not acquired |
-| 2 | Spotted Seatrout | 100 Fish pack: Spotted Seatrout | Named candidate; not acquired |
+| 1 | Red Drum | 100 Fish pack: Red Drum | Paid lead excluded; free exact-species file not verified |
+| 2 | Spotted Seatrout | 100 Fish pack: Spotted Seatrout | Paid lead excluded; free exact-species file not verified |
 | 3 | Pinfish | — | No verified exact-species asset |
 | 4 | Atlantic Croaker | — | No verified exact-species asset |
-| 5 | Spot | 100 Fish pack: Spot | Named candidate; not acquired |
+| 5 | Spot | 100 Fish pack: Spot | Paid lead excluded; free exact-species file not verified |
 | 6 | Black Drum | — | No verified exact-species asset |
-| 7 | Sheepshead | 100 Fish pack: Sheepshead | Named candidate; not acquired |
-| 8 | Southern Flounder | 100 Fish pack: Southern Flounder | Named candidate; not acquired |
+| 7 | Sheepshead | 100 Fish pack: Sheepshead | Paid lead excluded; free exact-species file not verified |
+| 8 | Southern Flounder | 100 Fish pack: Southern Flounder | Paid lead excluded; free exact-species file not verified |
 | 9 | Summer Flounder | — | No verified exact-species asset |
 | 10 | Weakfish | — | No verified exact-species asset |
 | 11 | Silver Perch | — | No verified exact-species asset |
@@ -24,15 +24,15 @@ Primary candidate: https://superhivemarket.com/products/100-fish-sea-creatures-c
 | 16 | Spanish Mackerel | — | No verified exact-species asset |
 | 17 | King Mackerel | — | No verified exact-species asset |
 | 18 | Cobia | — | No verified exact-species asset |
-| 19 | Tarpon | 100 Fish pack: Tarpon | Named candidate; not acquired |
+| 19 | Tarpon | 100 Fish pack: Tarpon | Paid lead excluded; free exact-species file not verified |
 | 20 | Ladyfish | — | No verified exact-species asset |
 | 21 | Crevalle Jack | — | No verified exact-species asset |
 | 22 | Florida Pompano | — | No verified exact-species asset |
 | 23 | Permit | — | No verified exact-species asset |
 | 24 | Black Sea Bass | — | No verified exact-species asset |
-| 25 | Gray Snapper | 100 Fish pack: Gray Snapper (verify; listing unknown) | Named candidate; not acquired |
+| 25 | Gray Snapper | 100 Fish pack: Gray Snapper (verify; listing unknown) | Paid lead excluded; free exact-species file not verified |
 | 26 | Vermilion Snapper | — | No verified exact-species asset |
-| 27 | Red Snapper | 100 Fish pack: Red Snapper | Named candidate; not acquired |
+| 27 | Red Snapper | 100 Fish pack: Red Snapper | Paid lead excluded; free exact-species file not verified |
 | 28 | Gag Grouper | — | No verified exact-species asset |
 | 29 | Scamp | — | No verified exact-species asset |
 | 30 | Mahi-mahi | — | No verified exact-species asset |
@@ -52,7 +52,7 @@ Primary candidate: https://superhivemarket.com/products/100-fish-sea-creatures-c
 | 44 | Largemouth Bass | — | No verified exact-species asset |
 | 45 | Bluegill | — | No verified exact-species asset |
 | 46 | Redear Sunfish | — | No verified exact-species asset |
-| 47 | Redbreast Sunfish | 100 Fish pack: Redbreast Sunfish | Named candidate; not acquired |
+| 47 | Redbreast Sunfish | 100 Fish pack: Redbreast Sunfish | Paid lead excluded; free exact-species file not verified |
 | 48 | Warmouth | — | No verified exact-species asset |
 | 49 | Green Sunfish | — | No verified exact-species asset |
 | 50 | Pumpkinseed | — | No verified exact-species asset |
@@ -92,16 +92,16 @@ Primary candidate: https://superhivemarket.com/products/100-fish-sea-creatures-c
 | 84 | Blackfin Tuna | — | No verified exact-species asset |
 | 85 | Wahoo | — | No verified exact-species asset |
 | 86 | Yellowfin Tuna | — | No verified exact-species asset |
-| 87 | Sailfish | 100 Fish pack: Sailfish | Named candidate; not acquired |
+| 87 | Sailfish | 100 Fish pack: Sailfish | Paid lead excluded; free exact-species file not verified |
 | 88 | Blue Marlin | — | No verified exact-species asset |
 | 89 | Atlantic Sturgeon | — | No verified exact-species asset |
-| 90 | Shortnose Sturgeon | 100 Fish pack: Shortnose Sturgeon | Named candidate; not acquired |
+| 90 | Shortnose Sturgeon | 100 Fish pack: Shortnose Sturgeon | Paid lead excluded; free exact-species file not verified |
 | 91 | Blueback Herring | — | No verified exact-species asset |
 | 92 | Gizzard Shad | — | No verified exact-species asset |
-| 93 | Threadfin Shad | 100 Fish pack: Threadfin Shad | Named candidate; not acquired |
+| 93 | Threadfin Shad | 100 Fish pack: Threadfin Shad | Paid lead excluded; free exact-species file not verified |
 | 94 | Flier | — | No verified exact-species asset |
-| 95 | Spotted Sunfish | 100 Fish pack: Spotted Sunfish | Named candidate; not acquired |
-| 96 | Redfin Pickerel | 100 Fish pack: Redfin Pickerel | Named candidate; not acquired |
+| 95 | Spotted Sunfish | 100 Fish pack: Spotted Sunfish | Paid lead excluded; free exact-species file not verified |
+| 96 | Redfin Pickerel | 100 Fish pack: Redfin Pickerel | Paid lead excluded; free exact-species file not verified |
 | 97 | Eastern Mosquitofish | — | No verified exact-species asset |
 | 98 | Hybrid Striped Bass | — | No verified exact-species asset |
 | 99 | White Bass | — | No verified exact-species asset |
