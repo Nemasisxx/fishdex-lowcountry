@@ -5,7 +5,7 @@ const active=()=>$('#player').value;
 const discovered=()=>new Set([...(unlocked[active()]||[]),...catches.filter(c=>c.player===active()).map(c=>c.id)]);
 function render(){
  const found=discovered(),q=$('#search').value.toLowerCase(),f=$('#filter').value;
- $('#stats').textContent=found.size+'/'+species.length+' discovered · '+active();
+ $('#stats').textContent=found.size+' / '+species.length+' discovered';$('#progress-fill').style.width=(found.size/species.length*100)+'%';$('.progress').setAttribute('aria-valuenow',found.size);
  $('#grid').replaceChildren(...species.filter(s=>(s.name.toLowerCase().includes(q)||(s.scientificName||'').toLowerCase().includes(q))&&(f==='all'||(f==='caught'?found.has(s.id):!found.has(s.id)))).map(s=>{
   const b=document.createElement('button'),isFound=found.has(s.id);
   b.className='card '+(isFound?'discovered':'undiscovered');
@@ -24,7 +24,7 @@ function discover(s,card){
   const ids=new Set(unlocked[active()]||[]);ids.add(s.id);unlocked[active()]=[...ids];
   localStorage.setItem(unlockKey,JSON.stringify(unlocked));
   card.classList.remove('undiscovered');card.classList.add('discovered','unlock-flash');
-  $('#stats').textContent=discovered().size+'/'+species.length+' discovered · '+active();
+  $('#stats').textContent=discovered().size+' / '+species.length+' discovered';$('#progress-fill').style.width=(discovered().size/species.length*100)+'%';$('.progress').setAttribute('aria-valuenow',discovered().size);
  }
  const dlg=$('#award'),image=$('#award-image');image.replaceChildren();
  const art=new Image();art.alt=s.name;FishDexArt.attach(s,art);image.append(art);
