@@ -96,26 +96,62 @@ function tackleFor(species){
  for(const [i,value] of data.entries()){const p=document.createElement('p');p.textContent=['Bait / lures: ','Tackle: ','Technique: '][i]+value;el.append(p)}
  const caveat=document.createElement('small');caveat.textContent='General fishing guidance, not a catch guarantee. Check current regulations.';el.append(caveat);
 }
+function drawTideGraph(container,predictions){
+ const rows=predictions.map(p=>({time:new Date(p.t.replace(' ','T')),height:Number(p.v)})).filter(p=>Number.isFinite(p.height)&&!Number.isNaN(p.time.getTime()));
+ if(rows.length<2)throw Error('Insufficient tide samples');
+ const W=920,H=270,left=54,right=20,top=25,bottom=47;
+ const lo=Math.min(...rows.map(p=>p.height)),hi=Math.max(...rows.map(p=>p.height)),pad=Math.max(.4,(hi-lo)*.12);
+ const min=lo-pad,max=hi+pad;const first=rows[0].time.getTime(),last=rows[rows.length-1].time.getTime();
+ const x=t=>left+(t-first)/(last-first)*(W-left-right),y=h=>top+(max-h)/(max-min)*(H-top-bottom);
+ const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+ svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('role','img');
+ svg.setAttribute('aria-label','NOAA Charleston Harbor predicted tide heights over the next two days in feet, with high and low tides');
+ svg.style.cssText='display:block;width:100%;height:auto;max-height:340px;background:#0b2737;border-radius:12px';
+ const make=(tag,attrs,txt)=>{const e=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(txt!==undefined)e.textContent=txt;svg.append(e);return e};
+ for(let i=0;i<=4;i++){const value=min+(max-min)*i/4,yy=y(value);
+  make('line',{x1:left,y1:yy,x2:W-right,y2:yy,stroke:'#356072','stroke-dasharray':'4 5'});
+  make('text',{x:left-9,y:yy+4,'text-anchor':'end',fill:'#bcd9e5','font-size':13},value.toFixed(1));
+ }
+ const step=Math.max(1,Math.ceil(rows.length/9));
+ for(let i=0;i<rows.length;i+=step){const xx=x(rows[i].time.getTime());make('text',{x:xx,y:H-18,'text-anchor':'middle',fill:'#bcd9e5','font-size':12},rows[i].time.toLocaleString('en-US',{hour:'numeric',hour12:true,month:'numeric',day:'numeric'}))}
+ const pts=rows.map(p=>[x(p.time.getTime()),y(p.height)]);
+ const line=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(2)+' '+p[1].toFixed(2)).join(' ');
+ make('path',{d:line+' L'+pts[pts.length-1][0]+' '+(H-bottom)+' L'+pts[0][0]+' '+(H-bottom)+' Z',fill:'#17b4d5','fill-opacity':'.18'});
+ make('path',{d:line,fill:'none',stroke:'#42ddfa','stroke-width':3,'stroke-linejoin':'round','stroke-linecap':'round'});
+ const nowLocal=new Date(new Date().toLocaleString('en-US',{timeZone:'America/New_York'})).getTime();
+ if(nowLocal>=first&&nowLocal<=last){const xx=x(nowLocal);make('line',{x1:xx,y1:top,x2:xx,y2:H-bottom,stroke:'#ffd57d','stroke-width':2,'stroke-dasharray':'6 4'});make('text',{x:xx+5,y:top+13,fill:'#ffd57d','font-size':12},'Now')}
+ for(let i=1;i<rows.length-1;i++){const prev=rows[i-1].height,cur=rows[i].height,next=rows[i+1].height;
+  if(!((cur>=prev&&cur>next)||(cur<=prev&&cur<next)))continue;
+  const xx=pts[i][0],yy=pts[i][1],high=cur>=prev;
+  make('circle',{cx:xx,cy:yy,r:4.5,fill:high?'#ffd57d':'#b5f5ff',stroke:'#0b2737','stroke-width':2});
+  make('text',{x:xx,y:yy+(high?-13:19),'text-anchor':'middle',fill:high?'#ffd57d':'#b5f5ff','font-size':12,'font-weight':600},(high?'H ':'L ')+cur.toFixed(1)+' ft');
+ }
+ const label=document.createElement('small');label.textContent='NOAA predicted water level (feet above MLLW) · Charleston Harbor station 8665530 · Times shown in Eastern Time';
+ container.append(svg,label);
+}
 async function loadConditions(){
- const el=document.getElementById('hotspot-conditions');const lines=[];
- const now=new Date();const ymd=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('');
- const local=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'}));
- const begin=ymd(local),end=ymd(new Date(local.getTime()+2*86400000));
- const tideUrl='https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date='+begin+'&end_date='+end+'&station=8665530&product=predictions&datum=MLLW&time_zone=lst_ldt&units=english&interval=hilo&format=json';
+ const el=document.getElementById('hotspot-conditions');el.replaceChildren();
+ const heading=document.createElement('h3');heading.textContent='Charleston tides & conditions';el.append(heading);
+ const graph=document.createElement('div');graph.textContent='Loading NOAA tide graph…';el.append(graph);
+ const weather=document.createElement('p');weather.textContent='Loading current weather…';el.append(weather);
+ const now=new Date();const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now);
+ const get=k=>parts.find(p=>p.type===k).value;
+ const begin=get('year')+get('month')+get('day');
+ const tomorrow=new Date(now.getTime()+2*86400000),endParts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(tomorrow);
+ const end=k=>endParts.find(p=>p.type===k).value;
+ const endDate=end('year')+end('month')+end('day');
+ const tideUrl='https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?begin_date='+begin+'&end_date='+endDate+'&station=8665530&product=predictions&datum=MLLW&time_zone=lst_ldt&units=english&interval=6&format=json';
  try{
-  const res=await fetch(tideUrl);if(!res.ok)throw Error('NOAA unavailable');const data=await res.json();
-  if(!data.predictions?.length)throw Error('No tide predictions');
-  const upcoming=data.predictions.filter(p=>p.t.replace(' ','T')>new Date(local.getTime()-3600000).toISOString().slice(0,16)).slice(0,4);
-  lines.push('NOAA Charleston Harbor tide predictions (station 8665530, MLLW): '+(upcoming.length?upcoming.map(p=>(p.type==='H'?'High':'Low')+' '+p.t+' · '+Number(p.v).toFixed(1)+' ft').join(' | '):'No upcoming events in the current window'));
- }catch{lines.push('NOAA tide predictions are temporarily unavailable.')}
+  const response=await fetch(tideUrl);if(!response.ok)throw Error('NOAA request failed');
+  const data=await response.json();if(!data.predictions?.length)throw Error('No tide data');
+  graph.replaceChildren();drawTideGraph(graph,data.predictions);
+ }catch(err){graph.textContent='Tide graph unavailable right now. NOAA prediction data could not be loaded.';console.warn('FishDex tide graph:',err)}
  try{
-  const res=await fetch('https://api.open-meteo.com/v1/forecast?latitude=32.78&longitude=-79.93&current=temperature_2m,wind_speed_10m,wind_direction_10m,precipitation&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York');if(!res.ok)throw Error('Weather unavailable');
-  const data=await res.json(),c=data.current;if(!c)throw Error('Missing conditions');
-  lines.push('Charleston-area modeled weather ('+c.time+'): '+Math.round(c.temperature_2m)+'°F, wind '+Math.round(c.wind_speed_10m)+' mph at '+Math.round(c.wind_direction_10m)+'°, precipitation '+c.precipitation+' mm. Source: Open-Meteo.');
- }catch{lines.push('Current weather is temporarily unavailable.')}
- el.replaceChildren();const h=document.createElement('strong');h.textContent='Charleston tides & conditions';el.append(h);
- for(const line of lines){const p=document.createElement('p');p.textContent=line;el.append(p)}
- const disclaimer=document.createElement('small');disclaimer.textContent='Tides are predictions for Charleston Harbor, not live measurements or site-specific predictions. Weather is modeled, not measured at each hotspot. Never use this panel for navigation or boating safety.';el.append(disclaimer);
+  const response=await fetch('https://api.open-meteo.com/v1/forecast?latitude=32.78&longitude=-79.93&current=temperature_2m,wind_speed_10m,wind_direction_10m,precipitation&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York');
+  if(!response.ok)throw Error('Weather request failed');const data=await response.json(),c=data.current;if(!c)throw Error('No weather data');
+  weather.textContent='Current Charleston-area conditions (Open-Meteo): '+Math.round(c.temperature_2m)+'°F · Wind '+Math.round(c.wind_speed_10m)+' mph · Direction '+Math.round(c.wind_direction_10m)+'° · Rain '+c.precipitation+' mm';
+ }catch{weather.textContent='Current weather is temporarily unavailable.'}
+ const note=document.createElement('small');note.textContent='NOAA predictions are for Charleston Harbor, not real-time measurements or every fishing spot. Do not use this graph for boating or navigation decisions.';el.append(note);
 }
 let map,markers=[],initialized=false,resizeObserver=null;
 function refreshMap(){if(!map)return;requestAnimationFrame(()=>{map.invalidateSize({pan:false});if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});});}
