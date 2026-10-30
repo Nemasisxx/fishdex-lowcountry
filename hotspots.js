@@ -206,29 +206,64 @@ function opportunityScore(spot){
  if(spot.profile==='tidalBridge'||spot.profile==='marshPier'||spot.profile==='harborPier'){score+=6;reasons.push('Structure habitat')}
  return {score:Math.max(0,Math.min(100,score)),reasons};
 }
+// Use mapped waterway geometry rather than inventing shoreline polygons.
+// OSM waterways are geographic references; they are NOT verified fishing structures.
+let habitatWays=[],habitatKey='',habitatTimer=null,habitatLoading=false;
+function nearestHabitatSpot(lat,lng){
+ let nearest=null,distance=Infinity;
+ for(const spot of spots){
+  const d=Math.hypot((lat-spot.lat)*111,(lng-spot.lng)*94);
+  if(d<distance){distance=d;nearest=spot}
+ }
+ return distance<=2.5?nearest:null;
+}
 function updateOpportunityZones(){
  if(!map||!opportunityLayer)return;
  opportunityLayer.clearLayers();
- const toggle=document.getElementById('hotspot-activity-toggle');
- const status=document.getElementById('hotspot-activity-status');
- if(!toggle?.checked){status.textContent='Opportunity zones are hidden.';return}
- if(map.getZoom()<13){status.textContent='Zoom to level 13+ to see approximate shoreline opportunity zones.';return}
- const bounds=map.getBounds(),type=document.getElementById('hotspot-filter').value;
+ const toggle=document.getElementById('hotspot-activity-toggle'),status=document.getElementById('hotspot-activity-status');
+ if(!toggle?.checked){status.textContent='Bite zones hidden.';return}
+ if(map.getZoom()<13){status.textContent='Zoom to level 13+ near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
+ const bounds=map.getBounds(),species=document.getElementById('hotspot-species').value;
  let count=0;
- for(const spot of spots){
-  if(!shoreProfiles.has(spot.profile)||!bounds.pad(.12).contains([spot.lat,spot.lng]))continue;
-  if(type!=='all'&&spot.type!==type)continue;
-  const result=opportunityScore(spot);if(!result)continue;
-  const color=result.score>=70?'#ef4444':result.score>=48?'#ffd04c':'#22c55e';
-  const circle=L.circle([spot.lat,spot.lng],{radius:135,color,fillColor:color,fillOpacity:.20,weight:2,interactive:true}).addTo(opportunityLayer);
-  const box=document.createElement('div');
-  const title=document.createElement('strong');title.textContent=spot.name+' · '+(result.score>=70?'Higher':result.score>=48?'Moderate':'Lower')+' estimated opportunity';
-  const why=document.createElement('p');why.textContent=result.reasons.join(' · ');
-  const caution=document.createElement('small');caution.textContent='Approximate area centered on public access, not a surveyed fishing bank. Not a real-time bite report. Verify access and safety.';
-  box.append(title,why,caution);circle.bindPopup(box);count++;
+ for(const way of habitatWays){
+  const mid=way.points[Math.floor(way.points.length/2)];
+  if(!bounds.pad(.15).contains(mid))continue;
+  const near=nearestHabitatSpot(mid[0],mid[1]);if(!near)continue;
+  const result=opportunityScore(near);if(!result)continue;
+  const score=Math.min(100,result.score+(way.kind==='stream'?7:0));
+  const color=score>=70?'#ef4444':score>=48?'#ffd04c':'#22c55e';
+  const line=L.polyline(way.points,{color,weight:13,opacity:.65,interactive:true}).addTo(opportunityLayer);
+  const label=document.createElement('div'),head=document.createElement('strong'),why=document.createElement('p'),caution=document.createElement('small');
+  head.textContent=(way.name||'Mapped tidal waterway')+' · '+(score>=70?'Higher':score>=48?'Moderate':'Lower')+' modeled opportunity';
+  why.textContent='Mapped waterway geometry (OpenStreetMap). '+result.reasons.join(' · ')+'.';
+  caution.textContent='Highlighted waterway segment, not a confirmed creek mouth, oyster reef, bank, depth contour or fish location. Shore access is not implied. Check tides, permissions and hazards.';
+  label.append(head,why,caution);line.bindPopup(label);count++;
  }
- status.textContent=count+' approximate opportunity zones in view. Zoom in and tap a shaded area for the reasoning. Updated using available conditions.';
+ status.textContent=habitatLoading?'Loading mapped waterways…':count?count+' mapped waterway segments highlighted in view. Tap a segment for its basis.':'No mapped eligible waterways here. Try zooming near Shem Creek or Wando River.';
 }
+async function loadHabitatWays(){
+ if(!map||map.getZoom()<13||!document.getElementById('hotspot-activity-toggle')?.checked)return;
+ const center=map.getCenter();
+ // Initial study region: Charleston Harbor, Wando River and Shem Creek.
+ if(center.lat<32.73||center.lat>32.94||center.lng< -80.02||center.lng> -79.73){habitatWays=[];habitatKey='';updateOpportunityZones();return}
+ const b=map.getBounds(),south=Math.max(32.73,b.getSouth()),north=Math.min(32.94,b.getNorth()),west=Math.max(-80.02,b.getWest()),east=Math.min(-79.73,b.getEast());
+ if(north<=south||east<=west)return;
+ const key=[south,north,west,east].map(n=>n.toFixed(2)).join(',');
+ if(key===habitatKey)return;
+ habitatKey=key;habitatLoading=true;updateOpportunityZones();
+ const query='[out:json][timeout:18];(way["waterway"~"^(stream|tidal_channel|river|canal)$"]('+south+','+west+','+north+','+east+'););out geom;';
+ try{
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),14000);
+  let response;
+  try{response=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(query),headers:{'Content-Type':'application/x-www-form-urlencoded'},signal:controller.signal})}finally{clearTimeout(timeout)}
+  if(!response.ok)throw Error('Map data unavailable');
+  const json=await response.json();
+  // Don't treat named channels as exact fish holding spots.
+  habitatWays=(json.elements||[]).filter(e=>e.type==='way'&&e.geometry?.length>=2).slice(0,110).map(e=>({name:e.tags?.name||'',kind:e.tags?.waterway||'',points:e.geometry.map(p=>[p.lat,p.lon])}));
+ }catch(e){habitatWays=[];habitatKey='';console.warn('FishDex habitat geometry:',e);const status=document.getElementById('hotspot-activity-status');if(status)status.textContent='Mapped waterways temporarily unavailable. No estimated zones displayed.'}
+ habitatLoading=false;updateOpportunityZones();
+}
+function queueHabitatWays(){clearTimeout(habitatTimer);habitatTimer=setTimeout(loadHabitatWays,650)}
 async function refreshOpportunityConditions(){
  try{
   const now=new Date(),parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now),p=k=>parts.find(v=>v.type===k).value;
@@ -303,9 +338,9 @@ function init(){
  initBubbleMenus();
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.77,-79.92],10);
  opportunityLayer=L.layerGroup().addTo(map);
- map.on('zoomend moveend',updateOpportunityZones);
- document.getElementById('hotspot-activity-toggle')?.addEventListener('change',updateOpportunityZones);
- refreshOpportunityConditions();setInterval(()=>{if(document.visibilityState==='visible')refreshOpportunityConditions()},30*60*1000);
+ map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
+ document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
+ refreshOpportunityConditions();queueHabitatWays();setInterval(()=>{if(document.visibilityState==='visible')refreshOpportunityConditions()},30*60*1000);
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
  document.getElementById('hotspot-basemap').addEventListener('change',e=>{if(e.target.value==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map)}else{map.removeLayer(satelliteLayer);streetLayer.addTo(map)}});
