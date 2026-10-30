@@ -294,38 +294,37 @@ function updateOpportunityZones(){
  opportunityLayer.clearLayers();
  const toggle=document.getElementById('hotspot-activity-toggle'),status=document.getElementById('hotspot-activity-status');
  const mode=document.getElementById('hotspot-layer-mode')?.value||'both';
- if(!toggle?.checked||mode==='access'||mode==='clear'){status.textContent='Bite zones hidden. Choose Bite Zones only or Both in Filters to display them.';return}
+ if((!toggle?.checked&&document.getElementById('hotspot-basemap')?.value!=='creek')||(mode==='access'||mode==='clear')&&document.getElementById('hotspot-basemap')?.value!=='creek'){status.textContent='Bite zones hidden. Choose Bite Zones only or Both in Filters to display them.';return}
  if(map.getZoom()<11){status.textContent='Zoom closer near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
  const bounds=map.getBounds(),species=document.getElementById('hotspot-species').value;
  let count=0;
  for(const way of habitatWays){
   const mid=way.center;
   if(!bounds.pad(.15).contains(mid))continue;
-  const near=nearestHabitatSpot(mid[0],mid[1],way.kind==='coastline'?18:7);if(!near)continue;
+  const near=nearestHabitatSpot(mid[0],mid[1],way.kind==='coastline'?18:12);if(!near)continue;
   const result=opportunityScore(near);if(!result)continue;
   const score=Math.min(100,result.score+(way.kind==='stream'?7:0));
   const color=score>=70?'#ef4444':score>=48?'#ffd04c':'#22c55e';
   const zonesOnly=mode==='hotspots';
-  const line=(way.kind==='coastline'?L.polyline(way.points,{color,weight:zonesOnly?9:7,opacity:.9,interactive:true}):L.polygon(way.points,{color,weight:zonesOnly?2:1,opacity:zonesOnly?.95:.75,fillColor:color,fillOpacity:zonesOnly?.76:.42,interactive:true})).addTo(opportunityLayer);
+  const line=((way.kind==='coastline'||way.kind==='stream'||way.kind==='creek'||way.kind==='tidal_channel')?L.polyline(way.points,{color,weight:zonesOnly?9:7,opacity:.9,interactive:true}):L.polygon(way.points,{color,weight:zonesOnly?2:1,opacity:zonesOnly?.95:.75,fillColor:color,fillOpacity:zonesOnly?.76:.42,interactive:true})).addTo(opportunityLayer);
   const label=document.createElement('div'),head=document.createElement('strong'),why=document.createElement('p'),caution=document.createElement('small');
-  head.textContent=(way.name||(way.kind==='coastline'?'Mapped shoreline':'Mapped tidal waterway'))+' · '+(score>=70?'Higher':score>=48?'Moderate':'Lower')+' modeled opportunity';
-  why.textContent=(way.kind==='coastline'?'Mapped coastline boundary (OpenStreetMap). ':'Mapped water-area polygon (OpenStreetMap). ')+result.reasons.join(' · ')+'.';
+  head.textContent=(way.name||(way.kind==='coastline'?'Mapped shoreline':'Mapped creek or waterway'))+' · '+(score>=70?'Higher':score>=48?'Moderate':'Lower')+' modeled opportunity';
+  why.textContent=(way.kind==='coastline'?'Mapped coastline boundary (OpenStreetMap). ':['stream','creek','tidal_channel'].includes(way.kind)?'Mapped stream/creek centerline (OpenStreetMap), NOT a depth contour. ':'Mapped water-area polygon (OpenStreetMap). ')+result.reasons.join(' · ')+'.';
   caution.textContent='Modeled fishing opportunity, not observed fish. Shoreline strokes follow mapped coast boundaries, not verified fishing access or safe water. Check tides, permissions and hazards.';
   label.append(head,why,caution);line.bindPopup(label);count++;
  }
  status.textContent=habitatLoading?'Loading shoreline and water geometry…':count?count+' shoreline/water zones highlighted in view. Tap a zone for details.':'No mapped shoreline or water zones available in this view. Try zooming or panning.';
 }
 async function loadHabitatWays(){
- if(!map||map.getZoom()<11||!document.getElementById('hotspot-activity-toggle')?.checked)return;
- const center=map.getCenter();
- // Initial study region: Charleston Harbor, Wando River and Shem Creek.
- if(center.lat<32.73||center.lat>32.94||center.lng< -80.02||center.lng> -79.73){habitatWays=[];habitatKey='';updateOpportunityZones();return}
- const b=map.getBounds(),south=Math.max(32.73,b.getSouth()),north=Math.min(32.94,b.getNorth()),west=Math.max(-80.02,b.getWest()),east=Math.min(-79.73,b.getEast());
+ if(!map||map.getZoom()<11||(!document.getElementById('hotspot-activity-toggle')?.checked&&document.getElementById('hotspot-basemap')?.value!=='creek'))return;
+ const b=map.getBounds(),south=b.getSouth(),north=b.getNorth(),west=b.getWest(),east=b.getEast();
+ // Limit very large queries to avoid overloading public Overpass services.
+ if((north-south)*(east-west)>.20){habitatWays=[];habitatKey='';updateOpportunityZones();return}
  if(north<=south||east<=west)return;
  const key=[south,north,west,east].map(n=>n.toFixed(2)).join(',');
  if(key===habitatKey)return;
  habitatKey=key;habitatLoading=true;updateOpportunityZones();
- const query='[out:json][timeout:18];(way["natural"="water"]('+south+','+west+','+north+','+east+');way["waterway"="riverbank"]('+south+','+west+','+north+','+east+'););out geom;';
+ const query='[out:json][timeout:18];(way["natural"="water"]('+south+','+west+','+north+','+east+');way["waterway"="riverbank"]('+south+','+west+','+north+','+east+');way["natural"="coastline"]('+south+','+west+','+north+','+east+');way["waterway"~"stream|creek|tidal_channel"]('+south+','+west+','+north+','+east+'););out geom;';
  try{
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),14000);
   let response;
@@ -335,7 +334,7 @@ async function loadHabitatWays(){
   // Only closed, explicitly mapped water polygons; never draw land-crossing centerlines.
   habitatWays=(json.elements||[]).filter(e=>{
    if(e.type!=='way'||!e.geometry||e.geometry.length<2)return false;
-   if(e.tags?.natural==='coastline')return true;
+   if(e.tags?.natural==='coastline'||/^(stream|creek|tidal_channel)$/.test(e.tags?.waterway||''))return true;
    const first=e.geometry[0],last=e.geometry[e.geometry.length-1];
    return first.lat===last.lat&&first.lon===last.lon&&(e.tags?.natural==='water'||e.tags?.waterway==='riverbank');
   }).slice(0,250).map(e=>{
@@ -412,10 +411,18 @@ function init(){
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
  const nauticalLayer=L.tileLayer('https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/NOAACharts/MapServer/tile/{z}/{y}/{x}',{zoomOffset:-2,minZoom:2,maxNativeZoom:18,maxZoom:18,attribution:'NOAA Office of Coast Survey · Chart Display Service',crossOrigin:true});
  const terrainLayer=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxNativeZoom:17,maxZoom:18,attribution:'© OpenTopoMap contributors · © OpenStreetMap contributors'});
+ const coastalDemLayer=L.tileLayer('https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/CUDEM_hillshade/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:14,maxZoom:18,opacity:.85,attribution:'NOAA NCEI CUDEM coastal bathymetry/topography · surveyed/modelled relief'});
+ const sonarLayer=L.tileLayer('https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/bag_hillshades/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:14,maxZoom:18,opacity:.88,attribution:'NOAA NCEI/NOS hydrographic survey BAG seafloor relief'});
+ const creekDetailLayer=L.layerGroup([coastalDemLayer]);
  document.getElementById('hotspot-basemap').addEventListener('change',e=>{
-  for(const layer of [streetLayer,satelliteLayer,nauticalLayer,terrainLayer])if(map.hasLayer(layer))map.removeLayer(layer);
+  for(const layer of [streetLayer,satelliteLayer,nauticalLayer,terrainLayer,coastalDemLayer,sonarLayer])if(map.hasLayer(layer))map.removeLayer(layer);
   const selected=e.target.value;
   (selected==='satellite'?satelliteLayer:selected==='nautical'?nauticalLayer:selected==='terrain'?terrainLayer:streetLayer).addTo(map);
+  if(selected==='coastal-dem'||selected==='creek')coastalDemLayer.addTo(map);
+  if(selected==='sonar')sonarLayer.addTo(map);
+  if(selected==='creek'){const toggle=document.getElementById('hotspot-activity-toggle');if(toggle)toggle.checked=true;queueHabitatWays();updateOpportunityZones()}
+  const info=document.getElementById('hotspot-activity-status');
+  if(info&&selected==='sonar')info.textContent='NOAA surveyed sonar relief: areas without survey coverage will not show detailed seabed terrain.';
  });
  setupTidePin();
  setupPersonalLocation();
