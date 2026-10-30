@@ -30,6 +30,18 @@ const FishDexArt=(()=>{
  }
  let queue=[],running=0;
  function pump(){while(running<4&&queue.length){const job=queue.shift();running++;(async()=>{try{let found=cache[job.s.id];if(found===undefined){found=await commons(job.s);cache[job.s.id]=found||null;save()}if(found?.url)job.apply(found)}catch{}finally{running--;pump()}})()}}
- function attach(s,img){img.src=fallback(s);img.dataset.imageType='illustration';queue.push({s,apply:found=>{if(!img.isConnected)return;const photo=new Image();photo.referrerPolicy='no-referrer';photo.onload=()=>{if(!img.isConnected)return;img.src=found.url;img.dataset.imageType='photograph';img.title='Wikimedia Commons photograph · '+found.license+' · '+found.author+' · '+found.source};photo.src=found.url}});pump()}
+ const matchedAtlasIDs=new Set([1,2,3,4,5,6,7,8,15,16,17,18,19,20,21,24,26,27,30,34,35,39,40,42,43,46,48,51,52,58,61,72,74,75,78,79,80,81,82,83,85,86,87,88,89,90,91,92,93,94,95,96,98]);
+ function attach(s,img){
+  if(matchedAtlasIDs.has(s.id)){
+   img.src='images/'+String(s.id).padStart(3,'0')+'.webp';
+   img.dataset.imageType='ai-atlas-crop';
+   img.title='AI-generated atlas crop · species identification not independently verified';
+   img.onerror=()=>{img.onerror=null;img.src=fallback(s);img.dataset.imageType='illustration'};
+   return;
+  }
+  img.src=fallback(s);
+  img.dataset.imageType='illustration';
+  img.title='Stylized illustration · no atlas image uploaded for this species';
+ }
  return {attach,fallback};
 })();
