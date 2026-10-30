@@ -221,7 +221,8 @@ function updateOpportunityZones(){
  if(!map||!opportunityLayer)return;
  opportunityLayer.clearLayers();
  const toggle=document.getElementById('hotspot-activity-toggle'),status=document.getElementById('hotspot-activity-status');
- if(!toggle?.checked){status.textContent='Bite zones hidden.';return}
+ const mode=document.getElementById('hotspot-layer-mode')?.value||'both';
+ if(!toggle?.checked||mode==='access'||mode==='clear'){status.textContent='Bite zones hidden. Choose Bite Zones only or Both in Filters to display them.';return}
  if(map.getZoom()<13){status.textContent='Zoom to level 13+ near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
  const bounds=map.getBounds(),species=document.getElementById('hotspot-species').value;
  let count=0;
@@ -288,9 +289,12 @@ function draw(){
  tackleFor(species);
  updateOpportunityZones();
  markers.forEach(m=>m.remove());markers=[];
+ const mode=document.getElementById('hotspot-layer-mode')?.value||'both';
+ const showAccess=mode==='both'||mode==='access';
  const list=document.getElementById('hotspot-list');list.replaceChildren();
  for(const s of shown){
-  const marker=L.marker([s.lat,s.lng],{zIndexOffset:1000,title:s.name}).addTo(map);
+  const marker=L.marker([s.lat,s.lng],{zIndexOffset:1000,title:s.name});
+  if(showAccess)marker.addTo(map);
   const route='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(s.name+', '+s.area+', South Carolina');
   marker.bindPopup('<strong>'+esc(s.name)+'</strong><p>'+esc(s.note)+'</p><p><small>Possible habitat: '+esc(s.species.join(', '))+'</small></p><a target="_blank" rel="noopener noreferrer" href="'+route+'">Directions</a>');
   markers.push(marker);
@@ -308,8 +312,8 @@ function draw(){
  }
  document.getElementById('hotspot-count').textContent=shown.length+' of '+spots.length+' access points';
  if(!shown.length){const p=document.createElement('p');p.textContent='No matching access points in this initial dataset. This does not mean the species is absent from the Lowcountry.';list.append(p)}
- if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});
- else if(markers.length)map.setView(markers[0].getLatLng(),13);
+ if(markers.length>1&&showAccess)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});
+ else if(markers.length&&showAccess)map.setView(markers[0].getLatLng(),13);
 }
 function init(){
  if(initialized){setTimeout(refreshMap,60);setTimeout(refreshMap,350);return}
@@ -329,6 +333,21 @@ function init(){
  document.getElementById('hotspot-add-personal').addEventListener('click',addPersonal);
  document.getElementById('hotspot-show-personal').addEventListener('click',e=>{showPersonal=!showPersonal;e.target.textContent=showPersonal?'Hide my spots':'Show my spots';redrawPersonal()});
  redrawPersonal();loadConditions();
+ const layerMode=document.getElementById('hotspot-layer-mode'),quick=document.getElementById('hotspot-quick-mode');
+ const syncLayers=()=>{
+  const mode=layerMode.value;
+  markers.forEach(marker=>{if(mode==='both'||mode==='access')marker.addTo(map);else marker.remove()});
+  updateOpportunityZones();
+  if(mode==='both'||mode==='hotspots')queueHabitatWays();
+  quick.querySelector('span').textContent=mode==='hotspots'?'Show points':'Zones only';
+  quick.setAttribute('aria-label',mode==='hotspots'?'Show fishing access points and Bite Zones':'Hide fishing access points and show Bite Zones only');
+ };
+ layerMode.addEventListener('change',syncLayers);
+ quick.addEventListener('click',()=>{
+  layerMode.value=layerMode.value==='hotspots'?'both':'hotspots';
+  syncLayers();
+  if(layerMode.value==='hotspots'&&map.getZoom()<13)map.setView([32.7935,-79.8823],14);
+ });
  document.getElementById('hotspot-filter').addEventListener('change',draw);
  document.getElementById('hotspot-species').addEventListener('change',draw);
  draw();
