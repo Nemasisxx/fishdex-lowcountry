@@ -227,22 +227,21 @@ function updateOpportunityZones(){
  const bounds=map.getBounds(),species=document.getElementById('hotspot-species').value;
  let count=0;
  for(const way of habitatWays){
-  const mid=way.points[Math.floor(way.points.length/2)];
+  const mid=way.center;
   if(!bounds.pad(.15).contains(mid))continue;
   const near=nearestHabitatSpot(mid[0],mid[1]);if(!near)continue;
   const result=opportunityScore(near);if(!result)continue;
   const score=Math.min(100,result.score+(way.kind==='stream'?7:0));
   const color=score>=70?'#ef4444':score>=48?'#ffd04c':'#22c55e';
   const zonesOnly=mode==='hotspots';
-  if(zonesOnly)L.polyline(way.points,{color:'#061a25',weight:23,opacity:.78,interactive:false,lineCap:'round',lineJoin:'round'}).addTo(opportunityLayer);
-  const line=L.polyline(way.points,{color,weight:zonesOnly?17:13,opacity:zonesOnly?1:.65,interactive:true,lineCap:'round',lineJoin:'round'}).addTo(opportunityLayer);
+  const line=L.polygon(way.points,{color,weight:zonesOnly?2:1,opacity:zonesOnly?.95:.75,fillColor:color,fillOpacity:zonesOnly?.76:.42,interactive:true}).addTo(opportunityLayer);
   const label=document.createElement('div'),head=document.createElement('strong'),why=document.createElement('p'),caution=document.createElement('small');
   head.textContent=(way.name||'Mapped tidal waterway')+' · '+(score>=70?'Higher':score>=48?'Moderate':'Lower')+' modeled opportunity';
-  why.textContent='Mapped waterway geometry (OpenStreetMap). '+result.reasons.join(' · ')+'.';
-  caution.textContent='Highlighted waterway segment, not a confirmed creek mouth, oyster reef, bank, depth contour or fish location. Shore access is not implied. Check tides, permissions and hazards.';
+  why.textContent='Mapped water-area polygon (OpenStreetMap). '+result.reasons.join(' · ')+'.';
+  caution.textContent='Highlight follows mapped water-area boundaries, not verified depth, reef, fish activity or navigable water. Map geometry can be incomplete. Check tides, permissions and hazards.';
   label.append(head,why,caution);line.bindPopup(label);count++;
  }
- status.textContent=habitatLoading?'Loading mapped waterways…':count?count+' mapped waterway segments highlighted in view. Tap a segment for its basis.':'No mapped eligible waterways here. Try zooming near Shem Creek or Wando River.';
+ status.textContent=habitatLoading?'Loading mapped water areas…':count?count+' mapped water areas highlighted in view. Tap an area for its basis.':'No verified mapped water-area polygons available here. No land-based fallback is shown.';
 }
 async function loadHabitatWays(){
  if(!map||map.getZoom()<((document.getElementById('hotspot-layer-mode')?.value==='hotspots')?11:13)||!document.getElementById('hotspot-activity-toggle')?.checked)return;
@@ -254,15 +253,23 @@ async function loadHabitatWays(){
  const key=[south,north,west,east].map(n=>n.toFixed(2)).join(',');
  if(key===habitatKey)return;
  habitatKey=key;habitatLoading=true;updateOpportunityZones();
- const query='[out:json][timeout:18];(way["waterway"~"^(stream|tidal_channel|river|canal)$"]('+south+','+west+','+north+','+east+'););out geom;';
+ const query='[out:json][timeout:18];(way["natural"="water"]('+south+','+west+','+north+','+east+');way["waterway"="riverbank"]('+south+','+west+','+north+','+east+'););out geom;';
  try{
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),14000);
   let response;
   try{response=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(query),headers:{'Content-Type':'application/x-www-form-urlencoded'},signal:controller.signal})}finally{clearTimeout(timeout)}
   if(!response.ok)throw Error('Map data unavailable');
   const json=await response.json();
-  // Don't treat named channels as exact fish holding spots.
-  habitatWays=(json.elements||[]).filter(e=>e.type==='way'&&e.geometry?.length>=2).slice(0,110).map(e=>({name:e.tags?.name||'',kind:e.tags?.waterway||'',points:e.geometry.map(p=>[p.lat,p.lon])}));
+  // Only closed, explicitly mapped water polygons; never draw land-crossing centerlines.
+  habitatWays=(json.elements||[]).filter(e=>{
+   if(e.type!=='way'||!e.geometry||e.geometry.length<4)return false;
+   const first=e.geometry[0],last=e.geometry[e.geometry.length-1];
+   return first.lat===last.lat&&first.lon===last.lon&&(e.tags?.natural==='water'||e.tags?.waterway==='riverbank');
+  }).slice(0,150).map(e=>{
+   const points=e.geometry.map(p=>[p.lat,p.lon]);
+   const bounds=L.latLngBounds(points);
+   return {name:e.tags?.name||'',kind:e.tags?.waterway||e.tags?.water||'',points,center:[bounds.getCenter().lat,bounds.getCenter().lng]};
+  });
  }catch(e){habitatWays=[];habitatKey='';console.warn('FishDex habitat geometry:',e);const status=document.getElementById('hotspot-activity-status');if(status)status.textContent='Mapped waterways temporarily unavailable. No estimated zones displayed.'}
  habitatLoading=false;updateOpportunityZones();
 }
