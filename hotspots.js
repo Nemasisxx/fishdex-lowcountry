@@ -407,20 +407,18 @@ function init(){
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:true}).setView([32.77,-79.92],10);
  map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
  document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
- streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
- satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
+ streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'});
+ satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'}).addTo(map);
  const nauticalLayer=L.tileLayer('https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/NOAACharts/MapServer/tile/{z}/{y}/{x}',{zoomOffset:-2,minZoom:2,maxNativeZoom:18,maxZoom:18,attribution:'NOAA Office of Coast Survey · Chart Display Service',crossOrigin:true});
  const terrainLayer=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxNativeZoom:17,maxZoom:18,attribution:'© OpenTopoMap contributors · © OpenStreetMap contributors'});
  const coastalDemLayer=L.tileLayer('https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/CUDEM_hillshade/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:14,maxZoom:18,opacity:.85,attribution:'NOAA NCEI CUDEM coastal bathymetry/topography · surveyed/modelled relief'});
- const sonarLayer=L.tileLayer('https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/bag_hillshades/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:14,maxZoom:18,opacity:.88,attribution:'NOAA NCEI/NOS hydrographic survey BAG seafloor relief'});
- const creekDetailLayer=L.layerGroup([coastalDemLayer]);
+ const sonarLayer=L.tileLayer('https://tiles.arcgis.com/tiles/C8EMgrsFcRFL6LrL/arcgis/rest/services/bag_hillshades/MapServer/tile/{z}/{y}/{x}',{maxNativeZoom:14,maxZoom:18,opacity:.72,errorTileUrl:'',attribution:'NOAA NCEI/NOS surveyed sonar BAG relief (limited coverage)'});
  document.getElementById('hotspot-basemap').addEventListener('change',e=>{
   for(const layer of [streetLayer,satelliteLayer,nauticalLayer,terrainLayer,coastalDemLayer,sonarLayer])if(map.hasLayer(layer))map.removeLayer(layer);
   const selected=e.target.value;
   (selected==='satellite'?satelliteLayer:selected==='nautical'?nauticalLayer:selected==='terrain'?terrainLayer:streetLayer).addTo(map);
-  if(selected==='coastal-dem'||selected==='creek')coastalDemLayer.addTo(map);
-  if(selected==='sonar')sonarLayer.addTo(map);
-  if(selected==='creek'){const toggle=document.getElementById('hotspot-activity-toggle');if(toggle)toggle.checked=true;queueHabitatWays();updateOpportunityZones()}
+  if(selected==='coastal-dem')coastalDemLayer.addTo(map);
+  if(selected==='sonar'){sonarLayer.addTo(map);const status=document.getElementById('hotspot-activity-status');if(status)status.textContent='Sonar data only exists where NOAA hydrographic surveys are published; unsurveyed ocean areas will show satellite imagery.';}
   const info=document.getElementById('hotspot-activity-status');
   if(info&&selected==='sonar')info.textContent='NOAA surveyed sonar relief: areas without survey coverage will not show detailed seabed terrain.';
  });
