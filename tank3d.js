@@ -106,7 +106,7 @@ const assetMap={'red drum':'red-drum','redfish':'red-drum','spotted seatrout':'s
 let swimmers=[],generation=0;
 function clearFish(){swimmers.forEach(o=>scene.remove(o.root));swimmers=[]}
 window.renderFishTank3D=function(fish){
- ++generation;clearFish();
+ previewMixer=null;++generation;clearFish();
  fish.slice(0,5).forEach((s,i)=>{const o=makeFish(s);const key=assetMap[s.name.toLowerCase()];if(key){const current=generation;glbLoader.load('models/'+key+'.glb',gltf=>{if(current!==generation)return;const model=gltf.scene;model.rotation.y=0;o.bodyGroup.clear();o.bodyGroup.add(model);o.tailPivot=new THREE.Group();const tail=model.getObjectByName('tail');if(tail){const parent=tail.parent;const world=new THREE.Vector3();tail.getWorldPosition(world);parent.remove(tail);o.tailPivot.position.copy(world);tail.position.sub(world);o.tailPivot.add(tail);o.bodyGroup.add(o.tailPivot)}o.loadedGLB=true},()=>{},()=>{})} o.root.position.set(-4+i*2.2,1.65-(i%3)*1.15,-2+(i%3)*1.5);o.baseY=o.root.position.y;o.phase=i*1.8;o.speed=.012+i*.003;o.direction=i%2?1:-1;o.root.rotation.y=o.direction===1?0:Math.PI;scene.add(o.root);swimmers.push(o)});
 };
 // Free CC0 artist-made GLB comparison models. Preview only: not FishDex species matches.
@@ -117,8 +117,8 @@ const freePreviewSources={
 let previewMixer=null,previewClock=new THREE.Clock();
 window.previewFreeFishModel=(kind)=>{
  const url=freePreviewSources[kind];if(!url)return;
- generation++;clearFish();previewMixer=null;
- glbLoader.load(url,gltf=>{
+ generation++;const current=generation;clearFish();previewMixer=null;
+ glbLoader.load(url,gltf=>{if(current!==generation)return;
   const root=new THREE.Group(),model=gltf.scene;
   const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
   if(Math.max(size.x,size.y,size.z)<.001)return;
