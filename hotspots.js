@@ -410,7 +410,13 @@ function init(){
  document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
- document.getElementById('hotspot-basemap').addEventListener('change',e=>{if(e.target.value==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map)}else{map.removeLayer(satelliteLayer);streetLayer.addTo(map)}});
+ const nauticalLayer=L.tileLayer('https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/NOAACharts/MapServer/tile/{z}/{y}/{x}',{zoomOffset:-2,minZoom:2,maxNativeZoom:18,maxZoom:18,attribution:'NOAA Office of Coast Survey · Chart Display Service',crossOrigin:true});
+ const terrainLayer=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxNativeZoom:17,maxZoom:18,attribution:'© OpenTopoMap contributors · © OpenStreetMap contributors'});
+ document.getElementById('hotspot-basemap').addEventListener('change',e=>{
+  for(const layer of [streetLayer,satelliteLayer,nauticalLayer,terrainLayer])if(map.hasLayer(layer))map.removeLayer(layer);
+  const selected=e.target.value;
+  (selected==='satellite'?satelliteLayer:selected==='nautical'?nauticalLayer:selected==='terrain'?terrainLayer:streetLayer).addTo(map);
+ });
  setupTidePin();
  setupPersonalLocation();
  document.getElementById('hotspot-add-personal').addEventListener('click',addPersonal);
