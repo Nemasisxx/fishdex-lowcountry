@@ -3,6 +3,7 @@ from PIL import Image
 import json
 files=sorted(Path("images").glob("*.webp"))
 results=[]
+# Re-audit after the transparent-margin update.
 for path in files:
     with Image.open(path) as im:
         rgba=im.convert("RGBA")
@@ -24,6 +25,8 @@ for path in files:
         if fill<0.18:issues.append("Very small visible silhouette")
         if fill>0.96:issues.append("Image nearly fills canvas")
         if transparent<0.03:issues.append("Very little transparent area")
+        if w<100 or h<100:issues.append("Low image resolution")
+        if max(w,h)/max(1,min(w,h))>5:issues.append("Extreme canvas aspect ratio")
         results.append(dict(file=path.name,width=w,height=h,visible_bounds=bounds,margin=margin,transparent_fraction=round(transparent,3),issues=issues))
 report=dict(total=len(files),flagged=sum(bool(r["issues"]) for r in results),results=results)
 Path("fish-image-audit.json").write_text(json.dumps(report,indent=2))
