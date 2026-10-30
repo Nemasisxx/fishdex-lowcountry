@@ -256,7 +256,21 @@ function init(){
  if('ResizeObserver' in window){resizeObserver=new ResizeObserver(()=>refreshMap());resizeObserver.observe(document.getElementById('hotspot-map'));}
  window.addEventListener('resize',refreshMap);
 }
+function initBubbleMenus(){
+ const stage=document.querySelector('.hotspot-stage');if(!stage)return;
+ const buttons=[...stage.querySelectorAll('[data-hotspot-panel]')];
+ const closeAll=()=>{stage.querySelectorAll('.hotspot-floating-panel').forEach(p=>p.hidden=true);buttons.forEach(b=>b.setAttribute('aria-expanded','false'))};
+ buttons.forEach(button=>button.addEventListener('click',()=>{
+  const panel=document.getElementById('hotspot-panel-'+button.dataset.hotspotPanel);
+  const opening=panel.hidden;closeAll();
+  if(opening){panel.hidden=false;button.setAttribute('aria-expanded','true')}
+  if(map)setTimeout(refreshMap,40);
+ }));
+ stage.querySelectorAll('.hotspot-close').forEach(b=>b.addEventListener('click',closeAll));
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+}
 document.addEventListener('DOMContentLoaded',()=>{
+ initBubbleMenus();
  const tab=document.querySelector('[data-tab="hotspots"]');
  if(tab)tab.addEventListener('click',()=>{setTimeout(init,100);setTimeout(refreshMap,450)});
  window.addEventListener('hashchange',()=>{if(location.hash==='#hotspots'){setTimeout(init,100);setTimeout(refreshMap,400)}});
