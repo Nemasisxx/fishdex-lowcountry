@@ -105,7 +105,7 @@ async function loadConditions(){
  try{
   const res=await fetch(tideUrl);if(!res.ok)throw Error('NOAA unavailable');const data=await res.json();
   if(!data.predictions?.length)throw Error('No tide predictions');
-  const upcoming=data.predictions.filter(p=>new Date(p.t.replace(' ','T')+'-04:00')>new Date(now.getTime()-3600000)).slice(0,4);
+  const upcoming=data.predictions.filter(p=>p.t.replace(' ','T')>new Date(local.getTime()-3600000).toISOString().slice(0,16)).slice(0,4);
   lines.push('NOAA Charleston Harbor tide predictions (station 8665530, MLLW): '+(upcoming.length?upcoming.map(p=>(p.type==='H'?'High':'Low')+' '+p.t+' · '+Number(p.v).toFixed(1)+' ft').join(' | '):'No upcoming events in the current window'));
  }catch{lines.push('NOAA tide predictions are temporarily unavailable.')}
  try{
