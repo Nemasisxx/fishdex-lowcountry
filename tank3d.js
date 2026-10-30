@@ -109,11 +109,33 @@ window.renderFishTank3D=function(fish){
  ++generation;clearFish();
  fish.slice(0,5).forEach((s,i)=>{const o=makeFish(s);const key=assetMap[s.name.toLowerCase()];if(key){const current=generation;glbLoader.load('models/'+key+'.glb',gltf=>{if(current!==generation)return;const model=gltf.scene;model.rotation.y=0;o.bodyGroup.clear();o.bodyGroup.add(model);o.tailPivot=new THREE.Group();const tail=model.getObjectByName('tail');if(tail){const parent=tail.parent;const world=new THREE.Vector3();tail.getWorldPosition(world);parent.remove(tail);o.tailPivot.position.copy(world);tail.position.sub(world);o.tailPivot.add(tail);o.bodyGroup.add(o.tailPivot)}o.loadedGLB=true},()=>{},()=>{})} o.root.position.set(-4+i*2.2,1.65-(i%3)*1.15,-2+(i%3)*1.5);o.baseY=o.root.position.y;o.phase=i*1.8;o.speed=.012+i*.003;o.direction=i%2?1:-1;o.root.rotation.y=o.direction===1?0:Math.PI;scene.add(o.root);swimmers.push(o)});
 };
+// Free CC0 artist-made GLB comparison models. Preview only: not FishDex species matches.
+const freePreviewSources={
+ shark:'https://raw.githubusercontent.com/Ariescar/gobkit-free-assets/main/animal/Shark.glb',
+ anglerfish:'https://raw.githubusercontent.com/Ariescar/gobkit-free-assets/main/animal/Anglerfish.glb'
+};
+let previewMixer=null,previewClock=new THREE.Clock();
+window.previewFreeFishModel=(kind)=>{
+ const url=freePreviewSources[kind];if(!url)return;
+ generation++;clearFish();previewMixer=null;
+ glbLoader.load(url,gltf=>{
+  const root=new THREE.Group(),model=gltf.scene;
+  const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
+  if(Math.max(size.x,size.y,size.z)<.001)return;
+  model.position.sub(center);
+  const scale=3.3/Math.max(size.x,size.y,size.z);root.scale.setScalar(scale);
+  root.add(model);root.position.set(0,0,0);scene.add(root);
+  const swimmer={root,bodyGroup:new THREE.Group(),tailPivot:new THREE.Group(),baseY:0,phase:0,speed:.009,direction:1};
+  swimmers.push(swimmer);
+  if(gltf.animations.length){previewMixer=new THREE.AnimationMixer(model);previewMixer.clipAction(gltf.animations[0]).play()}
+  const status=document.getElementById('tank-pick-status');if(status)status.textContent='Previewing free CC0 '+kind+' model by Gobkit. This is not a species-accurate FishDex catch.';
+ },undefined,err=>{const status=document.getElementById('tank-pick-status');if(status)status.textContent='Free preview could not load; check network or refresh.';console.error(err)});
+};
 let frame=0;
 function animate(){
  requestAnimationFrame(animate);
  if(document.getElementById('tab-fishtank').hidden)return;
- frame++;
+ frame++;if(previewMixer)previewMixer.update(Math.min(previewClock.getDelta(),.05));
  swimmers.forEach(o=>{o.root.position.x+=o.speed*o.direction;if(o.root.position.x>5.6)o.direction=-1;if(o.root.position.x< -5.6)o.direction=1;
  const target=o.direction===1?0:Math.PI;let diff=((target-o.root.rotation.y+Math.PI*3)%(Math.PI*2))-Math.PI;o.root.rotation.y+=diff*.035;
  o.root.position.y=o.baseY+Math.sin(frame*.018+o.phase)*.25;
