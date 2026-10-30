@@ -219,7 +219,7 @@ function updateOpportunityZones(){
   if(!shoreProfiles.has(spot.profile)||!bounds.pad(.12).contains([spot.lat,spot.lng]))continue;
   if(type!=='all'&&spot.type!==type)continue;
   const result=opportunityScore(spot);if(!result)continue;
-  const color=result.score>=70?'#2bdc84':result.score>=48?'#ffd04c':'#a3b9c6';
+  const color=result.score>=70?'#ef4444':result.score>=48?'#ffd04c':'#22c55e';
   const circle=L.circle([spot.lat,spot.lng],{radius:135,color,fillColor:color,fillOpacity:.20,weight:2,interactive:true}).addTo(opportunityLayer);
   const box=document.createElement('div');
   const title=document.createElement('strong');title.textContent=spot.name+' · '+(result.score>=70?'Higher':result.score>=48?'Moderate':'Lower')+' estimated opportunity';
