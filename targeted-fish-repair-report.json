@@ -1,0 +1,409 @@
+[
+  {
+    "number": "3",
+    "file": "Pinfish.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 7,
+        "y": 55,
+        "w": 15,
+        "h": 133,
+        "area": 1757
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "4",
+    "file": "Atlantic_Croaker.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "5",
+    "file": "Spot.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "7",
+    "file": "Sheepshead.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 7,
+        "y": 74,
+        "w": 19,
+        "h": 146,
+        "area": 2087
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "10",
+    "file": "Weakfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "11",
+    "file": "Silver_Perch.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "12",
+    "file": "Southern_Kingfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "13",
+    "file": "Northern_Kingfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "14",
+    "file": "Gulf_Kingfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "17",
+    "file": "King_Mackerel.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "18",
+    "file": "Cobia.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "20",
+    "file": "Ladyfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "21",
+    "file": "Crevalle_Jack.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "22",
+    "file": "Florida_Pompano.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "23",
+    "file": "Permit.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "24",
+    "file": "Black_Sea_Bass.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "25",
+    "file": "Gray_Snapper.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "31",
+    "file": "Little_Tunny.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "32",
+    "file": "Atlantic_Bonito.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "33",
+    "file": "Atlantic_Spadefish.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 30,
+        "y": 145,
+        "w": 34,
+        "h": 145,
+        "area": 2185
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "35",
+    "file": "Toadfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "38",
+    "file": "Hardhead_Catfish.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 30,
+        "y": 70,
+        "w": 26,
+        "h": 50,
+        "area": 593
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "41",
+    "file": "Atlantic_Sharpnose_Shark.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "42",
+    "file": "Blacktip_Shark.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "44",
+    "file": "Largemouth_Bass.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "45",
+    "file": "Bluegill.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "51",
+    "file": "Black_Crappie.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "52",
+    "file": "White_Crappie.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "54",
+    "file": "Blue_Catfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "55",
+    "file": "Flathead_Catfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "57",
+    "file": "Yellow_Bullhead.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 305,
+        "y": 63,
+        "w": 23,
+        "h": 38,
+        "area": 658
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "58",
+    "file": "Bowfin.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "61",
+    "file": "Chain_Pickerel.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "62",
+    "file": "American_Eel.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "72",
+    "file": "Spinner_Shark.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "73",
+    "file": "Sandbar_Shark.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "74",
+    "file": "Bull_Shark.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "75",
+    "file": "Tiger_Shark.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "77",
+    "file": "Great_White_Shark.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "78",
+    "file": "Pigfish.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "79",
+    "file": "Northern_Puffer.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 30,
+        "y": 62,
+        "w": 18,
+        "h": 118,
+        "area": 1083
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "80",
+    "file": "Gray_Triggerfish.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 29,
+        "y": 97,
+        "w": 22,
+        "h": 96,
+        "area": 1757
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "81",
+    "file": "Greater_Amberjack.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "82",
+    "file": "White_Grunt.webp",
+    "removed": 1,
+    "fragments": [
+      {
+        "x": 355,
+        "y": 89,
+        "w": 48,
+        "h": 40,
+        "area": 1203
+      }
+    ],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "83",
+    "file": "Great_Barracuda.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "88",
+    "file": "Blue_Marlin.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "89",
+    "file": "Atlantic_Sturgeon.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "90",
+    "file": "Shortnose_Sturgeon.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  },
+  {
+    "number": "94",
+    "file": "Flier.webp",
+    "removed": 0,
+    "fragments": [],
+    "review": "inspect for touching neighboring fish and missing anatomy"
+  }
+]
