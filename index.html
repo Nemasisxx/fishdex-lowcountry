@@ -177,6 +177,11 @@
 }
 @media(prefers-reduced-motion:reduce){.hotspot-menu-items>.hotspot-bubble,.hotspot-menu-symbol{transition:none!important}}
 </style><style>
+/* Keep expanded map tools clickable above Leaflet controls and layers. */
+.hotspot-stage>.hotspot-bubbles{z-index:10000!important;pointer-events:auto!important}
+.hotspot-bubbles.is-open .hotspot-menu-items{pointer-events:auto!important}
+.hotspot-bubbles.is-open .hotspot-menu-items>.hotspot-bubble{pointer-events:auto!important;z-index:10001}
+.hotspot-stage>.hotspot-floating-panel:not([hidden]){z-index:10002!important;pointer-events:auto!important}
 /* Bottom-center map dock: tools fan horizontally along the lower edge. */
 .hotspot-stage>.hotspot-bubbles{left:50%!important;right:auto!important;top:auto!important;bottom:14px!important;transform:translateX(-50%);width:max-content;max-width:calc(100% - 20px);overflow:visible!important}
 .hotspot-menu-toggle{margin:auto;width:116px;height:60px}
