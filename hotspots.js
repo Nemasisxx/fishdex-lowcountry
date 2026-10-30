@@ -424,6 +424,7 @@ function init(){
  });
  setupTidePin();
  setupPersonalLocation();
+ setupFishingIntelligence();
  document.getElementById('hotspot-add-personal').addEventListener('click',addPersonal);
  document.getElementById('hotspot-show-personal').addEventListener('click',e=>{showPersonal=!showPersonal;e.target.textContent=showPersonal?'Hide my spots':'Show my spots';redrawPersonal()});
  redrawPersonal();loadConditions();
@@ -523,5 +524,99 @@ function setupTidePin(){
   tidePinMarker.bindPopup('📍 Tide prediction location').openPopup();
   showPinnedTides(lat,lng);
  });
+}
+
+let fishdexOysterLayer=null,fishdexOysterTimer=null,fishdexOysterKey='',fishdexWeatherTimer=null;
+const fishdexCatchKey='fishdex_private_catches_v1';
+function fishdexStatus(message){const el=document.getElementById('fishdex-field-status');if(el)el.textContent=message}
+function fishdexSavedCatches(){try{const v=JSON.parse(localStorage.getItem(fishdexCatchKey)||'[]');return Array.isArray(v)?v:[]}catch{return []}}
+function fishdexRenderCatches(){
+ const el=document.getElementById('fishdex-catch-history');if(!el)return;
+ el.replaceChildren();const catches=fishdexSavedCatches();
+ const title=document.createElement('strong');title.textContent='Private catch log ('+catches.length+')';el.append(title);
+ for(const c of catches.slice(-5).reverse()){
+  const row=document.createElement('div');row.style.margin='6px 0';
+  row.textContent=c.species+' · '+c.date+' · '+c.lat.toFixed(4)+', '+c.lng.toFixed(4)+(c.bait?' · '+c.bait:'');
+  const del=document.createElement('button');del.type='button';del.textContent='Delete';del.style.marginLeft='8px';
+  del.addEventListener('click',()=>{localStorage.setItem(fishdexCatchKey,JSON.stringify(fishdexSavedCatches().filter(x=>x.id!==c.id)));fishdexRenderCatches()});
+  row.append(del);el.append(row);
+ }
+}
+function fishdexLogCatch(latlng){
+ const species=prompt('Catch species (Cancel to stop):');if(!species||!species.trim())return;
+ const length=prompt('Fish length in inches (optional):')||'';
+ const bait=prompt('Bait or lure (optional):')||'';
+ const notes=prompt('Catch notes (optional):')||'';
+ const catches=fishdexSavedCatches();
+ catches.push({id:Date.now()+Math.random(),date:new Date().toLocaleString(),species:species.trim().slice(0,90),length:length.slice(0,30),bait:bait.slice(0,100),notes:notes.slice(0,1000),lat:+latlng.lat.toFixed(6),lng:+latlng.lng.toFixed(6)});
+ try{localStorage.setItem(fishdexCatchKey,JSON.stringify(catches));fishdexStatus('Catch saved privately on this device.');fishdexRenderCatches()}catch{fishdexStatus('Could not save catch; device storage may be full.')}
+}
+async function fishdexLookupDepth(latlng){
+ fishdexStatus('Checking NOAA chart features near this point…');
+ try{
+  const bounds=map.getBounds(),bbox=[bounds.getWest(),bounds.getSouth(),bounds.getEast(),bounds.getNorth()].join(',');
+  const params=new URLSearchParams({f:'json',geometry:JSON.stringify({x:latlng.lng,y:latlng.lat,spatialReference:{wkid:4326}}),geometryType:'esriGeometryPoint',sr:'4326',layers:'all',tolerance:'6',mapExtent:bbox,imageDisplay:map.getSize().x+','+map.getSize().y+',96',returnGeometry:'false'});
+  const response=await fetch('https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/NOAACharts/MapServer/identify?'+params,{signal:AbortSignal.timeout(10000)});
+  if(!response.ok)throw Error('Chart service unavailable');
+  const data=await response.json();
+  const hits=(data.results||[]).filter(x=>/sound|depth|bathym/i.test(x.layerName||''));
+  const depth=hits.find(x=>Object.entries(x.attributes||{}).some(([k,v])=>/depth|sound/i.test(k)&&v!==null&&v!==''))||hits[0];
+  if(!depth){fishdexStatus('No verified depth sounding at this point. NOAA chart coverage may not include this creek.');return}
+  const values=Object.entries(depth.attributes||{}).filter(([k,v])=>/depth|sound/i.test(k)&&v!==null&&v!=='').slice(0,3).map(([k,v])=>k+': '+v).join(' · ');
+  fishdexStatus('NOAA chart feature: '+depth.layerName+(values?' · '+values:' (no numeric depth returned)')+'. Check source units and chart datum; not for navigation.');
+ }catch(e){fishdexStatus('Depth lookup unavailable here. No depth estimate was invented.')}
+}
+async function fishdexLoadOysters(){
+ if(!document.getElementById('fishdex-oysters-enabled')?.checked)return;
+ if(!fishdexOysterLayer)fishdexOysterLayer=L.layerGroup().addTo(map);
+ if(map.getZoom()<11){fishdexStatus('Zoom to level 11 or closer to load mapped oyster reefs.');return}
+ const b=map.getBounds();if((b.getNorth()-b.getSouth())*(b.getEast()-b.getWest())>.15)return;
+ const key=[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()].map(v=>v.toFixed(2)).join(',');
+ if(key===fishdexOysterKey)return;fishdexOysterKey=key;
+ const box=[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()].join(',');
+ const query='[out:json][timeout:15];(way["reef"="oyster"]('+box+');way["natural"="reef"]('+box+');way["seamark:type"="oyster_bed"]('+box+'););out geom;';
+ try{
+  const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),11000);
+  let response;try{response=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',body:new URLSearchParams({data:query}),signal:controller.signal})}finally{clearTimeout(timer)}
+  if(!response.ok)throw Error('Map source unavailable');
+  const data=await response.json();fishdexOysterLayer.clearLayers();
+  let count=0;
+  for(const w of (data.elements||[]).slice(0,150)){
+   if(!w.geometry||w.geometry.length<2)continue;
+   const pts=w.geometry.map(p=>[p.lat,p.lon]);
+   const closed=pts.length>2&&pts[0][0]===pts[pts.length-1][0]&&pts[0][1]===pts[pts.length-1][1];
+   const layer=closed?L.polygon(pts,{color:'#ffb74d',weight:2,fillOpacity:.20}):L.polyline(pts,{color:'#ffb74d',weight:3});
+   layer.bindPopup('Mapped reef / possible oyster habitat (OpenStreetMap). Not field verified.');layer.addTo(fishdexOysterLayer);count++;
+  }
+  fishdexStatus(count+' mapped reef features found in view. Orange features are community mapped, not verified oyster beds.');
+ }catch(e){fishdexOysterKey='';fishdexStatus('Oyster mapping unavailable right now.')}
+}
+async function fishdexLoadWeather(){
+ if(!document.getElementById('fishdex-weather-enabled')?.checked)return;
+ const c=map.getCenter(),el=document.getElementById('fishdex-weather-info');if(!el)return;
+ el.hidden=false;el.textContent='Loading current wind and weather…';
+ try{
+  const params=new URLSearchParams({latitude:c.lat.toFixed(4),longitude:c.lng.toFixed(4),current:'temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,weather_code',wind_speed_unit:'mph',temperature_unit:'fahrenheit',timezone:'auto'});
+  const response=await fetch('https://api.open-meteo.com/v1/forecast?'+params,{signal:AbortSignal.timeout(10000)});
+  if(!response.ok)throw Error('Weather service unavailable');
+  const data=await response.json(),w=data.current;if(!w)throw Error('Missing conditions');
+  el.textContent='Near map center · '+w.temperature_2m+'°F · Wind '+w.wind_speed_10m+' mph from '+w.wind_direction_10m+'° · Gusts '+w.wind_gusts_10m+' mph · Rain '+w.precipitation+' mm. Forecast/model data; check marine advisories before boating.';
+ }catch(e){el.textContent='Wind and weather currently unavailable.'}
+}
+function setupFishingIntelligence(){
+ const get=id=>document.getElementById(id);
+ const depth=get('fishdex-depth-enabled'),catchToggle=get('fishdex-catch-enabled'),oysters=get('fishdex-oysters-enabled'),weather=get('fishdex-weather-enabled');
+ if(!depth||!catchToggle||!oysters||!weather)return;
+ fishdexRenderCatches();
+ depth.addEventListener('change',()=>{if(depth.checked){catchToggle.checked=false;fishdexStatus('Tap water on the map to query NOAA chart features.')}})
+ catchToggle.addEventListener('change',()=>{if(catchToggle.checked){depth.checked=false;fishdexStatus('Tap a map location to record a private catch.')}})
+ map.on('click',e=>{
+  if(personalPinArmed||tidePinArmed)return;
+  if(catchToggle.checked)fishdexLogCatch(e.latlng);
+  else if(depth.checked)fishdexLookupDepth(e.latlng);
+ });
+ oysters.addEventListener('change',()=>{if(!oysters.checked){fishdexOysterLayer?.clearLayers();fishdexOysterKey=''}else fishdexLoadOysters()});
+ weather.addEventListener('change',()=>{get('fishdex-weather-info').hidden=!weather.checked;if(weather.checked)fishdexLoadWeather()});
+ map.on('moveend',()=>{clearTimeout(fishdexOysterTimer);fishdexOysterTimer=setTimeout(fishdexLoadOysters,650);clearTimeout(fishdexWeatherTimer);fishdexWeatherTimer=setTimeout(fishdexLoadWeather,900)});
 }
 })();
