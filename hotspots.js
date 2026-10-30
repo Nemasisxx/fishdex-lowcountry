@@ -168,13 +168,17 @@ function draw(){
   const route='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(s.name+', '+s.area+', South Carolina');
   marker.bindPopup('<strong>'+esc(s.name)+'</strong><p>'+esc(s.note)+'</p><p><small>Possible habitat: '+esc(s.species.join(', '))+'</small></p><a target="_blank" rel="noopener noreferrer" href="'+route+'">Directions</a>');
   markers.push(marker);
-  const card=document.createElement('div');card.className='feature-card';
-  const heading=document.createElement('h3');heading.textContent=s.name;
+  const item=document.createElement('details');item.className='hotspot-accordion-item';
+  const heading=document.createElement('summary');heading.textContent=s.name;
+  const body=document.createElement('div');body.className='hotspot-accordion-body';
   const info=document.createElement('p');info.textContent=s.area+' · '+({pier:'Fishing pier',shore:'Shore access',launch:'Watercraft launch'}[s.type]);
   const note=document.createElement('p');note.textContent=s.note;
-  const match=document.createElement('p');match.textContent=species==='all'?'Potential: '+s.species.slice(0,3).join(', ')+(s.species.length>3?' + more':''):'Potential '+species+' habitat';
-  const focus=document.createElement('button');focus.type='button';focus.textContent='Show on map';focus.onclick=()=>{map.setView([s.lat,s.lng],14);marker.openPopup();document.getElementById('hotspot-map').scrollIntoView({behavior:'smooth',block:'center'})};
-  card.append(heading,info,match,focus);card.title=s.note;list.append(card);
+  const match=document.createElement('p');match.textContent=species==='all'?'Potential habitat species: '+s.species.join(', '):'Potential '+species+' habitat (not a verified catch)';
+  const focus=document.createElement('button');focus.type='button';focus.textContent='Show on map';
+  focus.onclick=()=>{map.setView([s.lat,s.lng],14);marker.openPopup();document.getElementById('hotspot-map').scrollIntoView({behavior:'smooth',block:'center'})};
+  body.append(info,note,match,focus);item.append(heading,body);list.append(item);
+  item.addEventListener('toggle',()=>{if(item.open){list.querySelectorAll('details.hotspot-accordion-item').forEach(other=>{if(other!==item)other.open=false})}});
+
  }
  document.getElementById('hotspot-count').textContent=shown.length+' of '+spots.length+' access points';
  if(!shown.length){const p=document.createElement('p');p.textContent='No matching access points in this initial dataset. This does not mean the species is absent from the Lowcountry.';list.append(p)}
