@@ -122,6 +122,10 @@
   const stage=document.querySelector('.hotspot-stage');
   if(!stage||stage.dataset.menuReady)return;
   stage.dataset.menuReady='1';
+  const menu=stage.querySelector('.hotspot-bubbles'),toggle=document.getElementById('hotspot-menu-toggle'),items=document.getElementById('hotspot-menu-items');
+  const setMenu=open=>{menu.classList.toggle('is-open',open);toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Close map tools':'Open map tools');items.setAttribute('aria-hidden',String(!open));items.inert=!open};
+  setMenu(false);
+  toggle.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setMenu(!menu.classList.contains('is-open'))});
   const buttons=Array.from(stage.querySelectorAll('button[data-hotspot-panel]'));
   const panels=Array.from(stage.querySelectorAll('.hotspot-floating-panel'));
   function close(){panels.forEach(p=>p.hidden=true);buttons.forEach(b=>b.setAttribute('aria-expanded','false'))}
@@ -134,7 +138,8 @@
    if(opening){panel.hidden=false;button.setAttribute('aria-expanded','true')}
   }));
   stage.querySelectorAll('.hotspot-close').forEach(button=>button.addEventListener('click',function(e){e.preventDefault();close()}));
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){close();setMenu(false)}});
+  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&!e.target.closest('.hotspot-floating-panel'))setMenu(false)});
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 })();
