@@ -176,4 +176,39 @@
  .hotspot-stage>.hotspot-floating-panel{left:8px;right:8px;top:385px;width:auto;max-height:calc(100% - 395px)}
 }
 @media(prefers-reduced-motion:reduce){.hotspot-menu-items>.hotspot-bubble,.hotspot-menu-symbol{transition:none!important}}
+</style><style>
+/* Bottom-center map dock: tools fan horizontally along the lower edge. */
+.hotspot-stage>.hotspot-bubbles{left:50%!important;right:auto!important;top:auto!important;bottom:14px!important;transform:translateX(-50%);width:max-content;max-width:calc(100% - 20px);overflow:visible!important}
+.hotspot-menu-toggle{margin:auto;width:116px;height:60px}
+.hotspot-menu-items{position:absolute;left:50%;top:auto;bottom:0;width:0;height:60px;overflow:visible}
+.hotspot-menu-items>.hotspot-bubble{position:absolute;left:0;top:auto;bottom:7px;min-width:0;padding:9px 11px;font-size:12px;gap:5px;transform:translate(-50%,0) scale(.65)}
+.hotspot-bubbles.is-open .hotspot-menu-items>.hotspot-bubble{transform:translate(calc(-50% + var(--dock-x)),0) scale(1)}
+.hotspot-menu-items>.hotspot-bubble:nth-child(1){--dock-x:-350px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(2){--dock-x:-245px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(3){--dock-x:-140px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(4){--dock-x:140px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(5){--dock-x:245px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(6){--dock-x:350px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(7){--dock-x:455px}
+.hotspot-stage>.hotspot-floating-panel{left:50%!important;right:auto!important;top:auto!important;bottom:88px!important;transform:translateX(-50%);width:min(460px,calc(100% - 22px))!important;max-height:calc(100% - 112px)!important}
+@media(max-width:850px){
+ .hotspot-stage>.hotspot-bubbles{bottom:9px!important}
+ .hotspot-menu-toggle{width:102px;height:54px}
+ .hotspot-menu-items{height:54px}
+ .hotspot-menu-items>.hotspot-bubble{font-size:11px;padding:8px 9px;bottom:5px}
+ .hotspot-bubbles.is-open .hotspot-menu-items>.hotspot-bubble{transform:translate(calc(-50% + var(--dock-x)),var(--dock-y)) scale(1)}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(1){--dock-x:-105px;--dock-y:-108px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(2){--dock-x:0px;--dock-y:-108px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(3){--dock-x:105px;--dock-y:-108px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(4){--dock-x:-155px;--dock-y:-55px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(5){--dock-x:-55px;--dock-y:-55px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(6){--dock-x:55px;--dock-y:-55px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(7){--dock-x:155px;--dock-y:-55px}
+ .hotspot-stage>.hotspot-floating-panel{bottom:180px!important;max-height:calc(100% - 195px)!important}
+}
+@media(max-width:390px){
+ .hotspot-menu-items>.hotspot-bubble{font-size:10px;padding:7px 7px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(4){--dock-x:-139px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(7){--dock-x:139px}
+}
 </style><script src="hotspots.js"></script><script src="species.js"></script><script src="fish-art.js"></script><script src="app.js"></script><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script><script type="module" src="tank3d.js"></script></body></html>
