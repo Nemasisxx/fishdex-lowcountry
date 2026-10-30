@@ -32,9 +32,17 @@ const FishDexArt=(()=>{
  function pump(){while(running<4&&queue.length){const job=queue.shift();running++;(async()=>{try{let found=cache[job.s.id];if(found===undefined){found=await commons(job.s);cache[job.s.id]=found||null;save()}if(found?.url)job.apply(found)}catch{}finally{running--;pump()}})()}}
  // Verified, species-named images will be added as new batches arrive.
  function attach(s,img){
-  img.src=fallback(s);
-  img.dataset.imageType='illustration';
-  img.title='Temporary illustration · awaiting verified species image';
+  const filename=String(s.name).replace(/ \(.*?\)/g,'').replace(/ /g,'_')+'.webp';
+  const src='images/'+encodeURIComponent(filename);
+  img.dataset.imageType='species-webp';
+  img.title=s.name;
+  img.onerror=()=>{
+    img.onerror=null;
+    img.src=fallback(s);
+    img.dataset.imageType='illustration';
+    img.title='Temporary illustration · species image unavailable';
+  };
+  img.src=src;
  }
  return {attach,fallback};
 })();
