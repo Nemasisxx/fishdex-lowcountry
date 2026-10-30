@@ -85,7 +85,24 @@ const spots=[
  ['Garris Landing',32.939817,-79.657506,'launch','Awendaw','estuary','Intracoastal Waterway access; verify refuge and launch rules.'],
  ['Buck Hall Landing',33.038489,-79.560997,'launch','McClellanville','estuary','Intracoastal Waterway access.'],
  ['Robert E. Ashley Landing',33.080797,-79.459699,'launch','McClellanville','creek','Jeremy Creek watercraft access.']
-].map(([name,lat,lng,type,area,habitat,note])=>({name,lat,lng,type,area,habitat,note,profile:profileByName[name]||'tidalRiver',species:S[profileByName[name]||'tidalRiver']}));
+ ['Huntington Beach State Park',33.506,-79.063,'shore','Murrells Inlet / Georgetown County','surf','Public state-park oceanfront; approximate park-area pin, not a designated fishing spot. Check park and fishing rules.'],
+ ['Pawleys Island Public Beach',33.428,-79.119,'shore','Pawleys Island','surf','Approximate public beach vicinity; confirm public access, parking and surf-fishing rules.'],
+ ['Georgetown Harbor Waterfront',33.366,-79.282,'shore','Georgetown','estuary','Approximate waterfront vicinity on the Sampit River; check where fishing is permitted.'],
+ ['South Island Ferry Landing Area',33.233,-79.214,'launch','Georgetown / Winyah Bay','estuary','Approximate area reference only; verify public launch access before visiting.'],
+ ['Hobcaw Barony / Winyah Bay Shore',33.332,-79.212,'shore','Georgetown','estuary','Geographic reference only; much of Hobcaw Barony is restricted/private. Do not assume fishing access.'],
+ ['Santee Coastal Reserve Vicinity',33.164,-79.337,'shore','South Santee','estuary','Area reference; reserve access, closures and fishing restrictions must be checked.'],
+ ['Cape Romain / Bulls Bay Vicinity',33.006,-79.534,'shore','Cape Romain','estuary','Water-area reference; protected refuge, seasonal closures and boat access restrictions apply.'],
+ ['Edisto Beach State Park',32.505,-80.298,'shore','Edisto Beach','surf','Approximate state-park beach vicinity; check park access and surf fishing regulations.'],
+ ['Hunting Island State Park',32.360,-80.455,'shore','Beaufort / Hunting Island','surf','Approximate oceanfront park vicinity; check current beach access and fishing rules.'],
+ ['Port Royal Sands Beach',32.375,-80.690,'shore','Port Royal','estuary','Approximate Sands Beach public waterfront vicinity; verify permitted fishing areas.'],
+ ['Henry C. Chambers Waterfront Park',32.430,-80.669,'shore','Beaufort','estuary','Public Beaufort River waterfront; check posted fishing restrictions.'],
+ ['Broad River Fishing Pier',32.409,-80.777,'pier','Beaufort / Broad River','estuary','Approximate pier-area reference; verify current access, parking and fishing rules.'],
+ ['Coligny Beach Park',32.144,-80.750,'shore','Hilton Head Island','surf','Public beach access; observe beach fishing rules and seasonal restrictions.'],
+ ['Fish Haul Beach Park',32.242,-80.684,'shore','Hilton Head Island','estuary','Approximate public park vicinity on Port Royal Sound; check park rules and tides.'],
+ ['Daufuskie Island Public Beach Vicinity',32.106,-80.855,'shore','Daufuskie Island','surf','Approximate island beach reference; ferry/boat access and public shoreline rights must be verified.'],
+ ['Lake Moultrie / Bonneau Beach Vicinity',33.320,-79.960,'shore','Berkeley County','freshwater','Approximate lake shoreline reference; verify public access and fishing regulations.'],
+ ['Lake Marion / Santee State Park',33.521,-80.499,'shore','Santee / Lake Marion','freshwater','Approximate state-park lake access vicinity; check park rules and fishing access.'],
+].map(([name,lat,lng,type,area,habitat,note])=>({name,lat,lng,type,area,habitat,note,profile:profileByName[name]||(habitat==='freshwater'?'freshwater':habitat==='surf'?'oceanSurf':habitat==='creek'?'marshCreek':'tidalRiver'),species:S[profileByName[name]||(habitat==='freshwater'?'freshwater':habitat==='surf'?'oceanSurf':habitat==='creek'?'marshCreek':'tidalRiver')]}));
 const TACKLE={
  'Red Drum':['Live or cut mullet, shrimp, paddle-tail soft plastics','Medium spinning tackle, 15–30 lb braid, fluorocarbon leader','Work marsh edges, oyster points and creek mouths on moving water.'],
  'Spotted Seatrout':['Paddle-tail swimbaits, suspending twitchbaits, live shrimp','Light/medium spinning setup with fluorocarbon leader','Target current seams and grass edges; retrieve steadily.'],
@@ -223,7 +240,7 @@ function updateOpportunityZones(){
  const toggle=document.getElementById('hotspot-activity-toggle'),status=document.getElementById('hotspot-activity-status');
  const mode=document.getElementById('hotspot-layer-mode')?.value||'both';
  if(!toggle?.checked||mode==='access'||mode==='clear'){status.textContent='Bite zones hidden. Choose Bite Zones only or Both in Filters to display them.';return}
- if(map.getZoom()<(mode==='hotspots'?11:13)){status.textContent='Zoom closer near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
+ if(map.getZoom()<(mode==='hotspots'?11:13)){status.textContent='Zoom closer anywhere in the Georgetown-to-Daufuskie Lowcountry to view mapped water areas.';return}
  const bounds=map.getBounds(),species=document.getElementById('hotspot-species').value;
  let count=0;
  for(const way of habitatWays){
@@ -247,8 +264,8 @@ async function loadHabitatWays(){
  if(!map||map.getZoom()<((document.getElementById('hotspot-layer-mode')?.value==='hotspots')?11:13)||!document.getElementById('hotspot-activity-toggle')?.checked)return;
  const center=map.getCenter();
  // Initial study region: Charleston Harbor, Wando River and Shem Creek.
- if(center.lat<32.73||center.lat>32.94||center.lng< -80.02||center.lng> -79.73){habitatWays=[];habitatKey='';updateOpportunityZones();return}
- const b=map.getBounds(),south=Math.max(32.73,b.getSouth()),north=Math.min(32.94,b.getNorth()),west=Math.max(-80.02,b.getWest()),east=Math.min(-79.73,b.getEast());
+ if(center.lat<32.05||center.lat>33.62||center.lng< -80.95||center.lng> -78.95){habitatWays=[];habitatKey='';updateOpportunityZones();return}
+ const b=map.getBounds(),south=Math.max(32.05,b.getSouth()),north=Math.min(33.62,b.getNorth()),west=Math.max(-80.95,b.getWest()),east=Math.min(-78.95,b.getEast());
  if(north<=south||east<=west)return;
  const key=[south,north,west,east].map(n=>n.toFixed(2)).join(',');
  if(key===habitatKey)return;
@@ -333,7 +350,7 @@ function init(){
   speciesSelect.replaceChildren(new Option('All species','all'));
   for(const fish of species){speciesSelect.add(new Option(fish.name,fish.name))}
  }
- initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.77,-79.92],10);
+ initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.79,-79.95],8);
  map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
  document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
@@ -355,7 +372,7 @@ function init(){
  quick.addEventListener('click',()=>{
   layerMode.value=layerMode.value==='hotspots'?'both':'hotspots';
   syncLayers();
-  if(layerMode.value==='hotspots'&&map.getZoom()<11)map.setView([32.7935,-79.8823],12);
+  if(layerMode.value==='hotspots'&&map.getZoom()<11)map.setZoom(11);
  });
  document.getElementById('hotspot-filter').addEventListener('change',draw);
  document.getElementById('hotspot-species').addEventListener('change',draw);
