@@ -30,7 +30,7 @@ const FishDexArt=(()=>{
  }
  let queue=[],running=0;
  function pump(){while(running<4&&queue.length){const job=queue.shift();running++;(async()=>{try{let found=cache[job.s.id];if(found===undefined){found=await commons(job.s);cache[job.s.id]=found||null;save()}if(found?.url)job.apply(found)}catch{}finally{running--;pump()}})()}}
- const matchedAtlasIDs=new Set([1,2,3,4,5,6,7,8,15,16,17,18,19,20,21,24,26,27,30,34,35,39,40,42,43,46,48,51,52,58,61,72,74,75,78,79,80,81,82,83,85,86,87,88,89,90,91,92,93,94,95,96,98]);
+ const matchedAtlasIDs=new Set([1,2,3,4,5,6,7,8,9,10,15,16,17,18,19,20,21,23,24,26,27,30,31,32,34,35,38,39,40,42,43,46,48,51,52,53,54,55,56,57,58,59,61,62,72,74,75,76,77,78,79,80,81,82,83,85,86,87,88,89,90,91,92,93,94,95,96,98]);
  function attach(s,img){
   if(matchedAtlasIDs.has(s.id)){
    img.src='images/'+String(s.id).padStart(3,'0')+'.webp';
