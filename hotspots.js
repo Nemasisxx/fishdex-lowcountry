@@ -53,7 +53,8 @@ const spots=[
  ['Buck Hall Landing',33.038489,-79.560997,'launch','McClellanville','estuary','Intracoastal Waterway access.'],
  ['Robert E. Ashley Landing',33.080797,-79.459699,'launch','McClellanville','creek','Jeremy Creek watercraft access.']
 ].map(([name,lat,lng,type,area,habitat,note])=>({name,lat,lng,type,area,habitat,note,species:S[habitat]}));
-let map,markers=[],initialized=false;
+let map,markers=[],initialized=false,resizeObserver=null;
+function refreshMap(){if(!map)return;requestAnimationFrame(()=>{map.invalidateSize({pan:false});if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});});}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function draw(){
  const type=document.getElementById('hotspot-filter').value;
@@ -76,11 +77,11 @@ function draw(){
  }
  document.getElementById('hotspot-count').textContent=shown.length+' of '+spots.length+' access points';
  if(!shown.length){const p=document.createElement('p');p.textContent='No matching access points in this initial dataset. This does not mean the species is absent from the Lowcountry.';list.append(p)}
- if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.12));
+ if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});
  else if(markers.length)map.setView(markers[0].getLatLng(),13);
 }
 function init(){
- if(initialized){setTimeout(()=>map.invalidateSize(),50);return}
+ if(initialized){setTimeout(refreshMap,60);setTimeout(refreshMap,350);return}
  if(!window.L){document.getElementById('hotspot-map').textContent='Map could not load. Check your connection and reload.';return}
  const speciesSelect=document.getElementById('hotspot-species');
  // Offer the entire FishDex collection, while only showing locations with supported habitat matches.
@@ -92,11 +93,14 @@ function init(){
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
  document.getElementById('hotspot-filter').addEventListener('change',draw);
  document.getElementById('hotspot-species').addEventListener('change',draw);
- draw();setTimeout(()=>map.invalidateSize(),150);
+ draw();setTimeout(refreshMap,120);setTimeout(refreshMap,500);
+ if('ResizeObserver' in window){resizeObserver=new ResizeObserver(()=>refreshMap());resizeObserver.observe(document.getElementById('hotspot-map'));}
+ window.addEventListener('resize',refreshMap);
 }
 document.addEventListener('DOMContentLoaded',()=>{
  const tab=document.querySelector('[data-tab="hotspots"]');
- if(tab)tab.addEventListener('click',()=>setTimeout(init,100));
+ if(tab)tab.addEventListener('click',()=>{setTimeout(init,100);setTimeout(refreshMap,450)});
+ window.addEventListener('hashchange',()=>{if(location.hash==='#hotspots'){setTimeout(init,100);setTimeout(refreshMap,400)}});
  if(location.hash==='#hotspots')setTimeout(init,250);
 });
 })();
