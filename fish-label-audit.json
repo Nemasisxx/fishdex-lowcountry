@@ -1,0 +1,2697 @@
+{
+  "total": 99,
+  "files_modified": 32,
+  "files_needing_review": 86,
+  "results": [
+    {
+      "file": "American_Eel.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "American_Shad.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "4g",
+          "confidence": 76,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u201cdi",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "i,",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Wz,",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Fe)",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ty",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 85,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Atlantic_Bonito.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Uz,",
+          "confidence": 68,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ae",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mbit,",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Atlantic_Croaker.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Le",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "7,",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u201cZa",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Atlantic_Sharpnose_Shark.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "4",
+          "confidence": 80,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Atlantic_Spadefish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "4",
+          "confidence": 70,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "(4",
+          "confidence": 91,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Atlantic_Sturgeon.webp",
+      "removed": [
+        {
+          "text": "O86.",
+          "confidence": 68
+        },
+        {
+          "text": "Sturasan",
+          "confidence": 50
+        },
+        {
+          "text": "Atlantic",
+          "confidence": 84
+        },
+        {
+          "text": "Sturaeon",
+          "confidence": 72
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "NG",
+          "confidence": 87,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ae",
+          "confidence": 78,
+          "reason": "not safely isolated"
+        }
+      ]
+    },
+    {
+      "file": "Black_Crappie.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "SS",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Black_Drum.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ae",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "sm",
+          "confidence": 62,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SZ",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ZZ",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "GZ",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Black_Sea_Bass.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "lf",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "LE",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "WA",
+          "confidence": 65,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Blackfin_Tuna.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "4",
+          "confidence": 62,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "4.",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Blacktip_Shark.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Blue_Catfish.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Blue_Marlin.webp",
+      "removed": [
+        {
+          "text": "O88.",
+          "confidence": 66
+        },
+        {
+          "text": "Marlin",
+          "confidence": 88
+        },
+        {
+          "text": "Mi",
+          "confidence": 57
+        },
+        {
+          "text": "Blue",
+          "confidence": 87
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "2)",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "If.",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mi.",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Je",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Blueback_Herring.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "2",
+          "confidence": 68,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u2014\u2014",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "LS",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Bluefish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "fa",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "big",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Bluegill.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Ae",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "/,",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "EZ",
+          "confidence": 67,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "aa",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Bonnethead_Shark.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Bowfin.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "neg",
+          "confidence": 59,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Brown_Bullhead.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Bull_Shark.webp",
+      "removed": [
+        {
+          "text": "4",
+          "confidence": 60
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "bi",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ro",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Chain_Pickerel.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "fr",
+          "confidence": 68,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "=<",
+          "confidence": 63,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "<=",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ss",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Channel_Catfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "od",
+          "confidence": 65,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "7",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Cobia.webp",
+      "removed": [
+        {
+          "text": "Cohia",
+          "confidence": 70
+        },
+        {
+          "text": "N12",
+          "confidence": 59
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "Z|",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\\S",
+          "confidence": 76,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Common_Carp.webp",
+      "removed": [
+        {
+          "text": "067.",
+          "confidence": 63
+        },
+        {
+          "text": "Commen",
+          "confidence": 53
+        },
+        {
+          "text": "Care",
+          "confidence": 68
+        },
+        {
+          "text": "Common",
+          "confidence": 89
+        },
+        {
+          "text": "Carp",
+          "confidence": 96
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "og",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ae",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Zz",
+          "confidence": 70,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "4",
+          "confidence": 95,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Creek_Chubsucker.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "yy",
+          "confidence": 63,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Crevalle_Jack.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "i)",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ww",
+          "confidence": 80,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Lp",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "AEE",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "iP",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Eastern_Mosquitofish.webp",
+      "removed": [
+        {
+          "text": "nas",
+          "confidence": 56
+        }
+      ],
+      "needs_review": []
+    },
+    {
+      "file": "Flathead_Catfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ii,",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ze",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS,",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 80,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Flier.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "<2",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ZA",
+          "confidence": 69,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Vy",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "WS",
+          "confidence": 75,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Florida_Gar.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ea",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Florida_Pompano.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Som",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ai",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "vy",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Gafftopsail_Catfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Yy,",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "iy",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ss",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ih",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Gag_Grouper.webp",
+      "removed": [
+        {
+          "text": "028.",
+          "confidence": 86
+        },
+        {
+          "text": "Gag",
+          "confidence": 80
+        },
+        {
+          "text": "Gr",
+          "confidence": 64
+        },
+        {
+          "text": "Grouper",
+          "confidence": 96
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "sa",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "hae",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "=A",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "me",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "La",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Gag",
+          "confidence": 52,
+          "reason": "not safely isolated"
+        },
+        {
+          "text": "ae",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SEE",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "wth",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "eS",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Gag",
+          "confidence": 95,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Gizzard_Shad.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Vy",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "EN",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ty",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "WWE",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Golden_Shiner.webp",
+      "removed": [
+        {
+          "text": "070,",
+          "confidence": 85
+        },
+        {
+          "text": "Shiner",
+          "confidence": 96
+        },
+        {
+          "text": "070.",
+          "confidence": 95
+        },
+        {
+          "text": "Golden",
+          "confidence": 95
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "SAG",
+          "confidence": 71,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Grass_Carp.webp",
+      "removed": [
+        {
+          "text": "Grass",
+          "confidence": 93
+        },
+        {
+          "text": "Carp",
+          "confidence": 58
+        },
+        {
+          "text": "are",
+          "confidence": 59
+        },
+        {
+          "text": "068.",
+          "confidence": 95
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "8",
+          "confidence": 45,
+          "reason": "not safely isolated"
+        },
+        {
+          "text": "GB",
+          "confidence": 63,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Gray_Snapper.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Gray_Triggerfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ay",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "fy",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SG",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "XN",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "<4",
+          "confidence": 91,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SY",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Great_Barracuda.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Py",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "2",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mh",
+          "confidence": 57,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u20184",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Sd",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ge",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Great_Hammerhead.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Great_White_Shark.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Zz",
+          "confidence": 69,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Greater_Amberjack.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ow",
+          "confidence": 71,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Sy",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "y/",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Green_Sunfish.webp",
+      "removed": [
+        {
+          "text": "Me",
+          "confidence": 65
+        },
+        {
+          "text": "(re",
+          "confidence": 46
+        },
+        {
+          "text": "Graan",
+          "confidence": 75
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "WLLL",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "7",
+          "confidence": 72,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Md",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "LL",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Gulf_Kingfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "eet",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Hardhead_Catfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Ba\"",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Hickory_Shad.webp",
+      "removed": [
+        {
+          "text": "O66.",
+          "confidence": 72
+        },
+        {
+          "text": "Hickery",
+          "confidence": 85
+        },
+        {
+          "text": "066.",
+          "confidence": 96
+        },
+        {
+          "text": "Hickory",
+          "confidence": 96
+        },
+        {
+          "text": "Shad",
+          "confidence": 96
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "in",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Hybrid_Striped_Bass.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ks",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "MG",
+          "confidence": 79,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u2014_",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "King_Mackerel.webp",
+      "removed": [
+        {
+          "text": "4",
+          "confidence": 95
+        },
+        {
+          "text": "MIF",
+          "confidence": 79
+        },
+        {
+          "text": "Mavele",
+          "confidence": 51
+        },
+        {
+          "text": "Kina",
+          "confidence": 84
+        },
+        {
+          "text": "Mackerel",
+          "confidence": 89
+        },
+        {
+          "text": "N17)",
+          "confidence": 45
+        },
+        {
+          "text": "Mackaral",
+          "confidence": 84
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "219,",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "==",
+          "confidence": 65,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ld,",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": ">,",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "15",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Ladyfish.webp",
+      "removed": [
+        {
+          "text": "AMM",
+          "confidence": 47
+        },
+        {
+          "text": "NIN",
+          "confidence": 56
+        },
+        {
+          "text": "advfich",
+          "confidence": 51
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "SS,",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Largemouth_Bass.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "NS",
+          "confidence": 59,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "44",
+          "confidence": 78,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "yi\"",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ww",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Little_Tunny.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "S65),",
+          "confidence": 57,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "PR",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mba",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Longnose_Gar.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Age",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS)",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Mahi-mahi.webp",
+      "removed": [
+        {
+          "text": "030,",
+          "confidence": 67
+        },
+        {
+          "text": "Mahi-maht",
+          "confidence": 73
+        },
+        {
+          "text": "ni-maht",
+          "confidence": 56
+        },
+        {
+          "text": "030.",
+          "confidence": 92
+        },
+        {
+          "text": "Mahi-mahi",
+          "confidence": 92
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "fi",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "sae",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Northern_Kingfish.webp",
+      "removed": [
+        {
+          "text": "3",
+          "confidence": 70
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "LY",
+          "confidence": 71,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Min.",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Moder,",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Northern_Puffer.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "0",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "xX.",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "oe",
+          "confidence": 75,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Oyster_Toadfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Sag",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ah",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SY",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "DI",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "(i?",
+          "confidence": 57,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Sr",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "yes",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Permit.webp",
+      "removed": [
+        {
+          "text": "4",
+          "confidence": 50
+        }
+      ],
+      "needs_review": []
+    },
+    {
+      "file": "Pigfish.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Pinfish.webp",
+      "removed": [
+        {
+          "text": "4",
+          "confidence": 68
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "3",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ip",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Pumpkinseed.webp",
+      "removed": [
+        {
+          "text": "ALA",
+          "confidence": 62
+        },
+        {
+          "text": "AGN",
+          "confidence": 67
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "AM",
+          "confidence": 62,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "OY",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "LZ",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "di",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "al",
+          "confidence": 68,
+          "reason": "not safely isolated"
+        }
+      ]
+    },
+    {
+      "file": "Red_Drum.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "SS",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ine",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Opi",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Red_Snapper.webp",
+      "removed": [
+        {
+          "text": "027.",
+          "confidence": 84
+        },
+        {
+          "text": "Ree",
+          "confidence": 60
+        },
+        {
+          "text": "Snapper",
+          "confidence": 93
+        },
+        {
+          "text": "Red",
+          "confidence": 96
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "WM",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Redbreast_Sunfish.webp",
+      "removed": [
+        {
+          "text": "hraact",
+          "confidence": 57
+        },
+        {
+          "text": "NAT",
+          "confidence": 54
+        },
+        {
+          "text": "Radhraact",
+          "confidence": 74
+        },
+        {
+          "text": "Gunfich",
+          "confidence": 47
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "YE",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "thy",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "te",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Redear_Sunfish.webp",
+      "removed": [
+        {
+          "text": "AMAR",
+          "confidence": 65
+        },
+        {
+          "text": "NAR",
+          "confidence": 68
+        },
+        {
+          "text": "Radaar",
+          "confidence": 68
+        },
+        {
+          "text": "Gunfich",
+          "confidence": 56
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "W114",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u201ciy",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Wb",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ZZ",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ith",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "aye",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Redfin_Pickerel.webp",
+      "removed": [
+        {
+          "text": "aan",
+          "confidence": 78
+        },
+        {
+          "text": "anc",
+          "confidence": 69
+        },
+        {
+          "text": "te",
+          "confidence": 86
+        },
+        {
+          "text": "we",
+          "confidence": 60
+        }
+      ],
+      "needs_review": []
+    },
+    {
+      "file": "Sailfish.webp",
+      "removed": [
+        {
+          "text": "O87.",
+          "confidence": 79
+        },
+        {
+          "text": "Sailfish",
+          "confidence": 90
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "if",
+          "confidence": 57,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "9",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Sandbar_Shark.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Scamp.webp",
+      "removed": [
+        {
+          "text": "029.",
+          "confidence": 91
+        },
+        {
+          "text": "Scam",
+          "confidence": 49
+        },
+        {
+          "text": "Scamp",
+          "confidence": 75
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "Tae",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "<S",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ab",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "So",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "VAAL",
+          "confidence": 62,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ip",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Wd",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "te",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "oy",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Sheepshead.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Cz",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ly,",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "NN",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "WN",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Shortnose_Sturgeon.webp",
+      "removed": [
+        {
+          "text": "090.",
+          "confidence": 55
+        },
+        {
+          "text": "Sih",
+          "confidence": 54
+        },
+        {
+          "text": "090",
+          "confidence": 53
+        },
+        {
+          "text": "Shortnose",
+          "confidence": 68
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "GOS",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "wee",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u201cY=",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "hi",
+          "confidence": 62,
+          "reason": "not safely isolated"
+        }
+      ]
+    },
+    {
+      "file": "Silver_Perch.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ii",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ac",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "QS",
+          "confidence": 69,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "IZ",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Southern_Flounder.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "TR,",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "(oe",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ie",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "es",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "WS",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mf",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Vs",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Uf",
+          "confidence": 69,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ib",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SE",
+          "confidence": 57,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "13",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ay",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ni",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Southern_Kingfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "8",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Spanish_Mackerel.webp",
+      "removed": [
+        {
+          "text": "Snamieh",
+          "confidence": 54
+        },
+        {
+          "text": "Marlarall",
+          "confidence": 63
+        },
+        {
+          "text": "Smamieh",
+          "confidence": 70
+        },
+        {
+          "text": "Ms",
+          "confidence": 66
+        },
+        {
+          "text": "1A",
+          "confidence": 64
+        },
+        {
+          "text": "Snanich",
+          "confidence": 72
+        },
+        {
+          "text": "N16",
+          "confidence": 47
+        },
+        {
+          "text": "Gnanich",
+          "confidence": 45
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "Qe",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "LY)",
+          "confidence": 92,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mae",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Spinner_Shark.webp",
+      "removed": [],
+      "needs_review": []
+    },
+    {
+      "file": "Spot.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "SEY,",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ts",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Se",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "<A",
+          "confidence": 70,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ZA",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Spotted_Seatrout.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "rates!",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SG",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "NS",
+          "confidence": 80,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Spotted_Sucker.webp",
+      "removed": [
+        {
+          "text": "Sucker",
+          "confidence": 96
+        },
+        {
+          "text": "069.",
+          "confidence": 96
+        },
+        {
+          "text": "Spotted",
+          "confidence": 96
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "4",
+          "confidence": 71,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "RE",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\"te",
+          "confidence": 59,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Spotted_Sunfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "SS",
+          "confidence": 78,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "LA",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "WEE",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "BA",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "a)",
+          "confidence": 68,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Se:",
+          "confidence": 75,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Stingray_Atlantic.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "t<",
+          "confidence": 87,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ge",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Striped_Bass.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "MLL",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "es",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ae",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Wis",
+          "confidence": 59,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ss",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ww",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Striped_Mullet.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Ks",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Summer_Flounder.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "+4",
+          "confidence": 68,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Map",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "So",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mi",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ff",
+          "confidence": 71,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "We",
+          "confidence": 65,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "G2",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ANS",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Tarpon.webp",
+      "removed": [
+        {
+          "text": "19",
+          "confidence": 50
+        },
+        {
+          "text": "Tarnan",
+          "confidence": 74
+        },
+        {
+          "text": "N19",
+          "confidence": 51
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "WV",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SA)",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Wy",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "NS",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ge",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Threadfin_Shad.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "2",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "4",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "OA",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "WZ",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Tiger_Shark.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "\u201ca",
+          "confidence": 57,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ij",
+          "confidence": 65,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "/|",
+          "confidence": 64,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\u20184",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Pe",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ow",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Toadfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "(Ee",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ge",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "AP",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "oe",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Sad",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Tripletail.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "VE:",
+          "confidence": 61,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "BES",
+          "confidence": 59,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "wi",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Liye",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SE",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ig",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "(Ze",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Vermilion_Snapper.webp",
+      "removed": [
+        {
+          "text": "4",
+          "confidence": 93
+        },
+        {
+          "text": "026.",
+          "confidence": 74
+        },
+        {
+          "text": "Snapper",
+          "confidence": 78
+        },
+        {
+          "text": "Vermilion",
+          "confidence": 96
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "Ly",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "<7",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "goo",
+          "confidence": 55,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ME",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ay",
+          "confidence": 67,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ue",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 52,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Mi",
+          "confidence": 59,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Uti",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Wahoo.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "ind",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "re",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Warmouth.webp",
+      "removed": [
+        {
+          "text": "ith",
+          "confidence": 55
+        },
+        {
+          "text": "42",
+          "confidence": 55
+        },
+        {
+          "text": "Warmanith",
+          "confidence": 62
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "oes",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "4",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ae",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "NS",
+          "confidence": 63,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "An",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SF",
+          "confidence": 66,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Le",
+          "confidence": 58,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "3",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SSS",
+          "confidence": 60,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "4",
+          "confidence": 67,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 73,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Weakfish.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "SS",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "47",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "i,",
+          "confidence": 56,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "@)",
+          "confidence": 63,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "White_Bass.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "Wiis",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ops",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "White_Crappie.webp",
+      "removed": [
+        {
+          "text": "4",
+          "confidence": 61
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "ae",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "13",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "if",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Gee",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SS",
+          "confidence": 49,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "EE",
+          "confidence": 57,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "2",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "TT",
+          "confidence": 50,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "PEs",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ba",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "White_Grunt.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "11117,",
+          "confidence": 54,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ye",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "White_Perch.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "7)",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Ae",
+          "confidence": 53,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "til,",
+          "confidence": 63,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Yellow_Bullhead.webp",
+      "removed": [],
+      "needs_review": [
+        {
+          "text": "BZ",
+          "confidence": 45,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "\\\"",
+          "confidence": 51,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "Si",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "SG",
+          "confidence": 46,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    },
+    {
+      "file": "Yellowfin_Tuna.webp",
+      "removed": [
+        {
+          "text": "O86.",
+          "confidence": 71
+        },
+        {
+          "text": "Tuna",
+          "confidence": 60
+        },
+        {
+          "text": "086",
+          "confidence": 61
+        },
+        {
+          "text": "Yellowfin",
+          "confidence": 87
+        }
+      ],
+      "needs_review": [
+        {
+          "text": "ee",
+          "confidence": 47,
+          "reason": "overlaps main fish silhouette"
+        },
+        {
+          "text": "ta",
+          "confidence": 48,
+          "reason": "overlaps main fish silhouette"
+        }
+      ]
+    }
+  ]
+}
