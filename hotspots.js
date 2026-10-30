@@ -552,19 +552,25 @@ function fishdexLogCatch(latlng){
  try{localStorage.setItem(fishdexCatchKey,JSON.stringify(catches));fishdexStatus('Catch saved privately on this device.');fishdexRenderCatches()}catch{fishdexStatus('Could not save catch; device storage may be full.')}
 }
 async function fishdexLookupDepth(latlng){
- fishdexStatus('Checking NOAA chart features near this point…');
- try{
-  const bounds=map.getBounds(),bbox=[bounds.getWest(),bounds.getSouth(),bounds.getEast(),bounds.getNorth()].join(',');
-  const params=new URLSearchParams({f:'json',geometry:JSON.stringify({x:latlng.lng,y:latlng.lat,spatialReference:{wkid:4326}}),geometryType:'esriGeometryPoint',sr:'4326',layers:'all',tolerance:'6',mapExtent:bbox,imageDisplay:map.getSize().x+','+map.getSize().y+',96',returnGeometry:'false'});
-  const response=await fetch('https://gis.charttools.noaa.gov/arcgis/rest/services/MarineChart_Services/NOAACharts/MapServer/identify?'+params,{signal:AbortSignal.timeout(10000)});
-  if(!response.ok)throw Error('Chart service unavailable');
-  const data=await response.json();
-  const hits=(data.results||[]).filter(x=>/sound|depth|bathym/i.test(x.layerName||''));
-  const depth=hits.find(x=>Object.entries(x.attributes||{}).some(([k,v])=>/depth|sound/i.test(k)&&v!==null&&v!==''))||hits[0];
-  if(!depth){fishdexStatus('No verified depth sounding at this point. NOAA chart coverage may not include this creek.');return}
-  const values=Object.entries(depth.attributes||{}).filter(([k,v])=>/depth|sound/i.test(k)&&v!==null&&v!=='').slice(0,3).map(([k,v])=>k+': '+v).join(' · ');
-  fishdexStatus('NOAA chart feature: '+depth.layerName+(values?' · '+values:' (no numeric depth returned)')+'. Check source units and chart datum; not for navigation.');
- }catch(e){fishdexStatus('Depth lookup unavailable here. No depth estimate was invented.')}
+ fishdexStatus('Searching NOAA electronic chart depth soundings…');
+ const bounds=map.getBounds();
+ const params=new URLSearchParams({f:'json',geometry:JSON.stringify({x:latlng.lng,y:latlng.lat,spatialReference:{wkid:4326}}),geometryType:'esriGeometryPoint',sr:'4326',layers:'all',tolerance:'15',mapExtent:[bounds.getWest(),bounds.getSouth(),bounds.getEast(),bounds.getNorth()].join(','),imageDisplay:map.getSize().x+','+map.getSize().y+',96',returnGeometry:'false'});
+ let available=false;
+ for(const band of ['enc_harbor','enc_approach','enc_coastal']){
+  try{
+   const url='https://encdirect.noaa.gov/arcgis/rest/services/encdirect/'+band+'/MapServer/identify?'+params;
+   const response=await fetch(url,{signal:AbortSignal.timeout(9000)});
+   if(!response.ok)continue;
+   const data=await response.json();if(data.error)continue;available=true;
+   const hits=(data.results||[]).filter(v=>/sounding|depth.contour|depth.area/i.test(v.layerName||''));
+   const match=hits.find(v=>Object.entries(v.attributes||{}).some(([k,value])=>/VALSOU|DRVAL|DEPTH|SOUND/i.test(k)&&value!==null&&value!==''))||hits[0];
+   if(!match)continue;
+   const values=Object.entries(match.attributes||{}).filter(([k,v])=>/VALSOU|DRVAL|DEPTH|SOUND/i.test(k)&&v!==null&&v!=='').slice(0,3).map(([k,v])=>k+': '+v).join(' · ');
+   fishdexStatus('NOAA ENC '+match.layerName+(values?' · '+values:' · No numeric depth in feature')+'. Depth values may be in meters relative to chart datum; not a live water depth or navigation aid.');
+   return;
+  }catch(e){console.warn('FishDex depth '+band,e)}
+ }
+ fishdexStatus(available?'No charted sounding within the selected point tolerance. Try tapping a nearby channel or turning on NOAA nautical charts.':'NOAA depth service could not be reached. Try again later or view NOAA nautical charts; no depth was guessed.');
 }
 async function fishdexLoadOysters(){
  if(!document.getElementById('fishdex-oysters-enabled')?.checked)return;
@@ -578,7 +584,7 @@ async function fishdexLoadOysters(){
  try{
   const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),11000);
   let response;try{response=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',body:new URLSearchParams({data:query}),signal:controller.signal})}finally{clearTimeout(timer)}
-  if(!response.ok)throw Error('Map source unavailable');
+  if(!response||!response.ok)throw Error('Map source unavailable');
   const data=await response.json();fishdexOysterLayer.clearLayers();
   let count=0;
   for(const w of (data.elements||[]).slice(0,150)){
@@ -589,7 +595,7 @@ async function fishdexLoadOysters(){
    layer.bindPopup('Mapped reef / possible oyster habitat (OpenStreetMap). Not field verified.');layer.addTo(fishdexOysterLayer);count++;
   }
   fishdexStatus(count+' mapped reef features found in view. Orange features are community mapped, not verified oyster beds.');
- }catch(e){fishdexOysterKey='';fishdexStatus('Oyster mapping unavailable right now.')}
+ }catch(e){fishdexOysterKey='';fishdexStatus('Community reef data could not load. SCDNR maintains an official South Carolina intertidal oyster reef map: https://shellfish-applications-scdnr.hub.arcgis.com/ .')}
 }
 async function fishdexLoadWeather(){
  if(!document.getElementById('fishdex-weather-enabled')?.checked)return;
