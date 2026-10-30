@@ -71,17 +71,17 @@ const tankStorageKey='fishdex-tank-top5-v1';
 let tankSelections={};try{tankSelections=JSON.parse(localStorage.getItem(tankStorageKey)||'{}')}catch{}
 function renderTank(){
  const player=active(),logged=savedIds(player),choices=$('#tank-picks'),status=$('#tank-pick-status');
- const selected=(tankSelections[player]||[]).filter(id=>logged.has(id)).slice(0,5);
+ const selected=(tankSelections[player]||[]).filter(id=>species.some(f=>f.id===id)).slice(0,5);
  tankSelections[player]=selected;
  choices.replaceChildren();
- const available=species.filter(s=>logged.has(s.id));
+ const available=species;
  if(!available.length){
   status.textContent='No catch logs yet. Your temporary all-unlocked preview does not count as a logged catch.';
  }else{
-  status.textContent=selected.length+' / 5 selected · Click a fish to add or remove it.';
+  status.textContent=selected.length+' / 5 selected · All 99 fish are available for aquarium preview; only actual catches count toward achievements.';
   available.forEach(f=>{
    const button=document.createElement('button');button.className='tank-choice';
-   const picked=selected.includes(f.id);button.textContent=(picked?'✓ ':'+ ')+f.name;
+   const picked=selected.includes(f.id);button.textContent=(picked?'✓ ':'+ ')+f.name+(logged.has(f.id)?' · Caught':' · Preview');
    button.setAttribute('aria-pressed',String(picked));button.disabled=!picked&&selected.length>=5;
    button.onclick=()=>{
     const next=picked?selected.filter(id=>id!==f.id):[...selected,f.id].slice(0,5);
