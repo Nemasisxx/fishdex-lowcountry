@@ -132,11 +132,46 @@ function redrawPersonal(){
   container.append(h,p,catches,edit,document.createTextNode(' '),del);marker.bindPopup(container);personalMarkers.push(marker);
  });
 }
-function addPersonal(){
- const center=map.getCenter();const name=prompt('Name your private fishing spot (saved on this device only):');if(!name||!name.trim())return;
+let personalPinArmed=false,activeLocationMarker=null,activeLocationCircle=null;
+function savePersonalAt(lat,lng){
+ const name=prompt('Name your private fishing spot (saved on this device only):');if(!name||!name.trim())return;
  const note=prompt('Private notes (optional):')||'';
- personal.push({name:name.trim().slice(0,120),lat:+center.lat.toFixed(6),lng:+center.lng.toFixed(6),note:note.slice(0,2000),catchNotes:''});
+ personal.push({name:name.trim().slice(0,120),lat:+lat.toFixed(6),lng:+lng.toFixed(6),note:note.slice(0,2000),catchNotes:''});
+ showPersonal=true;document.getElementById('hotspot-show-personal').textContent='Hide my spots';
  persistPersonal();redrawPersonal();personalMarkers[personalMarkers.length-1]?.openPopup();
+ const status=document.getElementById('hotspot-personal-status');if(status)status.textContent='Saved your spot at the selected map pin on this device.';
+}
+function addPersonal(){
+ personalPinArmed=!personalPinArmed;
+ const button=document.getElementById('hotspot-add-personal'),status=document.getElementById('hotspot-personal-status');
+ button.textContent=personalPinArmed?'Cancel spot pin':'📍 Pin a new spot';
+ if(personalPinArmed&&typeof tidePinArmed!=='undefined'&&tidePinArmed){tidePinArmed=false;const tideButton=document.getElementById('hotspot-tide-pin');if(tideButton)tideButton.textContent='📍 Pin tide location'}
+ map.getContainer().style.cursor=personalPinArmed?'crosshair':'';
+ if(status)status.textContent=personalPinArmed?'Tap or click the exact spot on the map to save it.':'';
+}
+function setupPersonalLocation(){
+ map.on('click',event=>{
+  if(!personalPinArmed)return;
+  personalPinArmed=false;document.getElementById('hotspot-add-personal').textContent='📍 Pin a new spot';map.getContainer().style.cursor='';
+  savePersonalAt(event.latlng.lat,event.latlng.lng);
+ });
+ document.getElementById('hotspot-my-location')?.addEventListener('click',()=>{
+  const status=document.getElementById('hotspot-location-status');
+  if(!navigator.geolocation){status.textContent='Your browser does not support location access.';return}
+  status.textContent='Requesting your location permission…';
+  navigator.geolocation.getCurrentPosition(position=>{
+   const {latitude,longitude,accuracy}=position.coords;
+   if(activeLocationMarker)activeLocationMarker.remove();
+   if(activeLocationCircle)activeLocationCircle.remove();
+   activeLocationCircle=L.circle([latitude,longitude],{radius:accuracy,color:'#38bdf8',weight:1,fillOpacity:.10,interactive:false}).addTo(map);
+   activeLocationMarker=L.circleMarker([latitude,longitude],{radius:8,color:'#fff',weight:2,fillColor:'#0284c7',fillOpacity:1}).addTo(map);
+   activeLocationMarker.bindPopup('◎ Your approximate current location (accuracy ±'+Math.round(accuracy)+' m)').openPopup();
+   map.setView([latitude,longitude],Math.max(map.getZoom(),14));
+   status.textContent='Current location found (accuracy ±'+Math.round(accuracy)+' m). Location is not saved or shared by FishDex.';
+  },error=>{
+   status.textContent=error.code===1?'Location permission denied. Allow location access in your browser settings.':error.code===2?'Could not determine your location. Check device location services.':'Location request timed out. Try again.';
+  },{enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+ });
 }
 function tackleFor(species){
  const el=document.getElementById('hotspot-tackle');el.replaceChildren();
@@ -358,6 +393,7 @@ function init(){
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
  document.getElementById('hotspot-basemap').addEventListener('change',e=>{if(e.target.value==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map)}else{map.removeLayer(satelliteLayer);streetLayer.addTo(map)}});
  setupTidePin();
+ setupPersonalLocation();
  document.getElementById('hotspot-add-personal').addEventListener('click',addPersonal);
  document.getElementById('hotspot-show-personal').addEventListener('click',e=>{showPersonal=!showPersonal;e.target.textContent=showPersonal?'Hide my spots':'Show my spots';redrawPersonal()});
  redrawPersonal();loadConditions();
@@ -444,6 +480,7 @@ function setupTidePin(){
  const button=document.getElementById('hotspot-tide-pin');if(!button||!map)return;
  button.addEventListener('click',()=>{
   tidePinArmed=!tidePinArmed;
+  if(tidePinArmed&&personalPinArmed){personalPinArmed=false;const spotButton=document.getElementById('hotspot-add-personal');if(spotButton)spotButton.textContent='📍 Pin a new spot'}
   button.textContent=tidePinArmed?'Cancel pin selection':'📍 Pin tide location';
   const output=document.getElementById('hotspot-tide-result');
   if(tidePinArmed&&output)output.textContent='Tap or click the location on the map to place your tide pin.';
