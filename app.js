@@ -1,8 +1,10 @@
 const $=s=>document.querySelector(s),key='fishdex-catches-v1',unlockKey='fishdex-unlocks-v1';
 let catches=[];try{catches=JSON.parse(localStorage.getItem(key)||'[]')}catch{}
 let unlocked={};try{unlocked=JSON.parse(localStorage.getItem(unlockKey)||'{}')}catch{}
+// Temporary visual review mode: all artwork appears discovered without changing saved catches.
+const REVIEW_ALL_VISIBLE=true;
 const active=()=>$('#player').value;
-const discovered=()=>new Set([...(unlocked[active()]||[]),...catches.filter(c=>c.player===active()).map(c=>c.id)]);
+const discovered=()=>REVIEW_ALL_VISIBLE?new Set(species.map(s=>s.id)):new Set([...(unlocked[active()]||[]),...catches.filter(c=>c.player===active()).map(c=>c.id)]);
 function render(){
  const found=discovered(),q=$('#search').value.toLowerCase(),f=$('#filter').value,sort=$('#sort').value;
  const rank={C:0,U:1,R:2,E:3,L:4,M:5};
