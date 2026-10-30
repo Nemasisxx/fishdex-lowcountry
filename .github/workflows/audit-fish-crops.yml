@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/audit-fish-crops.yml'
+      - 'scripts/audit_fish_crops.py'
   workflow_dispatch:
 permissions:
   contents: write
