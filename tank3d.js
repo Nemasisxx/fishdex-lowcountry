@@ -127,7 +127,7 @@ window.previewFreeFishModel=(kind)=>{
   root.add(model);root.position.set(0,0,0);scene.add(root);
   const swimmer={root,bodyGroup:new THREE.Group(),tailPivot:new THREE.Group(),baseY:0,phase:0,speed:.009,direction:1};
   swimmers.push(swimmer);
-  if(gltf.animations.length){previewMixer=new THREE.AnimationMixer(model);previewMixer.clipAction(gltf.animations[0]).play()}
+  if(gltf.animations.length){previewMixer=new THREE.AnimationMixer(model);previewMixer.clipAction(THREE.AnimationUtils.subclip(gltf.animations[0],'idle',0,29,24)).play()}
   const status=document.getElementById('tank-pick-status');if(status)status.textContent='Previewing free CC0 '+kind+' model by Gobkit. This is not a species-accurate FishDex catch.';
  },undefined,err=>{const status=document.getElementById('tank-pick-status');if(status)status.textContent='Free preview could not load; check network or refresh.';console.error(err)});
 };
