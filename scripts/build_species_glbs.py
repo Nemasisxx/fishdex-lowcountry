@@ -45,52 +45,100 @@ def body_mesh(L,H,D,C):
  m.visual.vertex_colors=np.array(colors,dtype=np.uint8)
  return m
 def red_drum_body(L,H,D):
- # Higher-density longitudinal mesh with smooth continuous anatomy and metallic color gradation.
- stations=100;radial=48;vertices=[];colors=[];faces=[]
+ # Red drum silhouette: deep shoulder, rounded blunt snout, narrow caudal peduncle.
+ # +X is head, -X is tail. Smooth 144 x 64 surface with UV scale texture.
+ stations,radial=144,64;vertices=[];uv=[];faces=[]
  for i in range(stations):
-  u=i/(stations-1);x=(-.52+1.05*u)*L
-  # Peduncle at tail; deep shoulders behind head; wedge-shaped snout.
-  if u<.13: profile=.14+.65*u/.13
-  elif u<.38: profile=.79+.21*(u-.13)/.25
-  elif u<.72: profile=1-.25*(u-.38)/.34
-  else: profile=max(.045,.75*(1-(u-.72)/.28)**.72)
+  u=i/(stations-1);x=(-.51+1.04*u)*L
+  profile=np.interp(u,[0,.035,.13,.25,.43,.60,.74,.87,.94,1],
+                    [.12,.15,.35,.72,1,.95,.73,.49,.30,.075])
+  # Fuller cheeks near snout, no sharp triangular nose.
   for j in range(radial):
-   a=2*math.pi*j/radial; y=math.sin(a)*H*.5*profile;z=math.cos(a)*D*.5*profile
-   vertices.append([x,y,z])
-   upper=(math.sin(a)+1)/2
-   # Copper back, pearly silver-gold belly; subtle banding and scales.
-   base=np.array([205,181,138])*(1-upper)+np.array([118,115,91])*upper
-   glimmer=6*math.sin(i*1.9+j*.65)+3*math.sin(i*3.3-j*1.1)
-   base=np.clip(base+glimmer,0,255)
-   colors.append([*base.astype(int),255])
+   a=2*math.pi*j/radial
+   y=math.sin(a)*H*.5*profile
+   z=math.cos(a)*D*.5*profile*(.9+.1*math.cos(math.pi*(u-.46)))
+   vertices.append([x,y,z]);uv.append([u,j/(radial-1)])
  for i in range(stations-1):
-  for j in range(radial):
-   a=i*radial+j;b=i*radial+(j+1)%radial;c=(i+1)*radial+j;d=(i+1)*radial+(j+1)%radial
+  for j in range(radial-1):
+   a=i*radial+j;b=a+1;c=(i+1)*radial+j;d=c+1
    faces.extend([[a,c,b],[b,c,d]])
- m=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
- m.visual.vertex_colors=np.array(colors,dtype=np.uint8)
- return m
+ mesh=trimesh.Trimesh(vertices=vertices,faces=faces,process=False)
+ mesh.visual=trimesh.visual.TextureVisuals(uv=np.asarray(uv),image=red_drum_texture())
+ return mesh
+
+def red_drum_texture():
+ # Procedural painted scales and metallic countershading, using the reference
+ # redfish palette (bronze/copper shoulders, silver sides, pale cream belly).
+ from PIL import Image,ImageDraw,ImageFilter
+ W,H=2048,1024
+ yy,xx=np.mgrid[0:H,0:W].astype(np.float32)
+ theta=yy/H*2*math.pi
+ upper=(np.sin(theta)+1)/2
+ belly=np.clip((.58-upper)*3.1,0,1)
+ copper=np.clip((upper-.25)*1.55,0,1)
+ base=np.empty((H,W,3),dtype=np.float32)
+ base[:]=[202,190,158]
+ base+=copper[:,:,None]*np.array([-69,-64,-58],dtype=np.float32)
+ base+=belly[:,:,None]*np.array([30,35,35],dtype=np.float32)
+ # Reflective scale pockets, staggered rows, with soft rims rather than polka dots.
+ pitchx,pitchy=31,25
+ row=np.floor(yy/pitchy)
+ phase=((xx+(row%2)*pitchx*.5)%pitchx)/pitchx
+ dy=((yy%pitchy)/pitchy-.45)
+ dist=((phase-.5)/.53)**2+(dy/.55)**2
+ scallop=np.exp(-dist*3.0)
+ rim=np.exp(-((np.sqrt(dist)-.9)/.13)**2)
+ shimmer=7*scallop-8*rim+3*np.sin(xx*.018+yy*.006)
+ base+=shimmer[:,:,None]*(.5+.5*upper[:,:,None])
+ # darker copper upper back, faint lengthwise lateral line
+ lateral=np.exp(-((upper-.55)/.018)**2)
+ base-=lateral[:,:,None]*np.array([10,10,9])
+ img=Image.fromarray(np.uint8(np.clip(base,0,255)),'RGB')
+ return img
+
+def fin_mesh(points,color,thickness=.012,rays=12):
+ # Triangulated curved fan with tapered radial fin rays.
+ p=np.array(points,float)
+ mesh=plate(points,color,thickness)
+ return mesh
+
 def add_red_drum(scene,p):
  L,H,D=p['length'],p['height'],p['depth']
  def add(m,n):scene.add_geometry(m,geom_name=n)
- add(red_drum_body(L,H,D),'body')
- fin=[142,111,81,255]
- # Strong forked caudal fin attached at narrow peduncle.
- add(plate([[-L*.51,0,0],[-L*.70,H*.40,0],[-L*.65,H*.11,0],[-L*.65,-H*.11,0],[-L*.70,-H*.40,0]],fin,.014),'tail')
- add(plate([[-L*.30,H*.27,0],[-L*.23,H*.64,0],[-L*.11,H*.52,0],[L*.02,H*.51,0],[L*.18,H*.33,0]],fin,.012),'spiny-dorsal')
- add(plate([[L*.06,H*.30,0],[L*.19,H*.46,0],[L*.31,H*.22,0]],fin,.012),'soft-dorsal')
- add(plate([[-L*.21,-H*.28,0],[-L*.12,-H*.50,0],[L*.08,-H*.33,0]],fin,.012),'anal')
+ add(red_drum_body(L,H,D),'red-drum-textured-body')
+ bronze=[147,118,83,255];dark=[103,91,70,255]
+ # Caudal fin has a concave trailing edge and two distinct lobes.
+ add(fin_mesh([[-L*.505,-H*.02,0],[-L*.72,-H*.41,0],
+               [-L*.68,-H*.17,0],[-L*.62,0,0],
+               [-L*.68,H*.17,0],[-L*.72,H*.41,0],
+               [-L*.505,H*.02,0]],bronze),'forked-tail')
+ # Dorsal spines and soft dorsal fin.
+ add(fin_mesh([[-L*.27,H*.31,0],[-L*.22,H*.60,0],
+               [-L*.17,H*.67,0],[-L*.11,H*.63,0],
+               [-L*.02,H*.57,0],[L*.10,H*.48,0],
+               [L*.16,H*.31,0]],bronze),'dorsal-spiny')
+ add(fin_mesh([[L*.10,H*.30,0],[L*.20,H*.48,0],
+               [L*.28,H*.39,0],[L*.30,H*.25,0]],bronze),'dorsal-soft')
+ add(fin_mesh([[-L*.22,-H*.27,0],[-L*.13,-H*.52,0],
+               [L*.05,-H*.40,0],[L*.12,-H*.29,0]],bronze),'anal')
  for side in [-1,1]:
-  add(uv_sphere([.054,.054,.018],[L*.355,H*.10,side*D*.29],[22,24,20,255]),'eye'+str(side))
-  add(uv_sphere([.018,.018,.008],[L*.367,H*.114,side*D*.305],[245,245,230,255]),'eye-highlight'+str(side))
-  add(plate([[L*.14,-H*.06,side*D*.34],[-L*.13,-H*.38,side*D*.34],[L*.12,-H*.27,side*D*.34]],fin,.012),'pectoral'+str(side))
-  # Signature black ocellated spot at upper caudal peduncle.
-  add(uv_sphere([.075,.064,.011],[-L*.39,H*.13,side*D*.15],[28,31,25,255]),'tail-spot'+str(side))
-  add(uv_sphere([.023,.018,.009],[-L*.38,H*.15,side*D*.163],[88,81,65,255]),'spot-glint'+str(side))
-  # Gill line, small mouth, and lateral-line ridge.
-  add(uv_sphere([.012,H*.29,.009],[L*.24,-H*.01,side*D*.30],[92,84,68,255]),'gill'+str(side))
-  add(uv_sphere([L*.23,.009,.008],[-L*.03,H*.02,side*D*.42],[167,151,116,255]),'lateral-line'+str(side))
- add(plate([[L*.48,-H*.08,0],[L*.55,-H*.10,0],[L*.50,-H*.13,0]],[85,69,59,255],.009),'mouth')
+  # Eye near forward upper cheek, with dark pupil and pale iris.
+  x=L*.365;y=H*.095;z=side*D*.19
+  add(uv_sphere([.069,.069,.026],[x,y,z],[171,157,111,255]),'iris'+str(side))
+  add(uv_sphere([.044,.045,.029],[x+.009,y,z+side*.015],[17,20,19,255]),'pupil'+str(side))
+  add(uv_sphere([.013,.013,.009],[x+.022,y+.018,z+side*.041],[242,242,229,255]),'eye-glint'+str(side))
+  # Curved operculum ridge approximated with thin colored geometry.
+  add(uv_sphere([.009,H*.28,.009],[L*.22,-H*.025,side*D*.225],[103,94,76,255]),'gill-ridge'+str(side))
+  # Pectoral fins lie on the side of the body and sweep toward tail.
+  add(fin_mesh([[L*.15,-H*.09,side*D*.225],
+                [-L*.17,-H*.34,side*D*.23],
+                [-L*.03,-H*.13,side*D*.235]],bronze),'pectoral'+str(side))
+  # Single conspicuous black ocellus on upper tail base, correctly at tail.
+  add(uv_sphere([.071,.071,.012],[-L*.385,H*.09,side*D*.075],[21,24,22,255]),'caudal-ocellus'+str(side))
+  add(uv_sphere([.013,.012,.006],[-L*.374,H*.103,side*D*.087],[104,105,89,255]),'spot-reflection'+str(side))
+ # Mouth crease on blunt snout.
+ add(fin_mesh([[L*.48,-H*.06,0],[L*.53,-H*.08,0],
+               [L*.50,-H*.105,0]],dark,.008),'mouth')
 def make(name,p):
  L,H,D=p['length'],p['height'],p['depth'];C=p['color'];fin=[max(0,int(v*.8)) for v in C[:3]]+[255]
  scene=trimesh.Scene()
