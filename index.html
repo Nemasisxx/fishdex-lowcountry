@@ -85,7 +85,7 @@
 <div class="section-intro"><h2>📍 Hotspot Map</h2><p>Explore Charleston-area fishing access. Species are habitat suggestions, not verified catches.</p></div>
 <div class="hotspot-stage">
  <div id="hotspot-map" aria-label="Interactive Charleston public fishing access map"></div>
- <nav class="hotspot-bubbles" aria-label="Map tools">
+ <nav class="hotspot-bubbles" aria-label="Map tools"><button type="button" class="hotspot-bubble" id="hotspot-quick-mode" aria-label="Switch to Bite Zones only">🎯 <span>Zones only</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="filters" aria-expanded="false" aria-controls="hotspot-panel-filters">⚙️ <span>Filters</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="tides" aria-expanded="false" aria-controls="hotspot-panel-tides">🌊 <span>Tides</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="tackle" aria-expanded="false" aria-controls="hotspot-panel-tackle">🎣 <span>Tackle</span></button>
@@ -95,6 +95,7 @@
  </nav>
  <div class="hotspot-floating-panel" id="hotspot-panel-activity" hidden><div class="hotspot-panel-heading"><strong>Estimated fishing opportunity</strong><button type="button" class="hotspot-close" aria-label="Close bite zones">✕</button></div><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="hotspot-activity-toggle" checked> Show shoreline opportunity zones</label><p id="hotspot-activity-status">Zoom in near Shem Creek, Wando River or Charleston Harbor to see mapped waterway segments.</p><p>🔴 Higher potential · 🟡 Moderate · 🟢 Lower. Based on habitat, Charleston Harbor tide predictions, local time and modeled wind. This pilot uses OpenStreetMap waterway geometry, not verified oyster reefs, creek mouths, bathymetry or catch records. <strong>Highlights do not confirm fish activity or public shoreline access.</strong></p></div>
  <div class="hotspot-floating-panel" id="hotspot-panel-filters" hidden><div class="hotspot-panel-heading"><strong>Map filters</strong><button type="button" class="hotspot-close" aria-label="Close filters">✕</button></div>
+  <label for="hotspot-layer-mode">Show on map</label><select id="hotspot-layer-mode"><option value="both">Fishing access + Bite Zones</option><option value="hotspots">Bite Zones only (hide fishing points)</option><option value="access">Fishing access points only</option><option value="clear">Clear map (hide both)</option></select><p style="font-size:12px">Bite Zones appear at zoom 13+ in the pilot area. Hide fishing access pins to see highlighted waterways clearly.</p>
   <label for="hotspot-filter">Access type</label><select id="hotspot-filter"><option value="all">All public access</option><option value="pier">Fishing piers</option><option value="shore">Shore / bank access</option><option value="launch">Boat / kayak launch</option></select>
   <label for="hotspot-species">Target species</label><select id="hotspot-species"><option value="all">All species</option></select>
   <label for="hotspot-basemap">Map style</label><select id="hotspot-basemap"><option value="streets">Street map</option><option value="satellite">Satellite imagery</option></select>
