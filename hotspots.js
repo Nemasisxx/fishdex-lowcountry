@@ -85,7 +85,24 @@ const spots=[
  ['Garris Landing',32.939817,-79.657506,'launch','Awendaw','estuary','Intracoastal Waterway access; verify refuge and launch rules.'],
  ['Buck Hall Landing',33.038489,-79.560997,'launch','McClellanville','estuary','Intracoastal Waterway access.'],
  ['Robert E. Ashley Landing',33.080797,-79.459699,'launch','McClellanville','creek','Jeremy Creek watercraft access.']
-].map(([name,lat,lng,type,area,habitat,note])=>({name,lat,lng,type,area,habitat,note,profile:profileByName[name]||'tidalRiver',species:S[profileByName[name]||'tidalRiver']}));
+ ['Huntington Beach State Park',33.506,-79.063,'shore','Murrells Inlet / Georgetown County','surf','Approximate state-park oceanfront area; verify permitted fishing access.'],
+ ['Pawleys Island Public Beach',33.428,-79.119,'shore','Pawleys Island','surf','Approximate public beach vicinity; verify parking and surf fishing rules.'],
+ ['Georgetown Harbor Waterfront',33.366,-79.282,'shore','Georgetown','estuary','Approximate Sampit River waterfront area; check fishing permissions.'],
+ ['South Island Ferry Landing Area',33.233,-79.214,'launch','Georgetown / Winyah Bay','estuary','Approximate geographic reference; verify public access.'],
+ ['Hobcaw Barony / Winyah Bay Shore',33.332,-79.212,'shore','Georgetown','estuary','Geographic reference only; private or restricted access, do not assume fishing is allowed.'],
+ ['Santee Coastal Reserve Vicinity',33.164,-79.337,'shore','South Santee','estuary','Area reference; check reserve access and closures.'],
+ ['Cape Romain / Bulls Bay Vicinity',33.006,-79.534,'shore','Cape Romain','estuary','Area reference; wildlife refuge restrictions may apply.'],
+ ['Edisto Beach State Park',32.505,-80.298,'shore','Edisto Beach','surf','Approximate public state-park beach vicinity; check rules.'],
+ ['Hunting Island State Park',32.360,-80.455,'shore','Beaufort / Hunting Island','surf','Approximate oceanfront park vicinity; check access and fishing rules.'],
+ ['Port Royal Sands Beach',32.375,-80.690,'shore','Port Royal','estuary','Approximate public waterfront vicinity; verify fishing areas.'],
+ ['Henry C. Chambers Waterfront Park',32.430,-80.669,'shore','Beaufort','estuary','Public waterfront park; check posted fishing restrictions.'],
+ ['Broad River Fishing Pier',32.409,-80.777,'pier','Beaufort / Broad River','estuary','Approximate pier vicinity; verify access and fishing rules.'],
+ ['Coligny Beach Park',32.144,-80.750,'shore','Hilton Head Island','surf','Public beach access; follow seasonal fishing rules.'],
+ ['Fish Haul Beach Park',32.242,-80.684,'shore','Hilton Head Island','estuary','Approximate public park vicinity; check tides and posted rules.'],
+ ['Daufuskie Island Public Beach Vicinity',32.106,-80.855,'shore','Daufuskie Island','surf','Approximate island beach reference; verify public access.'],
+ ['Lake Moultrie / Bonneau Beach Vicinity',33.320,-79.960,'shore','Berkeley County','freshwater','Approximate lake shoreline reference; verify public access.'],
+ ['Lake Marion / Santee State Park',33.521,-80.499,'shore','Santee / Lake Marion','freshwater','Approximate state-park lake access vicinity; check rules.'],
+].map(([name,lat,lng,type,area,habitat,note])=>({name,lat,lng,type,area,habitat,note,profile:profileByName[name]||(habitat==='freshwater'?'freshwater':habitat==='surf'?'oceanSurf':habitat==='creek'?'marshCreek':'tidalRiver'),species:S[profileByName[name]||(habitat==='freshwater'?'freshwater':habitat==='surf'?'oceanSurf':habitat==='creek'?'marshCreek':'tidalRiver')]}));
 const TACKLE={
  'Red Drum':['Live or cut mullet, shrimp, paddle-tail soft plastics','Medium spinning tackle, 15–30 lb braid, fluorocarbon leader','Work marsh edges, oyster points and creek mouths on moving water.'],
  'Spotted Seatrout':['Paddle-tail swimbaits, suspending twitchbaits, live shrimp','Light/medium spinning setup with fluorocarbon leader','Target current seams and grass edges; retrieve steadily.'],
