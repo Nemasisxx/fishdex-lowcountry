@@ -290,7 +290,7 @@ function draw(){
  markers.forEach(m=>m.remove());markers=[];
  const list=document.getElementById('hotspot-list');list.replaceChildren();
  for(const s of shown){
-  const marker=L.marker([s.lat,s.lng]).addTo(map);
+  const marker=L.marker([s.lat,s.lng],{zIndexOffset:1000,title:s.name}).addTo(map);
   const route='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(s.name+', '+s.area+', South Carolina');
   marker.bindPopup('<strong>'+esc(s.name)+'</strong><p>'+esc(s.note)+'</p><p><small>Possible habitat: '+esc(s.species.join(', '))+'</small></p><a target="_blank" rel="noopener noreferrer" href="'+route+'">Directions</a>');
   markers.push(marker);
@@ -321,10 +321,8 @@ function init(){
   for(const fish of species){speciesSelect.add(new Option(fish.name,fish.name))}
  }
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.77,-79.92],10);
- opportunityLayer=L.layerGroup().addTo(map);
  map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
  document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
- refreshOpportunityConditions();queueHabitatWays();setInterval(()=>{if(document.visibilityState==='visible')refreshOpportunityConditions()},30*60*1000);
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
  document.getElementById('hotspot-basemap').addEventListener('change',e=>{if(e.target.value==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map)}else{map.removeLayer(satelliteLayer);streetLayer.addTo(map)}});
@@ -333,7 +331,13 @@ function init(){
  redrawPersonal();loadConditions();
  document.getElementById('hotspot-filter').addEventListener('change',draw);
  document.getElementById('hotspot-species').addEventListener('change',draw);
- draw();setTimeout(refreshMap,120);setTimeout(refreshMap,500);
+ draw();
+ // Keep fishing access markers above the optional colored habitat overlay.
+ opportunityLayer=L.layerGroup().addTo(map);
+ updateOpportunityZones();queueHabitatWays();
+ refreshOpportunityConditions().catch(e=>console.warn('Opportunity conditions:',e));
+ setInterval(()=>{if(document.visibilityState==='visible')refreshOpportunityConditions().catch(()=>{})},30*60*1000);
+ setTimeout(refreshMap,120);setTimeout(refreshMap,500);
  if('ResizeObserver' in window){resizeObserver=new ResizeObserver(()=>refreshMap());resizeObserver.observe(document.getElementById('hotspot-map'));}
  window.addEventListener('resize',refreshMap);
 }
