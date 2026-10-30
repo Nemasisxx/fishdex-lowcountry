@@ -82,6 +82,12 @@ function draw(){
 function init(){
  if(initialized){setTimeout(()=>map.invalidateSize(),50);return}
  if(!window.L){document.getElementById('hotspot-map').textContent='Map could not load. Check your connection and reload.';return}
+ const speciesSelect=document.getElementById('hotspot-species');
+ // Offer the entire FishDex collection, while only showing locations with supported habitat matches.
+ if(typeof species!=='undefined'&&Array.isArray(species)){
+  speciesSelect.replaceChildren(new Option('All species','all'));
+  for(const fish of species){speciesSelect.add(new Option(fish.name,fish.name))}
+ }
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.77,-79.92],10);
  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
  document.getElementById('hotspot-filter').addEventListener('change',draw);
