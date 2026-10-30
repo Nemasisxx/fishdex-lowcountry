@@ -1,0 +1,28 @@
+name: Remove detached fish image fragments
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-fish-fragments.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow numpy opencv-python-headless
+      - run: python scripts/remove_fish_fragments.py
+      - name: Commit corrected images and report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/*.webp fish-fragment-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Remove detached fragments outside fish silhouettes"
+            git pull --rebase
+            git push
+          fi
