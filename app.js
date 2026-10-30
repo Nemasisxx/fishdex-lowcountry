@@ -4,9 +4,10 @@ let unlocked={};try{unlocked=JSON.parse(localStorage.getItem(unlockKey)||'{}')}c
 const active=()=>$('#player').value;
 const discovered=()=>new Set([...(unlocked[active()]||[]),...catches.filter(c=>c.player===active()).map(c=>c.id)]);
 function render(){
- const found=discovered(),q=$('#search').value.toLowerCase(),f=$('#filter').value;
+ const found=discovered(),q=$('#search').value.toLowerCase(),f=$('#filter').value,sort=$('#sort').value;
+ const rank={C:0,U:1,R:2,E:3,L:4,M:5};
  $('#stats').textContent=found.size+' / '+species.length+' discovered';$('#progress-fill').style.width=(found.size/species.length*100)+'%';$('.progress').setAttribute('aria-valuenow',found.size);
- $('#grid').replaceChildren(...species.filter(s=>(s.name.toLowerCase().includes(q)||(s.scientificName||'').toLowerCase().includes(q))&&(f==='all'||(f==='caught'?found.has(s.id):!found.has(s.id)))).map(s=>{
+ $('#grid').replaceChildren(...species.filter(s=>(s.name.toLowerCase().includes(q)||(s.scientificName||'').toLowerCase().includes(q))&&(f==='all'||(f==='caught'?found.has(s.id):!found.has(s.id)))).sort((a,b)=>sort==='rarity-asc'?(rank[a.rarity]-rank[b.rarity]||a.id-b.id):sort==='rarity-desc'?(rank[b.rarity]-rank[a.rarity]||a.id-b.id):sort==='name'?a.name.localeCompare(b.name):a.id-b.id).map(s=>{
   const b=document.createElement('button'),isFound=found.has(s.id);
   b.className='card '+(isFound?'discovered':'undiscovered');
   b.innerHTML='<div class="number"></div><div class="image-wrap"></div><strong></strong><span class="rarity"></span>';
@@ -36,5 +37,5 @@ function discover(s,card){
 }
 $('#award-close').onclick=()=>$('#award').close();
 $('#award').onclick=e=>{if(e.target.id==='award')e.target.close()};
-['search','filter','player'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',render));
+['search','filter','player','sort'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',render));
 render();
