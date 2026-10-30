@@ -357,6 +357,7 @@ function init(){
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
  document.getElementById('hotspot-basemap').addEventListener('change',e=>{if(e.target.value==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map)}else{map.removeLayer(satelliteLayer);streetLayer.addTo(map)}});
+ setupTidePin();
  document.getElementById('hotspot-add-personal').addEventListener('click',addPersonal);
  document.getElementById('hotspot-show-personal').addEventListener('click',e=>{showPersonal=!showPersonal;e.target.textContent=showPersonal?'Hide my spots':'Show my spots';redrawPersonal()});
  redrawPersonal();loadConditions();
@@ -394,3 +395,67 @@ document.addEventListener('DOMContentLoaded',()=>{
  if(location.hash==='#hotspots')setTimeout(init,250);
 });
 })();
+
+let tidePinMarker=null,tidePinArmed=false,tidePinRequest=0,tideStationsCache=null;
+function tideDistance(a,b,c,d){const rad=Math.PI/180,x=(c-a)*rad,y=(d-b)*rad;return 6371*2*Math.asin(Math.sqrt(Math.sin(x/2)**2+Math.cos(a*rad)*Math.cos(c*rad)*Math.sin(y/2)**2))}
+async function tideStationFor(lat,lng){
+ if(!tideStationsCache){
+  const response=await fetch('https://api.tidesandcurrents.noaa.gov/mdapi/prod/webapi/stations.json?type=tidepredictions&units=english');
+  if(!response.ok)throw Error('NOAA station directory unavailable');
+  const data=await response.json();
+  tideStationsCache=(data.stations||[]).filter(v=>Number.isFinite(Number(v.lat))&&Number.isFinite(Number(v.lng))&&v.id);
+  if(!tideStationsCache.length)throw Error('No NOAA tide stations returned');
+ }
+ return tideStationsCache.map(v=>({station:v,distance:tideDistance(lat,lng,Number(v.lat),Number(v.lng))})).sort((a,b)=>a.distance-b.distance).slice(0,12);
+}
+async function showPinnedTides(lat,lng){
+ const output=document.getElementById('hotspot-tide-result');if(!output)return;
+ const request=++tidePinRequest;
+ output.replaceChildren();const status=document.createElement('p');status.textContent='Finding nearby NOAA tide stations…';output.append(status);
+ try{
+  const candidates=await tideStationFor(lat,lng);
+  const now=new Date(),date=offset=>{const d=new Date(now.getTime()+offset*86400000);const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);const get=k=>parts.find(p=>p.type===k).value;return get('year')+get('month')+get('day')};
+  let found=null,lastError=null;
+  for(const candidate of candidates){
+   if(request!==tidePinRequest)return;
+   try{
+    const station=candidate.station;
+    const params=new URLSearchParams({begin_date:date(0),end_date:date(2),station:station.id,product:'predictions',datum:'MLLW',time_zone:'lst_ldt',units:'english',interval:'6',format:'json'});
+    const response=await fetch('https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?'+params);
+    if(!response.ok)throw Error('Station prediction unavailable');
+    const data=await response.json();
+    if(!data.predictions?.length)throw Error(data.error?.message||'No predictions');
+    found={...candidate,predictions:data.predictions};break;
+   }catch(e){lastError=e}
+  }
+  if(request!==tidePinRequest)return;
+  if(!found)throw lastError||Error('No station predictions available');
+  const station=found.station;output.replaceChildren();
+  const title=document.createElement('strong');title.textContent='📍 Nearest available tide station: '+station.name+' ('+station.id+')';output.append(title);
+  const detail=document.createElement('p');detail.textContent='Pinned: '+lat.toFixed(5)+', '+lng.toFixed(5)+' · Station approximately '+found.distance.toFixed(1)+' km away. Times are Eastern. Tide heights are for the NOAA station, not exact predictions at the pin.';output.append(detail);
+  const graph=document.createElement('div');output.append(graph);
+  drawTideGraph(graph,found.predictions);
+  const graphLabel=graph.querySelector('small');if(graphLabel)graphLabel.textContent='NOAA predicted tide height (feet above MLLW) · '+station.name+' ('+station.id+') · Eastern Time';
+  const chart=graph.querySelector('svg');if(chart)chart.setAttribute('aria-label','NOAA predicted tides at '+station.name+' for the next two days');
+  const note=document.createElement('small');note.textContent='Approximation based on the nearest NOAA station with available predictions. Local tide timing and height may differ, especially in creeks and inlets. Not for navigation.';output.append(note);
+ }catch(e){if(request===tidePinRequest){status.textContent='Could not retrieve NOAA tides for this point. Try another location.';console.warn('Pinned tide lookup:',e)}}
+}
+function setupTidePin(){
+ const button=document.getElementById('hotspot-tide-pin');if(!button||!map)return;
+ button.addEventListener('click',()=>{
+  tidePinArmed=!tidePinArmed;
+  button.textContent=tidePinArmed?'Cancel pin selection':'📍 Pin tide location';
+  const output=document.getElementById('hotspot-tide-result');
+  if(tidePinArmed&&output)output.textContent='Tap or click the location on the map to place your tide pin.';
+  map.getContainer().style.cursor=tidePinArmed?'crosshair':'';
+ });
+ map.on('click',event=>{
+  if(!tidePinArmed)return;
+  tidePinArmed=false;button.textContent='📍 Pin tide location';map.getContainer().style.cursor='';
+  const {lat,lng}=event.latlng;
+  if(tidePinMarker)tidePinMarker.remove();
+  tidePinMarker=L.marker([lat,lng],{title:'Pinned tide location'}).addTo(map);
+  tidePinMarker.bindPopup('📍 Tide prediction location').openPopup();
+  showPinnedTides(lat,lng);
+ });
+}
