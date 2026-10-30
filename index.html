@@ -85,14 +85,14 @@
 <div class="section-intro"><h2>📍 Hotspot Map</h2><p>Explore Charleston-area fishing access. Species are habitat suggestions, not verified catches.</p></div>
 <div class="hotspot-stage">
  <div id="hotspot-map" aria-label="Interactive Charleston public fishing access map"></div>
- <nav class="hotspot-bubbles" aria-label="Map tools"><button type="button" class="hotspot-bubble" id="hotspot-quick-mode" aria-label="Switch to Bite Zones only">🎯 <span>Zones only</span></button>
+ <nav class="hotspot-bubbles" aria-label="Map tools"><button type="button" id="hotspot-menu-toggle" class="hotspot-menu-toggle" aria-expanded="false" aria-controls="hotspot-menu-items" aria-label="Open map tools"><span class="hotspot-menu-symbol">☰</span><span class="hotspot-menu-label">Map tools</span></button><div id="hotspot-menu-items" class="hotspot-menu-items" aria-hidden="true"><button type="button" class="hotspot-bubble" id="hotspot-quick-mode" aria-label="Switch to Bite Zones only">🎯 <span>Zones only</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="filters" aria-expanded="false" aria-controls="hotspot-panel-filters">⚙️ <span>Filters</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="tides" aria-expanded="false" aria-controls="hotspot-panel-tides">🌊 <span>Tides</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="tackle" aria-expanded="false" aria-controls="hotspot-panel-tackle">🎣 <span>Tackle</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="saved" aria-expanded="false" aria-controls="hotspot-panel-saved">⭐ <span>My Spots</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="locations" aria-expanded="false" aria-controls="hotspot-panel-locations">📍 <span>Locations</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="activity" aria-expanded="false" aria-controls="hotspot-panel-activity">🔥 <span>Bite zones</span></button>
- </nav>
+ </div></nav>
  <div class="hotspot-floating-panel" id="hotspot-panel-activity" hidden><div class="hotspot-panel-heading"><strong>Estimated fishing opportunity</strong><button type="button" class="hotspot-close" aria-label="Close bite zones">✕</button></div><label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="hotspot-activity-toggle" checked> Show shoreline opportunity zones</label><p id="hotspot-activity-status">Zoom in near Shem Creek, Wando River or Charleston Harbor to see mapped waterway segments.</p><p>🔴 Higher potential · 🟡 Moderate · 🟢 Lower. Based on habitat, Charleston Harbor tide predictions, local time and modeled wind. This pilot uses OpenStreetMap waterway geometry, not verified oyster reefs, creek mouths, bathymetry or catch records. <strong>Highlights do not confirm fish activity or public shoreline access.</strong></p></div>
  <div class="hotspot-floating-panel" id="hotspot-panel-filters" hidden><div class="hotspot-panel-heading"><strong>Map filters</strong><button type="button" class="hotspot-close" aria-label="Close filters">✕</button></div>
   <label for="hotspot-layer-mode">Show on map</label><select id="hotspot-layer-mode"><option value="both">Fishing access + Bite Zones</option><option value="hotspots">Bite Zones only (hide fishing points)</option><option value="access">Fishing access points only</option><option value="clear">Clear map (hide both)</option></select><p style="font-size:12px">Bite Zones appear at zoom 13+ in the pilot area. Hide fishing access pins to see highlighted waterways clearly.</p>
@@ -138,4 +138,37 @@
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 })();
-</script><script src="hotspots.js"></script><script src="species.js"></script><script src="fish-art.js"></script><script src="app.js"></script><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script><script type="module" src="tank3d.js"></script></body></html>
+</script><style>
+/* Expandable radial/fan menu, keeping the map unobstructed by default. */
+.hotspot-stage>.hotspot-bubbles{left:15px;top:15px;right:auto;display:block;overflow:visible;max-height:none}
+.hotspot-menu-toggle{pointer-events:auto;display:flex;align-items:center;justify-content:center;gap:9px;width:118px;height:66px;border-radius:35px;border:2px solid #91e8f6;background:#0a3548;color:#fff;font-weight:800;box-shadow:0 7px 24px #001724a6;cursor:pointer;position:relative;z-index:2;touch-action:manipulation}
+.hotspot-menu-symbol{font-size:25px;line-height:1;transition:transform .28s}
+.hotspot-menu-toggle[aria-expanded="true"] .hotspot-menu-symbol{transform:rotate(90deg)}
+.hotspot-menu-items{position:absolute;left:0;top:0;pointer-events:none}
+.hotspot-menu-items>.hotspot-bubble{position:absolute;left:0;top:0;margin:0;opacity:0;visibility:hidden;transform:translate(0,0) scale(.65);transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .22s,visibility .22s;white-space:nowrap}
+.hotspot-bubbles.is-open .hotspot-menu-items{pointer-events:auto}
+.hotspot-bubbles.is-open .hotspot-menu-items>.hotspot-bubble{opacity:1;visibility:visible;transform:translate(var(--fan-x),var(--fan-y)) scale(1);transition-delay:calc(var(--fan-i) * 35ms)}
+.hotspot-menu-items>.hotspot-bubble:nth-child(1){--fan-i:0;--fan-x:130px;--fan-y:0px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(2){--fan-i:1;--fan-x:130px;--fan-y:57px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(3){--fan-i:2;--fan-x:130px;--fan-y:114px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(4){--fan-i:3;--fan-x:130px;--fan-y:171px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(5){--fan-i:4;--fan-x:130px;--fan-y:228px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(6){--fan-i:5;--fan-x:130px;--fan-y:285px}
+.hotspot-menu-items>.hotspot-bubble:nth-child(7){--fan-i:6;--fan-x:130px;--fan-y:342px}
+.hotspot-stage>.hotspot-floating-panel{left:270px;top:15px;width:min(380px,calc(100% - 290px))}
+@media(max-width:700px){
+ .hotspot-stage>.hotspot-bubbles{left:9px;top:9px;right:auto;overflow:visible;max-height:none}
+ .hotspot-menu-toggle{width:96px;height:58px;font-size:12px;gap:5px}
+ .hotspot-menu-symbol{font-size:21px}
+ .hotspot-menu-items>.hotspot-bubble{min-width:0;font-size:12px;padding:9px 10px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(1){--fan-x:105px;--fan-y:0px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(2){--fan-x:105px;--fan-y:49px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(3){--fan-x:105px;--fan-y:98px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(4){--fan-x:105px;--fan-y:147px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(5){--fan-x:105px;--fan-y:196px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(6){--fan-x:105px;--fan-y:245px}
+ .hotspot-menu-items>.hotspot-bubble:nth-child(7){--fan-x:105px;--fan-y:294px}
+ .hotspot-stage>.hotspot-floating-panel{left:8px;right:8px;top:385px;width:auto;max-height:calc(100% - 395px)}
+}
+@media(prefers-reduced-motion:reduce){.hotspot-menu-items>.hotspot-bubble,.hotspot-menu-symbol{transition:none!important}}
+</style><script src="hotspots.js"></script><script src="species.js"></script><script src="fish-art.js"></script><script src="app.js"></script><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"}}</script><script type="module" src="tank3d.js"></script></body></html>
