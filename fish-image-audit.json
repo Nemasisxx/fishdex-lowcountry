@@ -1,71 +1,63 @@
 {
   "total": 99,
-  "flagged": 59,
+  "flagged": 0,
   "results": [
     {
       "file": "American_Eel.webp",
-      "width": 390,
-      "height": 225,
+      "width": 448,
+      "height": 283,
       "visible_bounds": [
-        0,
-        6,
-        390,
-        223
+        29,
+        35,
+        419,
+        252
       ],
       "margin": [
-        0,
-        6,
-        0,
-        2
+        29,
+        35,
+        29,
+        31
       ],
-      "transparent_fraction": 0.614,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.733,
+      "issues": []
     },
     {
       "file": "American_Shad.webp",
-      "width": 386,
-      "height": 195,
+      "width": 444,
+      "height": 253,
       "visible_bounds": [
-        6,
-        6,
-        380,
-        195
+        35,
+        35,
+        409,
+        224
       ],
       "margin": [
-        6,
-        6,
-        6,
-        0
+        35,
+        35,
+        35,
+        29
       ],
-      "transparent_fraction": 0.536,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.689,
+      "issues": []
     },
     {
       "file": "Atlantic_Bonito.webp",
-      "width": 396,
-      "height": 206,
+      "width": 456,
+      "height": 266,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        204
+        30,
+        36,
+        426,
+        234
       ],
       "margin": [
-        0,
-        6,
-        0,
-        2
+        30,
+        36,
+        30,
+        32
       ],
-      "transparent_fraction": 0.562,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.706,
+      "issues": []
     },
     {
       "file": "Atlantic_Croaker.webp",
@@ -88,46 +80,41 @@
     },
     {
       "file": "Atlantic_Sharpnose_Shark.webp",
-      "width": 388,
-      "height": 160,
+      "width": 446,
+      "height": 218,
       "visible_bounds": [
-        6,
-        6,
-        388,
-        160
+        35,
+        35,
+        417,
+        189
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        35,
+        35,
+        29,
+        29
       ],
-      "transparent_fraction": 0.639,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.769,
+      "issues": []
     },
     {
       "file": "Atlantic_Spadefish.webp",
-      "width": 397,
-      "height": 287,
+      "width": 457,
+      "height": 347,
       "visible_bounds": [
-        0,
-        5,
-        397,
-        287
+        30,
+        35,
+        427,
+        317
       ],
       "margin": [
-        0,
-        5,
-        0,
-        0
+        30,
+        35,
+        30,
+        30
       ],
-      "transparent_fraction": 0.51,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.648,
+      "issues": []
     },
     {
       "file": "Atlantic_Sturgeon.webp",
@@ -226,25 +213,22 @@
     },
     {
       "file": "Blacktip_Shark.webp",
-      "width": 396,
-      "height": 214,
+      "width": 456,
+      "height": 274,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        214
+        30,
+        36,
+        426,
+        244
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.659,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.769,
+      "issues": []
     },
     {
       "file": "Blue_Catfish.webp",
@@ -286,88 +270,79 @@
     },
     {
       "file": "Blueback_Herring.webp",
-      "width": 577,
-      "height": 216,
+      "width": 663,
+      "height": 302,
       "visible_bounds": [
-        7,
-        6,
-        577,
-        216
+        50,
+        49,
+        620,
+        259
       ],
       "margin": [
-        7,
-        6,
-        0,
-        0
+        50,
+        49,
+        43,
+        43
       ],
-      "transparent_fraction": 0.541,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.714,
+      "issues": []
     },
     {
       "file": "Bluefish.webp",
-      "width": 394,
-      "height": 172,
+      "width": 454,
+      "height": 232,
       "visible_bounds": [
-        0,
-        6,
-        387,
-        172
+        30,
+        36,
+        417,
+        202
       ],
       "margin": [
-        0,
-        6,
-        7,
-        0
+        30,
+        36,
+        37,
+        30
       ],
-      "transparent_fraction": 0.469,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.659,
+      "issues": []
     },
     {
       "file": "Bluegill.webp",
-      "width": 387,
-      "height": 200,
+      "width": 445,
+      "height": 258,
       "visible_bounds": [
-        0,
-        6,
-        381,
-        200
+        29,
+        35,
+        410,
+        229
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        29,
+        35,
+        35,
+        29
       ],
-      "transparent_fraction": 0.424,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.611,
+      "issues": []
     },
     {
       "file": "Bonnethead_Shark.webp",
-      "width": 393,
-      "height": 195,
+      "width": 451,
+      "height": 253,
       "visible_bounds": [
-        0,
-        6,
-        387,
-        195
+        29,
+        35,
+        416,
+        224
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        29,
+        35,
+        35,
+        29
       ],
-      "transparent_fraction": 0.684,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.788,
+      "issues": []
     },
     {
       "file": "Bowfin.webp",
@@ -409,46 +384,41 @@
     },
     {
       "file": "Bull_Shark.webp",
-      "width": 396,
-      "height": 208,
+      "width": 456,
+      "height": 268,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        208
+        30,
+        36,
+        426,
+        238
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.58,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.717,
+      "issues": []
     },
     {
       "file": "Chain_Pickerel.webp",
-      "width": 385,
-      "height": 149,
+      "width": 443,
+      "height": 207,
       "visible_bounds": [
-        6,
-        6,
-        385,
-        143
+        35,
+        35,
+        414,
+        172
       ],
       "margin": [
-        6,
-        6,
-        0,
-        6
+        35,
+        35,
+        29,
+        35
       ],
-      "transparent_fraction": 0.522,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.701,
+      "issues": []
     },
     {
       "file": "Channel_Catfish.webp",
@@ -471,68 +441,60 @@
     },
     {
       "file": "Cobia.webp",
-      "width": 397,
-      "height": 243,
+      "width": 457,
+      "height": 303,
       "visible_bounds": [
-        0,
-        6,
-        397,
-        243
+        30,
+        36,
+        427,
+        273
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.64,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.749,
+      "issues": []
     },
     {
       "file": "Common_Carp.webp",
-      "width": 376,
-      "height": 248,
+      "width": 432,
+      "height": 304,
       "visible_bounds": [
-        6,
-        6,
-        376,
-        248
+        34,
+        34,
+        404,
+        276
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        34,
+        34,
+        28,
+        28
       ],
-      "transparent_fraction": 0.541,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.674,
+      "issues": []
     },
     {
       "file": "Creek_Chubsucker.webp",
-      "width": 384,
-      "height": 188,
+      "width": 442,
+      "height": 246,
       "visible_bounds": [
-        6,
-        6,
-        384,
-        188
+        35,
+        35,
+        413,
+        217
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        35,
+        35,
+        29,
+        29
       ],
-      "transparent_fraction": 0.516,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.678,
+      "issues": []
     },
     {
       "file": "Crevalle_Jack.webp",
@@ -555,24 +517,22 @@
     },
     {
       "file": "Eastern_Mosquitofish.webp",
-      "width": 521,
-      "height": 210,
+      "width": 599,
+      "height": 288,
       "visible_bounds": [
-        6,
-        6,
-        515,
-        210
+        45,
+        45,
+        554,
+        249
       ],
       "margin": [
-        6,
-        6,
-        6,
-        0
+        45,
+        45,
+        45,
+        39
       ],
-      "transparent_fraction": 0.561,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.721,
+      "issues": []
     },
     {
       "file": "Flathead_Catfish.webp",
@@ -595,25 +555,22 @@
     },
     {
       "file": "Flier.webp",
-      "width": 488,
-      "height": 236,
+      "width": 562,
+      "height": 310,
       "visible_bounds": [
-        6,
-        0,
-        482,
-        236
+        43,
+        37,
+        519,
+        273
       ],
       "margin": [
-        6,
-        0,
-        6,
-        0
+        43,
+        37,
+        43,
+        37
       ],
-      "transparent_fraction": 0.35,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.571,
+      "issues": []
     },
     {
       "file": "Florida_Gar.webp",
@@ -655,25 +612,22 @@
     },
     {
       "file": "Gafftopsail_Catfish.webp",
-      "width": 396,
-      "height": 246,
+      "width": 456,
+      "height": 306,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        246
+        30,
+        36,
+        426,
+        276
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.594,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.717,
+      "issues": []
     },
     {
       "file": "Gag_Grouper.webp",
@@ -696,67 +650,60 @@
     },
     {
       "file": "Gizzard_Shad.webp",
-      "width": 568,
-      "height": 232,
+      "width": 654,
+      "height": 318,
       "visible_bounds": [
-        0,
-        6,
-        562,
-        232
+        43,
+        49,
+        605,
+        275
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        43,
+        49,
+        49,
+        43
       ],
-      "transparent_fraction": 0.507,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.687,
+      "issues": []
     },
     {
       "file": "Golden_Shiner.webp",
-      "width": 384,
-      "height": 228,
+      "width": 442,
+      "height": 286,
       "visible_bounds": [
-        0,
-        6,
-        378,
-        223
+        29,
+        35,
+        407,
+        252
       ],
       "margin": [
-        0,
-        6,
-        6,
-        5
+        29,
+        35,
+        35,
+        34
       ],
-      "transparent_fraction": 0.667,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.77,
+      "issues": []
     },
     {
       "file": "Grass_Carp.webp",
-      "width": 387,
-      "height": 234,
+      "width": 445,
+      "height": 292,
       "visible_bounds": [
-        6,
-        6,
-        387,
-        234
+        35,
+        35,
+        416,
+        263
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        35,
+        35,
+        29,
+        29
       ],
-      "transparent_fraction": 0.614,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.731,
+      "issues": []
     },
     {
       "file": "Gray_Snapper.webp",
@@ -779,24 +726,22 @@
     },
     {
       "file": "Gray_Triggerfish.webp",
-      "width": 384,
-      "height": 225,
+      "width": 442,
+      "height": 283,
       "visible_bounds": [
-        0,
-        6,
-        378,
-        219
+        29,
+        35,
+        407,
+        248
       ],
       "margin": [
-        0,
-        6,
-        6,
-        6
+        29,
+        35,
+        35,
+        35
       ],
-      "transparent_fraction": 0.511,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.662,
+      "issues": []
     },
     {
       "file": "Great_Barracuda.webp",
@@ -819,45 +764,41 @@
     },
     {
       "file": "Great_Hammerhead.webp",
-      "width": 383,
-      "height": 216,
+      "width": 441,
+      "height": 274,
       "visible_bounds": [
-        6,
-        6,
-        383,
-        210
+        35,
+        35,
+        412,
+        239
       ],
       "margin": [
-        6,
-        6,
-        0,
-        6
+        35,
+        35,
+        29,
+        35
       ],
-      "transparent_fraction": 0.637,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.751,
+      "issues": []
     },
     {
       "file": "Great_White_Shark.webp",
-      "width": 396,
-      "height": 237,
+      "width": 456,
+      "height": 297,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        231
+        30,
+        36,
+        426,
+        261
       ],
       "margin": [
-        0,
-        6,
-        0,
-        6
+        30,
+        36,
+        30,
+        36
       ],
-      "transparent_fraction": 0.62,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.737,
+      "issues": []
     },
     {
       "file": "Greater_Amberjack.webp",
@@ -880,196 +821,174 @@
     },
     {
       "file": "Green_Sunfish.webp",
-      "width": 363,
-      "height": 264,
+      "width": 417,
+      "height": 318,
       "visible_bounds": [
-        6,
-        6,
-        363,
-        264
+        33,
+        33,
+        390,
+        291
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        33,
+        33,
+        27,
+        27
       ],
-      "transparent_fraction": 0.516,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.65,
+      "issues": []
     },
     {
       "file": "Gulf_Kingfish.webp",
-      "width": 396,
-      "height": 164,
+      "width": 456,
+      "height": 224,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        158
+        30,
+        36,
+        426,
+        188
       ],
       "margin": [
-        0,
-        6,
-        0,
-        6
+        30,
+        36,
+        30,
+        36
       ],
-      "transparent_fraction": 0.583,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.735,
+      "issues": []
     },
     {
       "file": "Hardhead_Catfish.webp",
-      "width": 397,
-      "height": 202,
+      "width": 457,
+      "height": 262,
       "visible_bounds": [
-        0,
-        6,
-        397,
-        196
+        30,
+        36,
+        427,
+        226
       ],
       "margin": [
-        0,
-        6,
-        0,
-        6
+        30,
+        36,
+        30,
+        36
       ],
-      "transparent_fraction": 0.63,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.752,
+      "issues": []
     },
     {
       "file": "Hickory_Shad.webp",
-      "width": 386,
-      "height": 249,
+      "width": 444,
+      "height": 307,
       "visible_bounds": [
-        6,
-        6,
-        385,
-        249
+        35,
+        35,
+        414,
+        278
       ],
       "margin": [
-        6,
-        6,
-        1,
-        0
+        35,
+        35,
+        30,
+        29
       ],
-      "transparent_fraction": 0.635,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.742,
+      "issues": []
     },
     {
       "file": "Hybrid_Striped_Bass.webp",
-      "width": 592,
-      "height": 237,
+      "width": 680,
+      "height": 325,
       "visible_bounds": [
-        4,
-        0,
-        592,
-        237
+        48,
+        44,
+        636,
+        281
       ],
       "margin": [
-        4,
-        0,
-        0,
-        0
+        48,
+        44,
+        44,
+        44
       ],
-      "transparent_fraction": 0.451,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.652,
+      "issues": []
     },
     {
       "file": "King_Mackerel.webp",
-      "width": 396,
-      "height": 236,
+      "width": 456,
+      "height": 296,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        236
+        30,
+        36,
+        426,
+        266
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.646,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.755,
+      "issues": []
     },
     {
       "file": "Ladyfish.webp",
-      "width": 390,
-      "height": 233,
+      "width": 448,
+      "height": 291,
       "visible_bounds": [
-        0,
-        6,
-        384,
-        233
+        29,
+        35,
+        413,
+        262
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        29,
+        35,
+        35,
+        29
       ],
-      "transparent_fraction": 0.737,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.816,
+      "issues": []
     },
     {
       "file": "Largemouth_Bass.webp",
-      "width": 396,
-      "height": 203,
+      "width": 456,
+      "height": 263,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        203
+        30,
+        36,
+        426,
+        233
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.515,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.675,
+      "issues": []
     },
     {
       "file": "Little_Tunny.webp",
-      "width": 390,
-      "height": 221,
+      "width": 448,
+      "height": 279,
       "visible_bounds": [
-        6,
-        6,
-        390,
-        221
+        35,
+        35,
+        419,
+        250
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        35,
+        35,
+        29,
+        29
       ],
-      "transparent_fraction": 0.549,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.689,
+      "issues": []
     },
     {
       "file": "Longnose_Gar.webp",
@@ -1111,66 +1030,60 @@
     },
     {
       "file": "Northern_Kingfish.webp",
-      "width": 397,
-      "height": 171,
+      "width": 457,
+      "height": 231,
       "visible_bounds": [
-        0,
-        6,
-        397,
-        167
+        30,
+        36,
+        427,
+        197
       ],
       "margin": [
-        0,
-        6,
-        0,
-        4
+        30,
+        36,
+        30,
+        34
       ],
-      "transparent_fraction": 0.563,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.719,
+      "issues": []
     },
     {
       "file": "Northern_Puffer.webp",
-      "width": 396,
-      "height": 171,
+      "width": 456,
+      "height": 231,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        165
+        30,
+        36,
+        426,
+        195
       ],
       "margin": [
-        0,
-        6,
-        0,
-        6
+        30,
+        36,
+        30,
+        36
       ],
-      "transparent_fraction": 0.426,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.631,
+      "issues": []
     },
     {
       "file": "Oyster_Toadfish.webp",
-      "width": 383,
-      "height": 189,
+      "width": 441,
+      "height": 247,
       "visible_bounds": [
-        6,
-        6,
-        377,
-        189
+        35,
+        35,
+        406,
+        218
       ],
       "margin": [
-        6,
-        6,
-        6,
-        0
+        35,
+        35,
+        35,
+        29
       ],
-      "transparent_fraction": 0.405,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.605,
+      "issues": []
     },
     {
       "file": "Permit.webp",
@@ -1193,24 +1106,22 @@
     },
     {
       "file": "Pigfish.webp",
-      "width": 397,
-      "height": 208,
+      "width": 457,
+      "height": 268,
       "visible_bounds": [
-        0,
-        6,
-        397,
-        202
+        30,
+        36,
+        427,
+        232
       ],
       "margin": [
-        0,
-        6,
-        0,
-        6
+        30,
+        36,
+        30,
+        36
       ],
-      "transparent_fraction": 0.541,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.691,
+      "issues": []
     },
     {
       "file": "Pinfish.webp",
@@ -1233,25 +1144,22 @@
     },
     {
       "file": "Pumpkinseed.webp",
-      "width": 378,
-      "height": 257,
+      "width": 434,
+      "height": 313,
       "visible_bounds": [
-        0,
-        6,
-        372,
-        257
+        28,
+        34,
+        400,
+        285
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        28,
+        34,
+        34,
+        28
       ],
-      "transparent_fraction": 0.543,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.673,
+      "issues": []
     },
     {
       "file": "Red_Drum.webp",
@@ -1293,66 +1201,60 @@
     },
     {
       "file": "Redbreast_Sunfish.webp",
-      "width": 360,
-      "height": 270,
+      "width": 414,
+      "height": 324,
       "visible_bounds": [
-        6,
-        6,
-        354,
-        270
+        33,
+        33,
+        381,
+        297
       ],
       "margin": [
-        6,
-        6,
-        6,
-        0
+        33,
+        33,
+        33,
+        27
       ],
-      "transparent_fraction": 0.502,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.639,
+      "issues": []
     },
     {
       "file": "Redear_Sunfish.webp",
-      "width": 377,
-      "height": 266,
+      "width": 433,
+      "height": 322,
       "visible_bounds": [
-        6,
-        6,
-        376,
-        266
+        34,
+        34,
+        404,
+        294
       ],
       "margin": [
-        6,
-        6,
-        1,
-        0
+        34,
+        34,
+        29,
+        28
       ],
-      "transparent_fraction": 0.499,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.64,
+      "issues": []
     },
     {
       "file": "Redfin_Pickerel.webp",
-      "width": 585,
-      "height": 201,
+      "width": 673,
+      "height": 289,
       "visible_bounds": [
-        0,
-        6,
-        578,
-        201
+        44,
+        50,
+        622,
+        245
       ],
       "margin": [
-        0,
-        6,
-        7,
-        0
+        44,
+        50,
+        51,
+        44
       ],
-      "transparent_fraction": 0.548,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.727,
+      "issues": []
     },
     {
       "file": "Sailfish.webp",
@@ -1375,25 +1277,22 @@
     },
     {
       "file": "Sandbar_Shark.webp",
-      "width": 397,
-      "height": 205,
+      "width": 457,
+      "height": 265,
       "visible_bounds": [
-        0,
-        6,
-        397,
-        205
+        30,
+        36,
+        427,
+        235
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.621,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.745,
+      "issues": []
     },
     {
       "file": "Scamp.webp",
@@ -1454,24 +1353,22 @@
     },
     {
       "file": "Silver_Perch.webp",
-      "width": 386,
-      "height": 219,
+      "width": 444,
+      "height": 277,
       "visible_bounds": [
-        6,
-        6,
-        386,
-        219
+        35,
+        35,
+        415,
+        248
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        35,
+        35,
+        29,
+        29
       ],
-      "transparent_fraction": 0.47,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.636,
+      "issues": []
     },
     {
       "file": "Southern_Flounder.webp",
@@ -1494,67 +1391,60 @@
     },
     {
       "file": "Southern_Kingfish.webp",
-      "width": 396,
-      "height": 166,
+      "width": 456,
+      "height": 226,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        160
+        30,
+        36,
+        426,
+        190
       ],
       "margin": [
-        0,
-        6,
-        0,
-        6
+        30,
+        36,
+        30,
+        36
       ],
-      "transparent_fraction": 0.603,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.747,
+      "issues": []
     },
     {
       "file": "Spanish_Mackerel.webp",
-      "width": 393,
-      "height": 229,
+      "width": 451,
+      "height": 287,
       "visible_bounds": [
-        6,
-        6,
-        393,
-        229
+        35,
+        35,
+        422,
+        258
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        35,
+        35,
+        29,
+        29
       ],
-      "transparent_fraction": 0.684,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.78,
+      "issues": []
     },
     {
       "file": "Spinner_Shark.webp",
-      "width": 396,
-      "height": 192,
+      "width": 456,
+      "height": 252,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        192
+        30,
+        36,
+        426,
+        222
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.665,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.778,
+      "issues": []
     },
     {
       "file": "Spot.webp",
@@ -1596,110 +1486,98 @@
     },
     {
       "file": "Spotted_Sucker.webp",
-      "width": 386,
-      "height": 239,
+      "width": 444,
+      "height": 297,
       "visible_bounds": [
-        6,
-        6,
-        386,
-        239
+        35,
+        35,
+        415,
+        268
       ],
       "margin": [
-        6,
-        6,
-        0,
-        0
+        35,
+        35,
+        29,
+        29
       ],
-      "transparent_fraction": 0.612,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.728,
+      "issues": []
     },
     {
       "file": "Spotted_Sunfish.webp",
-      "width": 536,
-      "height": 236,
+      "width": 616,
+      "height": 316,
       "visible_bounds": [
-        6,
-        4,
-        536,
-        236
+        46,
+        44,
+        576,
+        276
       ],
       "margin": [
-        6,
-        4,
-        0,
-        0
+        46,
+        44,
+        40,
+        40
       ],
-      "transparent_fraction": 0.502,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.676,
+      "issues": []
     },
     {
       "file": "Stingray_Atlantic.webp",
-      "width": 397,
-      "height": 237,
+      "width": 457,
+      "height": 297,
       "visible_bounds": [
-        0,
-        6,
-        397,
-        237
+        30,
+        36,
+        427,
+        267
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.537,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.679,
+      "issues": []
     },
     {
       "file": "Striped_Bass.webp",
-      "width": 389,
-      "height": 193,
+      "width": 447,
+      "height": 251,
       "visible_bounds": [
-        0,
-        6,
-        383,
-        193
+        29,
+        35,
+        412,
+        222
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        29,
+        35,
+        35,
+        29
       ],
-      "transparent_fraction": 0.467,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.643,
+      "issues": []
     },
     {
       "file": "Striped_Mullet.webp",
-      "width": 396,
-      "height": 194,
+      "width": 456,
+      "height": 254,
       "visible_bounds": [
-        5,
-        6,
-        396,
-        188
+        35,
+        36,
+        426,
+        218
       ],
       "margin": [
-        5,
-        6,
-        0,
-        6
+        35,
+        36,
+        30,
+        36
       ],
-      "transparent_fraction": 0.558,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.707,
+      "issues": []
     },
     {
       "file": "Summer_Flounder.webp",
@@ -1722,109 +1600,98 @@
     },
     {
       "file": "Tarpon.webp",
-      "width": 396,
-      "height": 242,
+      "width": 456,
+      "height": 302,
       "visible_bounds": [
-        0,
-        6,
-        396,
-        242
+        30,
+        36,
+        426,
+        272
       ],
       "margin": [
-        0,
-        6,
-        0,
-        0
+        30,
+        36,
+        30,
+        30
       ],
-      "transparent_fraction": 0.592,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.716,
+      "issues": []
     },
     {
       "file": "Threadfin_Shad.webp",
-      "width": 566,
-      "height": 227,
+      "width": 650,
+      "height": 311,
       "visible_bounds": [
-        6,
-        6,
-        560,
-        227
+        48,
+        48,
+        602,
+        269
       ],
       "margin": [
-        6,
-        6,
-        6,
-        0
+        48,
+        48,
+        48,
+        42
       ],
-      "transparent_fraction": 0.588,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.738,
+      "issues": []
     },
     {
       "file": "Tiger_Shark.webp",
-      "width": 396,
-      "height": 209,
+      "width": 456,
+      "height": 269,
       "visible_bounds": [
-        0,
-        6,
-        390,
-        209
+        30,
+        36,
+        420,
+        239
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        30,
+        36,
+        36,
+        30
       ],
-      "transparent_fraction": 0.575,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.714,
+      "issues": []
     },
     {
       "file": "Toadfish.webp",
-      "width": 389,
-      "height": 179,
+      "width": 447,
+      "height": 237,
       "visible_bounds": [
-        6,
-        6,
-        383,
-        179
+        35,
+        35,
+        412,
+        208
       ],
       "margin": [
-        6,
-        6,
-        6,
-        0
+        35,
+        35,
+        35,
+        29
       ],
-      "transparent_fraction": 0.35,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.573,
+      "issues": []
     },
     {
       "file": "Tripletail.webp",
-      "width": 394,
-      "height": 231,
+      "width": 454,
+      "height": 291,
       "visible_bounds": [
-        0,
-        6,
-        388,
-        231
+        30,
+        36,
+        418,
+        261
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        30,
+        36,
+        36,
+        30
       ],
-      "transparent_fraction": 0.339,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.545,
+      "issues": []
     },
     {
       "file": "Vermilion_Snapper.webp",
@@ -1866,24 +1733,22 @@
     },
     {
       "file": "Warmouth.webp",
-      "width": 374,
-      "height": 263,
+      "width": 430,
+      "height": 319,
       "visible_bounds": [
-        6,
-        6,
-        370,
-        263
+        34,
+        34,
+        398,
+        291
       ],
       "margin": [
-        6,
-        6,
-        4,
-        0
+        34,
+        34,
+        32,
+        28
       ],
-      "transparent_fraction": 0.5,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.642,
+      "issues": []
     },
     {
       "file": "Weakfish.webp",
@@ -1906,25 +1771,22 @@
     },
     {
       "file": "White_Bass.webp",
-      "width": 577,
-      "height": 237,
+      "width": 663,
+      "height": 323,
       "visible_bounds": [
-        0,
-        0,
-        571,
-        232
+        43,
+        43,
+        614,
+        275
       ],
       "margin": [
-        0,
-        0,
-        6,
-        5
+        43,
+        43,
+        49,
+        48
       ],
-      "transparent_fraction": 0.503,
-      "issues": [
-        "Visible pixels touch image boundary",
-        "Image nearly fills canvas"
-      ]
+      "transparent_fraction": 0.683,
+      "issues": []
     },
     {
       "file": "White_Crappie.webp",
@@ -1966,24 +1828,22 @@
     },
     {
       "file": "White_Perch.webp",
-      "width": 378,
-      "height": 193,
+      "width": 434,
+      "height": 249,
       "visible_bounds": [
-        0,
-        6,
-        372,
-        193
+        28,
+        34,
+        400,
+        221
       ],
       "margin": [
-        0,
-        6,
-        6,
-        0
+        28,
+        34,
+        34,
+        28
       ],
-      "transparent_fraction": 0.515,
-      "issues": [
-        "Visible pixels touch image boundary"
-      ]
+      "transparent_fraction": 0.673,
+      "issues": []
     },
     {
       "file": "Yellow_Bullhead.webp",
