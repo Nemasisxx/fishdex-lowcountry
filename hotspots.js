@@ -350,7 +350,7 @@ function init(){
   speciesSelect.replaceChildren(new Option('All species','all'));
   for(const fish of species){speciesSelect.add(new Option(fish.name,fish.name))}
  }
- initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.77,-79.92],10);
+ initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:true}).setView([32.77,-79.92],10);
  map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
  document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
