@@ -41,3 +41,37 @@ $('#award-close').onclick=()=>$('#award').close();
 $('#award').onclick=e=>{if(e.target.id==='award')e.target.close()};
 ['search','filter','player','sort'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',render));
 render();
+
+const savedIds=player=>new Set([...(unlocked[player]||[]),...catches.filter(c=>c.player===player).map(c=>c.id)]);
+function showTab(name){
+ document.querySelectorAll('.site-nav [data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===name)));
+ document.querySelectorAll('.tab-panel').forEach(p=>p.hidden=p.id!=='tab-'+name);
+ if(name==='achievements')renderAchievements();
+ if(name==='leaderboards')renderLeaderboard();
+ if(name==='fishtank')renderTank();
+}
+document.querySelectorAll('.site-nav [data-tab]').forEach(b=>b.addEventListener('click',()=>{showTab(b.dataset.tab);location.hash=b.dataset.tab}));
+function renderAchievements(){
+ const count=savedIds(active()).size;
+ const badges=[['First Catch',1,'Discover your first fish'],['Getting Started',5,'Discover 5 fish'],['Weekend Angler',10,'Discover 10 fish'],['Dedicated Angler',25,'Discover 25 fish'],['Halfway There',50,'Discover 50 fish'],['FishDex Master',99,'Discover all 99 fish']];
+ const grid=$('#achievement-grid');grid.replaceChildren(...badges.map(([name,goal,desc])=>{
+  const card=document.createElement('div');card.className='feature-card';
+  const title=document.createElement('h3');title.textContent=(count>=goal?'🏆 ':'🔒 ')+name;
+  const p=document.createElement('p');p.textContent=desc;
+  const progress=document.createElement('div');progress.className='count';progress.textContent=Math.min(count,goal)+' / '+goal;
+  card.append(title,p,progress);return card;
+ }));
+}
+function renderLeaderboard(){
+ const board=$('#leaderboard-list');board.replaceChildren();
+ const players=[...$('#player').options].map(o=>o.value).sort((a,b)=>savedIds(b).size-savedIds(a).size);
+ players.forEach((name,i)=>{const row=document.createElement('div');row.className='leader-row';const label=document.createElement('strong');label.textContent=(i+1)+'. '+name;const count=document.createElement('span');count.textContent=savedIds(name).size+' / 99 caught';row.append(label,count);board.append(row)});
+}
+function renderTank(){
+ const tank=$('#tank-display');tank.replaceChildren();
+ const ids=savedIds(active());const fish=species.filter(s=>ids.has(s.id)).slice(0,8);
+ if(!fish.length){const p=document.createElement('p');p.textContent='No saved catches yet. Discover fish after artwork review to populate your tank.';tank.append(p);return}
+ fish.forEach(s=>{const img=new Image();img.alt=s.name;img.title=s.name;FishDexArt.attach(s,img);tank.append(img)});
+}
+$('#player').addEventListener('change',()=>{const name=location.hash.slice(1);if(name==='achievements')renderAchievements();if(name==='leaderboards')renderLeaderboard();if(name==='fishtank')renderTank()});
+const initialTab=location.hash.slice(1);if(['fishdex','achievements','leaderboards','hotspots','fishtank'].includes(initialTab))showTab(initialTab);
