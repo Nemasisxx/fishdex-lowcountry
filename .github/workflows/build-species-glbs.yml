@@ -24,5 +24,7 @@ jobs:
           git add models/*.glb
           if ! git diff --cached --quiet; then
             git commit -m "Generate five species-specific FishDex GLB models"
-            git push
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi
