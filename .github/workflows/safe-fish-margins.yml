@@ -1,0 +1,27 @@
+name: Preserve artwork and add safe margins
+on:
+  push:
+    paths:
+      - '.github/workflows/safe-fish-margins.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  add-margins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow
+      - run: python scripts/add_safe_margins.py
+      - name: Commit images with safe margins
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/*.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Give flagged fish transparent margins without changing artwork"
+            git push
+          fi
