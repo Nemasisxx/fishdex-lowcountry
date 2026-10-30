@@ -91,9 +91,19 @@ function renderTank(){
   });
  }
  const fish=selected.map(id=>species.find(s=>s.id===id)).filter(Boolean);
+ $('#tank-count').textContent='('+fish.length+'/5)';
+ const tray=$('#tank-selected');tray.replaceChildren();
+ fish.forEach(f=>{const card=document.createElement('div');card.className='tank-fish-card';const img=new Image();img.alt=f.name;FishDexArt.attach(f,img);const name=document.createElement('span');name.textContent=f.name;const remove=document.createElement('button');remove.textContent='×';remove.setAttribute('aria-label','Remove '+f.name);remove.onclick=()=>{tankSelections[player]=selected.filter(id=>id!==f.id);localStorage.setItem(tankStorageKey,JSON.stringify(tankSelections));renderTank()};card.append(img,name,remove);tray.append(card)});
+ if(!fish.length){const p=document.createElement('p');p.textContent='Select your catches to populate the tank.';tray.append(p)}
  if(window.renderFishTank3D)window.renderFishTank3D(fish);
  else window.pendingFishTank=fish;
 }
 
 $('#player').addEventListener('change',()=>{const name=location.hash.slice(1);if(name==='achievements')renderAchievements();if(name==='leaderboards')renderLeaderboard();if(name==='fishtank')renderTank()});
 const initialTab=location.hash.slice(1);if(['fishdex','achievements','leaderboards','hotspots','fishtank'].includes(initialTab))showTab(initialTab);
+
+$('#tank-change').onclick=()=>{$('#tank-picker').hidden=!$('#tank-picker').hidden;renderTank()};
+$('#tank-settings-toggle').onclick=()=>{$('#tank-settings').hidden=!$('#tank-settings').hidden};
+$('#tank-reset').onclick=()=>window.resetFishTankView?.();
+$('#tank-bubbles').onchange=e=>window.setFishTankOptions?.({bubbles:e.target.checked});
+$('#tank-plants').onchange=e=>window.setFishTankOptions?.({plants:e.target.checked});
