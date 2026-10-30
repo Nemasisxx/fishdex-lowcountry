@@ -311,21 +311,6 @@ function draw(){
  if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});
  else if(markers.length)map.setView(markers[0].getLatLng(),13);
 }
-function initBubbleMenus(){
- const shell=document.querySelector('.hotspot-map-shell');if(!shell||shell.dataset.bubblesReady)return;
- shell.dataset.bubblesReady='true';
- const buttons=[...shell.querySelectorAll('[data-hotspot-panel]')];
- const closeAll=()=>{for(const btn of buttons){btn.setAttribute('aria-expanded','false');const panel=document.getElementById('hotspot-panel-'+btn.dataset.hotspotPanel);if(panel)panel.hidden=true}};
- for(const btn of buttons){
-  btn.addEventListener('click',()=>{
-   const panel=document.getElementById('hotspot-panel-'+btn.dataset.hotspotPanel);
-   const shouldOpen=panel.hidden;closeAll();
-   if(shouldOpen){panel.hidden=false;btn.setAttribute('aria-expanded','true')}
-  });
- }
- shell.querySelectorAll('.hotspot-panel-close').forEach(btn=>btn.addEventListener('click',closeAll));
- shell.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
-}
 function init(){
  if(initialized){setTimeout(refreshMap,60);setTimeout(refreshMap,350);return}
  if(!window.L){document.getElementById('hotspot-map').textContent='Map could not load. Check your connection and reload.';return}
@@ -335,7 +320,6 @@ function init(){
   speciesSelect.replaceChildren(new Option('All species','all'));
   for(const fish of species){speciesSelect.add(new Option(fish.name,fish.name))}
  }
- initBubbleMenus();
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.77,-79.92],10);
  opportunityLayer=L.layerGroup().addTo(map);
  map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
@@ -353,21 +337,7 @@ function init(){
  if('ResizeObserver' in window){resizeObserver=new ResizeObserver(()=>refreshMap());resizeObserver.observe(document.getElementById('hotspot-map'));}
  window.addEventListener('resize',refreshMap);
 }
-function initBubbleMenus(){
- const stage=document.querySelector('.hotspot-stage');if(!stage)return;
- const buttons=[...stage.querySelectorAll('[data-hotspot-panel]')];
- const closeAll=()=>{stage.querySelectorAll('.hotspot-floating-panel').forEach(p=>p.hidden=true);buttons.forEach(b=>b.setAttribute('aria-expanded','false'))};
- buttons.forEach(button=>button.addEventListener('click',()=>{
-  const panel=document.getElementById('hotspot-panel-'+button.dataset.hotspotPanel);
-  const opening=panel.hidden;closeAll();
-  if(opening){panel.hidden=false;button.setAttribute('aria-expanded','true')}
-  if(map)setTimeout(refreshMap,40);
- }));
- stage.querySelectorAll('.hotspot-close').forEach(b=>b.addEventListener('click',closeAll));
- document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
-}
 document.addEventListener('DOMContentLoaded',()=>{
- initBubbleMenus();
  const tab=document.querySelector('[data-tab="hotspots"]');
  if(tab)tab.addEventListener('click',()=>{setTimeout(init,100);setTimeout(refreshMap,450)});
  window.addEventListener('hashchange',()=>{if(location.hash==='#hotspots'){setTimeout(init,100);setTimeout(refreshMap,400)}});
