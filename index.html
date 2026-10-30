@@ -85,6 +85,7 @@
 <div class="section-intro"><h2>📍 Hotspot Map</h2><p>Explore fishing access across the South Carolina Lowcountry. Species are habitat suggestions, not verified catches.</p></div>
 <div class="hotspot-stage">
  <div id="hotspot-map" aria-label="Interactive Charleston public fishing access map"></div>
+ <div class="fishdex-map-layer-menu" id="fishdex-map-layer-menu"><button type="button" id="fishdex-layer-toggle" aria-expanded="false" aria-controls="fishdex-layer-content">🗺️ Map Layers ▾</button><div id="fishdex-layer-content" hidden><strong>Map style & water detail</strong><label for="hotspot-basemap">Choose a map layer</label><select id="hotspot-basemap"><option value="streets">Street map</option><option value="satellite">Satellite imagery</option><option value="nautical">Water depth / NOAA nautical charts</option><option value="terrain">Land topography (terrain)</option><option value="coastal-dem">NOAA coastal depth relief</option><option value="sonar">NOAA surveyed sonar relief</option><option value="creek">Creek detail + coastal relief</option></select><p>NOAA depth and sonar layers only show surveyed coverage. Creek detail combines mapped water features and available coastal relief; gaps are not measured depths.</p></div></div>
  <nav class="hotspot-bubbles" aria-label="Map tools"><button type="button" id="hotspot-menu-toggle" class="hotspot-menu-toggle" aria-expanded="false" aria-controls="hotspot-menu-items" aria-label="Open map tools"><span class="hotspot-menu-symbol">☰</span><span class="hotspot-menu-label">Map tools</span></button><div id="hotspot-menu-items" class="hotspot-menu-items" aria-hidden="true"><button type="button" class="hotspot-bubble" id="hotspot-quick-mode" aria-label="Switch to Bite Zones only">🎯 <span>Zones only</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="filters" aria-expanded="false" aria-controls="hotspot-panel-filters">⚙️ <span>Filters</span></button>
   <button type="button" class="hotspot-bubble" data-hotspot-panel="tides" aria-expanded="false" aria-controls="hotspot-panel-tides">🌊 <span>Tides</span></button>
@@ -98,7 +99,6 @@
   <label for="hotspot-layer-mode">Show on map</label><select id="hotspot-layer-mode"><option value="both">Fishing access + Bite Zones</option><option value="hotspots">Bite Zones only (hide fishing points)</option><option value="access">Fishing access points only</option><option value="clear">Clear map (hide both)</option></select><p style="font-size:12px">Bite Zones cover mapped water areas across the Lowcountry; zoom in to see them. Hide fishing access pins to see highlighted waterways clearly.</p>
   <label for="hotspot-filter">Access type</label><select id="hotspot-filter"><option value="all">All public access</option><option value="pier">Fishing piers</option><option value="shore">Shore / bank access</option><option value="launch">Boat / kayak launch</option></select>
   <label for="hotspot-species">Target species</label><select id="hotspot-species"><option value="all">All species</option></select>
-  <label for="hotspot-basemap">Map style</label><select id="hotspot-basemap"><option value="streets">Street map</option><option value="satellite">Satellite imagery</option><option value="nautical">Water depth / NOAA nautical charts</option><option value="terrain">Land topography (terrain)</option><option value="coastal-dem">NOAA coastal depth relief</option><option value="sonar">NOAA surveyed sonar relief</option><option value="creek">Creek detail + coastal relief</option></select><small>NOAA charts show available coastal depth soundings, channels and shoals. Not every creek or lake is surveyed. Not for navigation.</small>
   <span id="hotspot-count" aria-live="polite"></span>
  </div>
  <div class="hotspot-floating-panel" id="hotspot-panel-tides" hidden><div class="hotspot-panel-heading"><strong>Tides &amp; weather</strong><button type="button" class="hotspot-close" aria-label="Close tides">✕</button></div><p style="margin:8px 0">Pin a point on the map to see predicted tides from its nearest available NOAA tide station.</p><button type="button" id="hotspot-tide-pin" style="padding:9px 12px;border-radius:10px;cursor:pointer">📍 Pin tide location</button><div id="hotspot-tide-result" aria-live="polite" style="margin-top:10px"></div><div id="hotspot-conditions" aria-live="polite"><p>Loading NOAA tide predictions and weather…</p></div></div>
@@ -115,6 +115,18 @@
 .hotspot-stage>.hotspot-floating-panel[hidden]{display:none!important}
 @media(max-width:700px){.hotspot-stage>.hotspot-bubbles{max-height:98px;overflow-y:auto}.hotspot-stage>.hotspot-floating-panel{top:112px}}
 </style>
+<script>
+(function(){
+ function setupLayers(){
+  const toggle=document.getElementById('fishdex-layer-toggle'),panel=document.getElementById('fishdex-layer-content');
+  if(!toggle||!panel)return;
+  toggle.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden))});
+  document.addEventListener('click',event=>{if(!event.target.closest('#fishdex-map-layer-menu')){panel.hidden=true;toggle.setAttribute('aria-expanded','false')}});
+  document.addEventListener('keydown',event=>{if(event.key==='Escape'){panel.hidden=true;toggle.setAttribute('aria-expanded','false')}});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setupLayers);else setupLayers();
+})();
+</script>
 <script>
 /* Standalone map menu controller: works even if map data or Leaflet fails to load. */
 (function(){
@@ -182,6 +194,15 @@
 .hotspot-bubbles.is-open .hotspot-menu-items{pointer-events:auto!important}
 .hotspot-bubbles.is-open .hotspot-menu-items>.hotspot-bubble{pointer-events:auto!important;z-index:10001}
 .hotspot-stage>.hotspot-floating-panel:not([hidden]){z-index:10002!important;pointer-events:auto!important}
+/* Dedicated top-right map layer control, separate from bottom map tools. */
+.fishdex-map-layer-menu{position:absolute;top:14px;right:14px;z-index:11000;width:min(280px,calc(100% - 28px));font-size:13px}
+#fishdex-layer-toggle{display:block;margin-left:auto;border:2px solid #91e8f6;background:#0a3548;color:#fff;padding:11px 15px;border-radius:12px;font-weight:750;cursor:pointer;box-shadow:0 5px 20px #00172499}
+#fishdex-layer-content{margin-top:8px;padding:14px;border-radius:12px;background:#0b2e40;color:#fff;border:1px solid #4d8497;box-shadow:0 8px 24px #001724aa}
+#fishdex-layer-content[hidden]{display:none!important}
+#fishdex-layer-content label{display:block;margin:10px 0 5px}
+#fishdex-layer-content select{display:block;width:100%;padding:9px;border-radius:8px}
+#fishdex-layer-content p{font-size:12px;line-height:1.5;color:#c7e1e9;margin:10px 0 0}
+@media(max-width:600px){.fishdex-map-layer-menu{top:10px;right:8px;width:min(225px,calc(100% - 16px))}#fishdex-layer-toggle{padding:9px 10px;font-size:12px}}
 /* Bottom-center map dock: tools fan horizontally along the lower edge. */
 .hotspot-stage>.hotspot-bubbles{left:50%!important;right:auto!important;top:auto!important;bottom:14px!important;transform:translateX(-50%);width:max-content;max-width:calc(100% - 20px);overflow:visible!important}
 .hotspot-menu-toggle{margin:auto;width:116px;height:60px}
