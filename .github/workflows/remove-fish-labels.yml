@@ -1,0 +1,31 @@
+name: Remove embedded fish image labels
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-fish-labels.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  clean-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y tesseract-ocr
+          pip install pillow numpy opencv-python-headless pytesseract
+      - run: python scripts/remove_embedded_labels.py
+      - name: Commit safely cleaned artwork and report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/*.webp fish-label-audit.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Remove isolated embedded fish labels and report remaining text"
+            git pull --rebase
+            git push
+          fi
