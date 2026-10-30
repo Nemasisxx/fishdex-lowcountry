@@ -172,9 +172,9 @@ function draw(){
   const heading=document.createElement('h3');heading.textContent=s.name;
   const info=document.createElement('p');info.textContent=s.area+' · '+({pier:'Fishing pier',shore:'Shore access',launch:'Watercraft launch'}[s.type]);
   const note=document.createElement('p');note.textContent=s.note;
-  const match=document.createElement('p');match.textContent=species==='all'?'Possible habitat species: '+s.species.join(', '):'Possible '+species+' habitat (not a catch report)';
+  const match=document.createElement('p');match.textContent=species==='all'?'Potential: '+s.species.slice(0,3).join(', ')+(s.species.length>3?' + more':''):'Potential '+species+' habitat';
   const focus=document.createElement('button');focus.type='button';focus.textContent='Show on map';focus.onclick=()=>{map.setView([s.lat,s.lng],14);marker.openPopup();document.getElementById('hotspot-map').scrollIntoView({behavior:'smooth',block:'center'})};
-  card.append(heading,info,note,match,focus);list.append(card);
+  card.append(heading,info,match,focus);card.title=s.note;list.append(card);
  }
  document.getElementById('hotspot-count').textContent=shown.length+' of '+spots.length+' access points';
  if(!shown.length){const p=document.createElement('p');p.textContent='No matching access points in this initial dataset. This does not mean the species is absent from the Lowcountry.';list.append(p)}
