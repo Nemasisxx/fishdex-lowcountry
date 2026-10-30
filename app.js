@@ -67,11 +67,33 @@ function renderLeaderboard(){
  const players=[...$('#player').options].map(o=>o.value).sort((a,b)=>savedIds(b).size-savedIds(a).size);
  players.forEach((name,i)=>{const row=document.createElement('div');row.className='leader-row';const label=document.createElement('strong');label.textContent=(i+1)+'. '+name;const count=document.createElement('span');count.textContent=savedIds(name).size+' / 99 caught';row.append(label,count);board.append(row)});
 }
+const tankStorageKey='fishdex-tank-top5-v1';
+let tankSelections={};try{tankSelections=JSON.parse(localStorage.getItem(tankStorageKey)||'{}')}catch{}
 function renderTank(){
- const tank=$('#tank-display');tank.replaceChildren();
- const ids=savedIds(active());const fish=species.filter(s=>ids.has(s.id)).slice(0,8);
- if(!fish.length){const p=document.createElement('p');p.textContent='No saved catches yet. Discover fish after artwork review to populate your tank.';tank.append(p);return}
- fish.forEach(s=>{const img=new Image();img.alt=s.name;img.title=s.name;FishDexArt.attach(s,img);tank.append(img)});
+ const player=active(),logged=savedIds(player),choices=$('#tank-picks'),status=$('#tank-pick-status');
+ const selected=(tankSelections[player]||[]).filter(id=>logged.has(id)).slice(0,5);
+ tankSelections[player]=selected;
+ choices.replaceChildren();
+ const available=species.filter(s=>logged.has(s.id));
+ if(!available.length){
+  status.textContent='No catch logs yet. Your temporary all-unlocked preview does not count as a logged catch.';
+ }else{
+  status.textContent=selected.length+' / 5 selected · Click a fish to add or remove it.';
+  available.forEach(f=>{
+   const button=document.createElement('button');button.className='tank-choice';
+   const picked=selected.includes(f.id);button.textContent=(picked?'✓ ':'+ ')+f.name;
+   button.setAttribute('aria-pressed',String(picked));button.disabled=!picked&&selected.length>=5;
+   button.onclick=()=>{
+    const next=picked?selected.filter(id=>id!==f.id):[...selected,f.id].slice(0,5);
+    tankSelections[player]=next;localStorage.setItem(tankStorageKey,JSON.stringify(tankSelections));renderTank();
+   };
+   choices.append(button);
+  });
+ }
+ const fish=selected.map(id=>species.find(s=>s.id===id)).filter(Boolean);
+ if(window.renderFishTank3D)window.renderFishTank3D(fish);
+ else window.pendingFishTank=fish;
 }
+
 $('#player').addEventListener('change',()=>{const name=location.hash.slice(1);if(name==='achievements')renderAchievements();if(name==='leaderboards')renderLeaderboard();if(name==='fishtank')renderTank()});
 const initialTab=location.hash.slice(1);if(['fishdex','achievements','leaderboards','hotspots','fishtank'].includes(initialTab))showTab(initialTab);
