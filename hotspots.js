@@ -9,7 +9,7 @@
 // profiles are assigned per access point below; launches describe nearby water, not the ramp.
 const S={
  harborPier:['Sheepshead','Black Drum','Red Drum','Spotted Seatrout','Atlantic Croaker','Spot','Pinfish','Silver Perch','Southern Flounder','Bluefish','Spanish Mackerel','Atlantic Spadefish'],
- oceanPier:['Whiting','Southern Kingfish','Northern Kingfish','Gulf Kingfish','Spot','Atlantic Croaker','Bluefish','Spanish Mackerel','Florida Pompano','Red Drum','Southern Flounder','Pinfish','Ladyfish'],
+ oceanPier:['Southern Kingfish','Northern Kingfish','Gulf Kingfish','Spot','Atlantic Croaker','Bluefish','Spanish Mackerel','Florida Pompano','Red Drum','Southern Flounder','Pinfish','Ladyfish'],
  tidalBridge:['Red Drum','Spotted Seatrout','Sheepshead','Black Drum','Southern Flounder','Atlantic Croaker','Spot','Pinfish','Silver Perch'],
  marshCreek:['Red Drum','Spotted Seatrout','Southern Flounder','Black Drum','Atlantic Croaker','Spot','Pinfish','Striped Mullet','Silver Perch'],
  marshPier:['Red Drum','Spotted Seatrout','Sheepshead','Black Drum','Pinfish','Atlantic Croaker','Spot','Southern Flounder'],
