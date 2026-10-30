@@ -1,0 +1,27 @@
+name: Fish second-pass cleanup
+on:
+  workflow_run:
+    workflows: ["Fish artwork visual QA"]
+    types: [completed]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pillow numpy opencv-python-headless
+      - run: python scripts/fish_second_pass_cleanup.py
+      - name: Commit conservative cleanup and audit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add images/*.webp fish-second-pass-audit.json
+          git diff --cached --quiet || (git commit -m "Remove isolated stray fish artwork fragments after second audit" && git push)
