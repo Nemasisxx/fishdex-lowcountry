@@ -223,7 +223,7 @@ function updateOpportunityZones(){
  const toggle=document.getElementById('hotspot-activity-toggle'),status=document.getElementById('hotspot-activity-status');
  const mode=document.getElementById('hotspot-layer-mode')?.value||'both';
  if(!toggle?.checked||mode==='access'||mode==='clear'){status.textContent='Bite zones hidden. Choose Bite Zones only or Both in Filters to display them.';return}
- if(map.getZoom()<13){status.textContent='Zoom to level 13+ near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
+ if(map.getZoom()<(mode==='hotspots'?11:13)){status.textContent='Zoom closer near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
  const bounds=map.getBounds(),species=document.getElementById('hotspot-species').value;
  let count=0;
  for(const way of habitatWays){
@@ -233,7 +233,9 @@ function updateOpportunityZones(){
   const result=opportunityScore(near);if(!result)continue;
   const score=Math.min(100,result.score+(way.kind==='stream'?7:0));
   const color=score>=70?'#ef4444':score>=48?'#ffd04c':'#22c55e';
-  const line=L.polyline(way.points,{color,weight:13,opacity:.65,interactive:true}).addTo(opportunityLayer);
+  const zonesOnly=mode==='hotspots';
+  if(zonesOnly)L.polyline(way.points,{color:'#061a25',weight:23,opacity:.78,interactive:false,lineCap:'round',lineJoin:'round'}).addTo(opportunityLayer);
+  const line=L.polyline(way.points,{color,weight:zonesOnly?17:13,opacity:zonesOnly?1:.65,interactive:true,lineCap:'round',lineJoin:'round'}).addTo(opportunityLayer);
   const label=document.createElement('div'),head=document.createElement('strong'),why=document.createElement('p'),caution=document.createElement('small');
   head.textContent=(way.name||'Mapped tidal waterway')+' · '+(score>=70?'Higher':score>=48?'Moderate':'Lower')+' modeled opportunity';
   why.textContent='Mapped waterway geometry (OpenStreetMap). '+result.reasons.join(' · ')+'.';
@@ -243,7 +245,7 @@ function updateOpportunityZones(){
  status.textContent=habitatLoading?'Loading mapped waterways…':count?count+' mapped waterway segments highlighted in view. Tap a segment for its basis.':'No mapped eligible waterways here. Try zooming near Shem Creek or Wando River.';
 }
 async function loadHabitatWays(){
- if(!map||map.getZoom()<13||!document.getElementById('hotspot-activity-toggle')?.checked)return;
+ if(!map||map.getZoom()<((document.getElementById('hotspot-layer-mode')?.value==='hotspots')?11:13)||!document.getElementById('hotspot-activity-toggle')?.checked)return;
  const center=map.getCenter();
  // Initial study region: Charleston Harbor, Wando River and Shem Creek.
  if(center.lat<32.73||center.lat>32.94||center.lng< -80.02||center.lng> -79.73){habitatWays=[];habitatKey='';updateOpportunityZones();return}
@@ -346,7 +348,7 @@ function init(){
  quick.addEventListener('click',()=>{
   layerMode.value=layerMode.value==='hotspots'?'both':'hotspots';
   syncLayers();
-  if(layerMode.value==='hotspots'&&map.getZoom()<13)map.setView([32.7935,-79.8823],14);
+  if(layerMode.value==='hotspots'&&map.getZoom()<11)map.setView([32.7935,-79.8823],12);
  });
  document.getElementById('hotspot-filter').addEventListener('change',draw);
  document.getElementById('hotspot-species').addEventListener('change',draw);
