@@ -75,3 +75,5 @@ for number,name in TARGETS.items():
  report.append(dict(number=number,file=p.name,removed=len(removed),fragments=removed,review="inspect for touching neighboring fish and missing anatomy"))
 Path("targeted-fish-repair-report.json").write_text(json.dumps(report,indent=2))
 print("Flagged:",len(TARGETS),"files edited:",sum(bool(r.get("removed")) for r in report))
+
+# Trigger targeted repair run after workflow registration.
