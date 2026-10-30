@@ -226,13 +226,13 @@ function opportunityScore(spot){
 // Use mapped waterway geometry rather than inventing shoreline polygons.
 // OSM waterways are geographic references; they are NOT verified fishing structures.
 let habitatWays=[],habitatKey='',habitatTimer=null,habitatLoading=false;
-function nearestHabitatSpot(lat,lng){
+function nearestHabitatSpot(lat,lng,maxDistance=2.5){
  let nearest=null,distance=Infinity;
  for(const spot of spots){
   const d=Math.hypot((lat-spot.lat)*111,(lng-spot.lng)*94);
   if(d<distance){distance=d;nearest=spot}
  }
- return distance<=2.5?nearest:null;
+ return distance<=maxDistance?nearest:null;
 }
 function updateOpportunityZones(){
  if(!map||!opportunityLayer)return;
@@ -240,28 +240,28 @@ function updateOpportunityZones(){
  const toggle=document.getElementById('hotspot-activity-toggle'),status=document.getElementById('hotspot-activity-status');
  const mode=document.getElementById('hotspot-layer-mode')?.value||'both';
  if(!toggle?.checked||mode==='access'||mode==='clear'){status.textContent='Bite zones hidden. Choose Bite Zones only or Both in Filters to display them.';return}
- if(map.getZoom()<(mode==='hotspots'?11:13)){status.textContent='Zoom closer near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
+ if(map.getZoom()<11){status.textContent='Zoom closer near Shem Creek, Wando River or Charleston Harbor to view mapped waterway habitat.';return}
  const bounds=map.getBounds(),species=document.getElementById('hotspot-species').value;
  let count=0;
  for(const way of habitatWays){
   const mid=way.center;
   if(!bounds.pad(.15).contains(mid))continue;
-  const near=nearestHabitatSpot(mid[0],mid[1]);if(!near)continue;
+  const near=nearestHabitatSpot(mid[0],mid[1],way.kind==='coastline'?18:7);if(!near)continue;
   const result=opportunityScore(near);if(!result)continue;
   const score=Math.min(100,result.score+(way.kind==='stream'?7:0));
   const color=score>=70?'#ef4444':score>=48?'#ffd04c':'#22c55e';
   const zonesOnly=mode==='hotspots';
-  const line=L.polygon(way.points,{color,weight:zonesOnly?2:1,opacity:zonesOnly?.95:.75,fillColor:color,fillOpacity:zonesOnly?.76:.42,interactive:true}).addTo(opportunityLayer);
+  const line=(way.kind==='coastline'?L.polyline(way.points,{color,weight:zonesOnly?9:7,opacity:.9,interactive:true}):L.polygon(way.points,{color,weight:zonesOnly?2:1,opacity:zonesOnly?.95:.75,fillColor:color,fillOpacity:zonesOnly?.76:.42,interactive:true})).addTo(opportunityLayer);
   const label=document.createElement('div'),head=document.createElement('strong'),why=document.createElement('p'),caution=document.createElement('small');
-  head.textContent=(way.name||'Mapped tidal waterway')+' · '+(score>=70?'Higher':score>=48?'Moderate':'Lower')+' modeled opportunity';
-  why.textContent='Mapped water-area polygon (OpenStreetMap). '+result.reasons.join(' · ')+'.';
-  caution.textContent='Highlight follows mapped water-area boundaries, not verified depth, reef, fish activity or navigable water. Map geometry can be incomplete. Check tides, permissions and hazards.';
+  head.textContent=(way.name||(way.kind==='coastline'?'Mapped shoreline':'Mapped tidal waterway'))+' · '+(score>=70?'Higher':score>=48?'Moderate':'Lower')+' modeled opportunity';
+  why.textContent=(way.kind==='coastline'?'Mapped coastline boundary (OpenStreetMap). ':'Mapped water-area polygon (OpenStreetMap). ')+result.reasons.join(' · ')+'.';
+  caution.textContent='Modeled fishing opportunity, not observed fish. Shoreline strokes follow mapped coast boundaries, not verified fishing access or safe water. Check tides, permissions and hazards.';
   label.append(head,why,caution);line.bindPopup(label);count++;
  }
- status.textContent=habitatLoading?'Loading mapped water areas…':count?count+' mapped water areas highlighted in view. Tap an area for its basis.':'No verified mapped water-area polygons available here. No land-based fallback is shown.';
+ status.textContent=habitatLoading?'Loading shoreline and water geometry…':count?count+' shoreline/water zones highlighted in view. Tap a zone for details.':'No mapped shoreline or water zones available in this view. Try zooming or panning.';
 }
 async function loadHabitatWays(){
- if(!map||map.getZoom()<((document.getElementById('hotspot-layer-mode')?.value==='hotspots')?11:13)||!document.getElementById('hotspot-activity-toggle')?.checked)return;
+ if(!map||map.getZoom()<11||!document.getElementById('hotspot-activity-toggle')?.checked)return;
  const center=map.getCenter();
  // Initial study region: Charleston Harbor, Wando River and Shem Creek.
  if(center.lat<32.73||center.lat>32.94||center.lng< -80.02||center.lng> -79.73){habitatWays=[];habitatKey='';updateOpportunityZones();return}
@@ -279,13 +279,14 @@ async function loadHabitatWays(){
   const json=await response.json();
   // Only closed, explicitly mapped water polygons; never draw land-crossing centerlines.
   habitatWays=(json.elements||[]).filter(e=>{
-   if(e.type!=='way'||!e.geometry||e.geometry.length<4)return false;
+   if(e.type!=='way'||!e.geometry||e.geometry.length<2)return false;
+   if(e.tags?.natural==='coastline')return true;
    const first=e.geometry[0],last=e.geometry[e.geometry.length-1];
    return first.lat===last.lat&&first.lon===last.lon&&(e.tags?.natural==='water'||e.tags?.waterway==='riverbank');
-  }).slice(0,150).map(e=>{
+  }).slice(0,250).map(e=>{
    const points=e.geometry.map(p=>[p.lat,p.lon]);
    const bounds=L.latLngBounds(points);
-   return {name:e.tags?.name||'',kind:e.tags?.waterway||e.tags?.water||'',points,center:[bounds.getCenter().lat,bounds.getCenter().lng]};
+   return {name:e.tags?.name||'',kind:e.tags?.natural==='coastline'?'coastline':e.tags?.waterway||e.tags?.water||'',points,center:[bounds.getCenter().lat,bounds.getCenter().lng]};
   });
  }catch(e){habitatWays=[];habitatKey='';console.warn('FishDex habitat geometry:',e);const status=document.getElementById('hotspot-activity-status');if(status)status.textContent='Mapped waterways temporarily unavailable. No estimated zones displayed.'}
  habitatLoading=false;updateOpportunityZones();
