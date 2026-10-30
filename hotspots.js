@@ -189,11 +189,69 @@ async function loadConditions(){
 let map,markers=[],initialized=false,resizeObserver=null;
 function refreshMap(){if(!map)return;requestAnimationFrame(()=>{map.invalidateSize({pan:false});if(markers.length>1)map.fitBounds(L.featureGroup(markers).getBounds().pad(.10),{animate:false,maxZoom:12});});}
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// These circles are approximate access-area opportunity indicators, NOT verified fish locations.
+let opportunityLayer=null,opportunityTide=null,opportunityWind=null,opportunityUpdated=0;
+const shoreProfiles=new Set(['tidalBridge','marshCreek','marshPier','riverbank','harborBank','oceanSurf','inletSurf','soundFlats','barrierCreek','harborPier','oceanPier']);
+function opportunityScore(spot){
+ let score=35,reasons=[];
+ const species=document.getElementById('hotspot-species').value;
+ if(species!=='all'){if(!spot.species.includes(species))return null;score+=12;reasons.push('Habitat may suit '+species)}
+ else reasons.push('General shoreline habitat');
+ const hour=Number(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',hourCycle:'h23'}).format(new Date()));
+ if(hour<9||hour>=17){score+=10;reasons.push('Early or late-day timing')}else reasons.push('Midday conditions');
+ if(opportunityTide!==null){if(opportunityTide>=.28){score+=20;reasons.push('Predicted moving tide')}else{score-=8;reasons.push('Predicted slower tide')}}
+ else reasons.push('Tide data unavailable');
+ if(opportunityWind!==null){if(opportunityWind<=12){score+=12;reasons.push('Lighter modeled wind')}else if(opportunityWind>=22){score-=15;reasons.push('Stronger modeled wind')}else reasons.push('Moderate wind')}
+ else reasons.push('Wind data unavailable');
+ if(spot.profile==='tidalBridge'||spot.profile==='marshPier'||spot.profile==='harborPier'){score+=6;reasons.push('Structure habitat')}
+ return {score:Math.max(0,Math.min(100,score)),reasons};
+}
+function updateOpportunityZones(){
+ if(!map||!opportunityLayer)return;
+ opportunityLayer.clearLayers();
+ const toggle=document.getElementById('hotspot-activity-toggle');
+ const status=document.getElementById('hotspot-activity-status');
+ if(!toggle?.checked){status.textContent='Opportunity zones are hidden.';return}
+ if(map.getZoom()<13){status.textContent='Zoom to level 13+ to see approximate shoreline opportunity zones.';return}
+ const bounds=map.getBounds(),type=document.getElementById('hotspot-filter').value;
+ let count=0;
+ for(const spot of spots){
+  if(!shoreProfiles.has(spot.profile)||!bounds.pad(.12).contains([spot.lat,spot.lng]))continue;
+  if(type!=='all'&&spot.type!==type)continue;
+  const result=opportunityScore(spot);if(!result)continue;
+  const color=result.score>=70?'#2bdc84':result.score>=48?'#ffd04c':'#a3b9c6';
+  const circle=L.circle([spot.lat,spot.lng],{radius:135,color,fillColor:color,fillOpacity:.20,weight:2,interactive:true}).addTo(opportunityLayer);
+  const box=document.createElement('div');
+  const title=document.createElement('strong');title.textContent=spot.name+' · '+(result.score>=70?'Higher':result.score>=48?'Moderate':'Lower')+' estimated opportunity';
+  const why=document.createElement('p');why.textContent=result.reasons.join(' · ');
+  const caution=document.createElement('small');caution.textContent='Approximate area centered on public access, not a surveyed fishing bank. Not a real-time bite report. Verify access and safety.';
+  box.append(title,why,caution);circle.bindPopup(box);count++;
+ }
+ status.textContent=count+' approximate opportunity zones in view. Zoom in and tap a shaded area for the reasoning. Updated using available conditions.';
+}
+async function refreshOpportunityConditions(){
+ try{
+  const now=new Date(),parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now),p=k=>parts.find(v=>v.type===k).value;
+  const day=p('year')+p('month')+p('day');
+  const url='https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?date='+day+'&station=8665530&product=predictions&datum=MLLW&time_zone=lst_ldt&units=english&interval=6&format=json';
+  const res=await fetch(url);if(!res.ok)throw Error('NOAA unavailable');
+  const data=await res.json(),rows=(data.predictions||[]).map(v=>({t:new Date(v.t.replace(' ','T')).getTime(),h:Number(v.v)}));
+  const local=new Date(now.toLocaleString('en-US',{timeZone:'America/New_York'})).getTime();
+  let nearest=1;for(let i=1;i<rows.length;i++)if(Math.abs(rows[i].t-local)<Math.abs(rows[nearest].t-local))nearest=i;
+  if(rows.length>2){const a=rows[Math.max(0,nearest-5)],b=rows[Math.min(rows.length-1,nearest+5)];opportunityTide=Math.abs(b.h-a.h)}
+ }catch{opportunityTide=null}
+ try{
+  const res=await fetch('https://api.open-meteo.com/v1/forecast?latitude=32.78&longitude=-79.93&current=wind_speed_10m&wind_speed_unit=mph&timezone=America%2FNew_York');
+  const data=await res.json();opportunityWind=Number.isFinite(data.current?.wind_speed_10m)?data.current.wind_speed_10m:null;
+ }catch{opportunityWind=null}
+ opportunityUpdated=Date.now();updateOpportunityZones();
+}
 function draw(){
  const type=document.getElementById('hotspot-filter').value;
  const species=document.getElementById('hotspot-species').value;
  const shown=spots.filter(s=>(type==='all'||s.type===type)&&(species==='all'||s.species.includes(species)));
  tackleFor(species);
+ updateOpportunityZones();
  markers.forEach(m=>m.remove());markers=[];
  const list=document.getElementById('hotspot-list');list.replaceChildren();
  for(const s of shown){
@@ -244,6 +302,10 @@ function init(){
  }
  initBubbleMenus();
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:false}).setView([32.77,-79.92],10);
+ opportunityLayer=L.layerGroup().addTo(map);
+ map.on('zoomend moveend',updateOpportunityZones);
+ document.getElementById('hotspot-activity-toggle')?.addEventListener('change',updateOpportunityZones);
+ refreshOpportunityConditions();setInterval(()=>{if(document.visibilityState==='visible')refreshOpportunityConditions()},30*60*1000);
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'}).addTo(map);
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'});
  document.getElementById('hotspot-basemap').addEventListener('change',e=>{if(e.target.value==='satellite'){map.removeLayer(streetLayer);satelliteLayer.addTo(map)}else{map.removeLayer(satelliteLayer);streetLayer.addTo(map)}});
