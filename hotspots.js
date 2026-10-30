@@ -84,7 +84,7 @@ const spots=[
  ['Paradise Boat Landing',32.913640,-79.737200,'launch','East Cooper','estuary','Wando River paddle-first landing.'],
  ['Garris Landing',32.939817,-79.657506,'launch','Awendaw','estuary','Intracoastal Waterway access; verify refuge and launch rules.'],
  ['Buck Hall Landing',33.038489,-79.560997,'launch','McClellanville','estuary','Intracoastal Waterway access.'],
- ['Robert E. Ashley Landing',33.080797,-79.459699,'launch','McClellanville','creek','Jeremy Creek watercraft access.']
+ ['Robert E. Ashley Landing',33.080797,-79.459699,'launch','McClellanville','creek','Jeremy Creek watercraft access.'],
  ['Huntington Beach State Park',33.506,-79.063,'shore','Murrells Inlet / Georgetown County','surf','Approximate state-park oceanfront area; verify permitted fishing access.'],
  ['Pawleys Island Public Beach',33.428,-79.119,'shore','Pawleys Island','surf','Approximate public beach vicinity; verify parking and surf fishing rules.'],
  ['Georgetown Harbor Waterfront',33.366,-79.282,'shore','Georgetown','estuary','Approximate Sampit River waterfront area; check fishing permissions.'],
