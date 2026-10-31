@@ -24,7 +24,7 @@ Deno.serve(async req=>{
  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(x=>x.toString(16).padStart(2,'0')).join('');
  const admin=createClient(url,service);
  const {data:duplicate}=await admin.from('verified_fish_unlocks').select('user_id').eq('photo_sha256',digest).limit(1);
- if(duplicate?.length)return json({verified:false,reason:'This photo has already been used for a verified unlock. Capture a new photo.'});
+ if(duplicate?.length&&!body?.redo)return json({verified:false,reason:'This photo has already been used for a verified unlock. Capture a new photo.'});
  const hint=typeof body.fishermanHint==='string'?body.fishermanHint.trim().slice(0,100):'';
  const prompt='Identify the single fish in this real photograph. Only return a catalog species if strongly supported by visible anatomy and markings. Reject screenshots, drawings, AI-generated pictures, blurry or unclear photos, multiple ambiguous fish, or images without a fish. Return JSON with speciesId (integer from list, or null), confidence (0 to 1), and reason (brief observable identification evidence). Identify fish even when photographed vertically or at an angle. Spotted Seatrout has dark spots across upper body, dorsal fin, and tail; Red Drum usually has one or more spots near its tail base. Do not reject a clear photo just because the fish is lying on a dock. The fisherman's suggested species is unverified context, not evidence. Consider it as a candidate only when visible features support it; never increase confidence merely because the fisherman suggested it. Never infer ownership or whether fish was caught by submitter. FishDex catalog: '+catalog.map(x=>x.id+':'+x.name).join('; ');
  let result;
@@ -35,6 +35,7 @@ Deno.serve(async req=>{
  }catch(e){console.error('Vision failure',e);return json({reason:'AI identification unavailable'},502)}
  const match=catalog.find(x=>x.id===Number(result.speciesId));
  if(!match||!Number.isFinite(Number(result.confidence))||Number(result.confidence)<0.8)return json({verified:false,reason:'Identification uncertain: '+String(result.reason||'Try a clear side-on photo with the whole fish visible.').slice(0,240)});
+ if(body?.redo)return json({verified:false,reviewOnly:true,speciesId:match.id,speciesName:match.name,reason:'Recheck suggests '+match.name+'. This preview does not change saved unlocks.'});
  const {data:existing}=await admin.from('verified_fish_unlocks').select('species_id').eq('user_id',user.id).eq('species_id',match.id).maybeSingle();
  if(existing)return json({verified:true,alreadyUnlocked:true,speciesId:match.id,speciesName:match.name});
  const {error}=await admin.from('verified_fish_unlocks').insert({user_id:user.id,species_id:match.id,species_name:match.name,photo_sha256:digest});
