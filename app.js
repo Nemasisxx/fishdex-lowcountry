@@ -53,10 +53,10 @@ function fishdexPreviewUnlock(){
 document.getElementById('fishdex-preview-unlock').addEventListener('click',fishdexPreviewUnlock);
 async function fishdexRefreshVerified(){
  const client=window.fishdexSupabase;if(!client)return;
- const {data:{user}}=await client.auth.getUser();if(!user){verifiedIds=new Set();render();return}
- const {data,error}=await client.from('verified_fish_unlocks').select('species_id').eq('user_id',user.id);
+ const {data:{user}}=await client.auth.getUser();if(!user){verifiedIds=new Set();const recent=document.getElementById('fishdex-recent-list');if(recent)recent.textContent='Sign in to view verified catches.';render();return}
+ const {data,error}=await client.from('verified_fish_unlocks').select('species_id,verified_at').eq('user_id',user.id).order('verified_at',{ascending:false});
  if(error){document.getElementById('fishdex-verify-status').textContent='Verified progress unavailable: '+error.message;return}
- verifiedIds=new Set((data||[]).map(x=>Number(x.species_id)));render();
+ verifiedIds=new Set((data||[]).map(x=>Number(x.species_id)));const recent=document.getElementById('fishdex-recent-list');if(recent){recent.replaceChildren();if(!data?.length)recent.textContent='No verified catches yet.';else for(const item of data.slice(0,5)){const fish=species.find(x=>x.id===Number(item.species_id));if(!fish)continue;const row=document.createElement('div');row.className='recent-entry';const name=document.createElement('strong');name.textContent=fish.name;const badge=document.createElement('span');badge.textContent='✓ Verified';badge.style.color='#7cf2ce';row.append(name,badge);recent.append(row)}}render();
 }
 async function fishdexVerifyPhoto(redoMode=false){
  const redo=document.getElementById('fishdex-redo-button');
