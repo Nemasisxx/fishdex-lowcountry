@@ -28,6 +28,29 @@ function discover(s){
  $('#award-number').textContent='#'+String(s.id).padStart(3,'0')+' · '+tiers[s.rarity];
  dlg.showModal();
 }
+function fishdexPreviewUnlock(){
+ const locked=species.find(f=>!verifiedIds.has(f.id))||species[0];
+ const search=$('#search'),filter=$('#filter');
+ search.value='';filter.value='all';render();
+ const target=document.querySelector('[data-species-id="'+locked.id+'"]');
+ if(!target)return;
+ target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});
+ setTimeout(()=>{
+  if(!target.isConnected)return;
+  target.classList.remove('undiscovered');target.classList.add('discovered','unlock-celebrate');
+  const lock=target.querySelector('.fish-lock');if(lock)lock.remove();
+  const img=target.querySelector('img');if(img)img.style.filter='none';
+  const dlg=$('#award'),image=$('#award-image');image.replaceChildren();
+  const art=new Image();art.alt=locked.name;FishDexArt.attach(locked,art);image.append(art);
+  $('#award-kicker').textContent='✨ PREVIEW — SIMULATED UNLOCK';
+  $('#award-title').textContent=locked.name;
+  $('#award-number').textContent='#'+String(locked.id).padStart(3,'0')+' · '+tiers[locked.rarity]+' · No progress saved';
+  if(!dlg.open)dlg.showModal();
+  const reset=()=>{dlg.removeEventListener('close',reset);render()};
+  dlg.addEventListener('close',reset,{once:true});
+ },850);
+}
+document.getElementById('fishdex-preview-unlock').addEventListener('click',fishdexPreviewUnlock);
 async function fishdexRefreshVerified(){
  const client=window.fishdexSupabase;if(!client)return;
  const {data:{user}}=await client.auth.getUser();if(!user){verifiedIds=new Set();render();return}
