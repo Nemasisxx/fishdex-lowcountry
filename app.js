@@ -1,10 +1,9 @@
 const $=s=>document.querySelector(s),key='fishdex-catches-v1',unlockKey='fishdex-unlocks-v1';
 let catches=[];try{catches=JSON.parse(localStorage.getItem(key)||'[]')}catch{}
 let unlocked={};try{unlocked=JSON.parse(localStorage.getItem(unlockKey)||'{}')}catch{}
-// Temporary visual review mode: all artwork appears discovered without changing saved catches.
-const REVIEW_ALL_VISIBLE=true;
 const active=()=>$('#player').value;
-const discovered=()=>REVIEW_ALL_VISIBLE?new Set(species.map(s=>s.id)):new Set([...(unlocked[active()]||[]),...catches.filter(c=>c.player===active()).map(c=>c.id)]);
+let verifiedIds=new Set();
+const discovered=()=>verifiedIds;
 function render(){
  const found=discovered(),q=$('#search').value.toLowerCase(),f=$('#filter').value,sort=$('#sort').value;
  const rank={C:0,U:1,R:2,E:3,L:4,M:5};
@@ -17,32 +16,52 @@ function render(){
   b.querySelector('strong').textContent=s.name;
   const rarity=b.querySelector('.rarity');rarity.textContent=tiers[s.rarity];rarity.style.color=colors[s.rarity];
   const img=new Image();img.alt=s.name;img.loading='lazy';b.querySelector('.image-wrap').append(img);FishDexArt.attach(s,img);
-  b.setAttribute('aria-label',s.name+(isFound?' discovered':' undiscovered. Click to discover'));
+  b.setAttribute('aria-label',s.name+(isFound?' verified':' locked. Submit a photo to unlock'));
   b.onclick=()=>discover(s,b);return b;
  }));
 }
-function discover(s,card){
- const wasFound=discovered().has(s.id);
- if(!wasFound){
-  const ids=new Set(unlocked[active()]||[]);ids.add(s.id);unlocked[active()]=[...ids];
-  localStorage.setItem(unlockKey,JSON.stringify(unlocked));
-  card.classList.remove('undiscovered');card.classList.add('discovered','unlock-flash');
-  $('#stats').textContent=discovered().size+' / '+species.length+' discovered';$('#progress-fill').style.width=(discovered().size/species.length*100)+'%';$('.progress').setAttribute('aria-valuenow',discovered().size);
- }
+function discover(s){
+ if(!discovered().has(s.id)){document.getElementById('fishdex-verify-status').textContent='🔒 '+s.name+' is locked. Submit a fish photo for AI verification to unlock it.';document.getElementById('fishdex-verify-panel').scrollIntoView({behavior:'smooth',block:'center'});return}
  const dlg=$('#award'),image=$('#award-image');image.replaceChildren();
  const art=new Image();art.alt=s.name;FishDexArt.attach(s,art);image.append(art);
- $('#award-kicker').textContent=wasFound?'COLLECTION ENTRY':'NEW DISCOVERY!';
- $('#award-title').textContent=s.name;
+ $('#award-kicker').textContent='VERIFIED COLLECTION ENTRY';$('#award-title').textContent=s.name;
  $('#award-number').textContent='#'+String(s.id).padStart(3,'0')+' · '+tiers[s.rarity];
- dlg.classList.remove('play');void dlg.offsetWidth;dlg.classList.add('play');dlg.showModal();
- if(!wasFound)dlg.addEventListener('close',render,{once:true});
+ dlg.showModal();
 }
+async function fishdexRefreshVerified(){
+ const client=window.fishdexSupabase;if(!client)return;
+ const {data:{user}}=await client.auth.getUser();if(!user){verifiedIds=new Set();render();return}
+ const {data,error}=await client.from('verified_fish_unlocks').select('species_id').eq('user_id',user.id);
+ if(error){document.getElementById('fishdex-verify-status').textContent='Verified progress unavailable: '+error.message;return}
+ verifiedIds=new Set((data||[]).map(x=>Number(x.species_id)));render();
+}
+async function fishdexVerifyPhoto(){
+ const status=document.getElementById('fishdex-verify-status'),file=document.getElementById('fishdex-photo').files?.[0],button=document.getElementById('fishdex-verify-button');
+ if(!file){status.textContent='Take a photo or select an image first.';return}
+ if(!file.type.startsWith('image/')||file.size>8*1024*1024){status.textContent='Use a JPG, PNG, or WEBP image under 8 MB.';return}
+ const client=window.fishdexSupabase;if(!client){status.textContent='Sign in service is not ready.';return}
+ const {data:{session}}=await client.auth.getSession();
+ if(!session){status.textContent='Please log in before verifying a fish.';return}
+ button.disabled=true;status.textContent='Analyzing photo securely…';
+ try{
+  const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
+  const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type}});
+  if(error)throw Error(error.message||'Verification unavailable');
+  if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'AI could not confidently identify a FishDex species.');return}
+  status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Already in your collection.':'New species unlocked!');
+  await fishdexRefreshVerified();
+ }catch(e){status.textContent='Verification failed: '+e.message+'. The Supabase verification function must be deployed and configured.'}
+ finally{button.disabled=false}
+}
+document.getElementById('fishdex-verify-button').addEventListener('click',fishdexVerifyPhoto);
+window.addEventListener('fishdex-auth-change',fishdexRefreshVerified);
+setTimeout(fishdexRefreshVerified,900);
 $('#award-close').onclick=()=>$('#award').close();
 $('#award').onclick=e=>{if(e.target.id==='award')e.target.close()};
 ['search','filter','player','sort'].forEach(id=>$('#'+id).addEventListener(id==='search'?'input':'change',render));
 render();
 
-const savedIds=player=>new Set([...(unlocked[player]||[]),...catches.filter(c=>c.player===player).map(c=>c.id)]);
+const savedIds=player=>verifiedIds;
 function showTab(name){
  document.querySelectorAll('.site-nav [data-tab]').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.tab===name)));
  document.querySelectorAll('.tab-panel').forEach(p=>p.hidden=p.id!=='tab-'+name);
@@ -76,7 +95,7 @@ function renderTank(){
  choices.replaceChildren();
  const available=species;
  if(!available.length){
-  status.textContent='No catch logs yet. Your temporary all-unlocked preview does not count as a logged catch.';
+  status.textContent='No catch logs yet. Only AI-verified catches count toward collection progress.';
  }else{
   status.textContent=selected.length+' / 5 selected · All 99 fish are available for aquarium preview; only actual catches count toward achievements.';
   available.forEach(f=>{
