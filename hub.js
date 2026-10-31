@@ -23,7 +23,7 @@ function init(){
   style.value=metadata.fishdex_fishing_style||'';
   save.disabled=!user;
   name.disabled=!user;waters.disabled=!user;style.disabled=!user;
-  $('hub-account-status').textContent=user?'Account: '+user.email+' · Profile stored with Supabase Auth.':'You are browsing as a guest. Log in to save your profile.';
+  $('hub-account-status').textContent=user?'Account: '+user.email+' · Profile saved to your account.':'You are browsing as a guest. Log in to save your profile.';
   $('hub-greeting').textContent='Welcome, '+(metadata.fishdex_display_name||'angler')+'!';
   msg.textContent='';
   refreshStats();
