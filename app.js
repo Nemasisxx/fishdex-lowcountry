@@ -59,16 +59,17 @@ async function fishdexRefreshVerified(){
  verifiedIds=new Set((data||[]).map(x=>Number(x.species_id)));render();
 }
 async function fishdexVerifyPhoto(){
+ const redo=document.getElementById('fishdex-redo-button');
  const status=document.getElementById('fishdex-verify-status'),file=document.getElementById('fishdex-photo').files?.[0],button=document.getElementById('fishdex-verify-button');
  if(!file){status.textContent='Take a photo or select an image first.';return}
  if(!file.type.startsWith('image/')||file.size>8*1024*1024){status.textContent='Use a JPG, PNG, or WEBP image under 8 MB.';return}
  const client=window.fishdexSupabase;if(!client){status.textContent='Sign in service is not ready.';return}
  const {data:{session}}=await client.auth.getSession();
  if(!session){status.textContent='Please log in before verifying a fish.';return}
- button.disabled=true;status.textContent='Analyzing photo securely…';
+ button.disabled=true;redo.disabled=true;status.textContent='Analyzing photo securely…';
  try{
   const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
-  const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type}});
+  const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type,fishermanHint:document.getElementById('fishdex-fisherman-hint').value.trim()}});
   if(error){
    let details='';
    try{const response=error.context;if(response?.json){const payload=await response.json();details=payload?.reason||payload?.error||payload?.message||''}else if(response?.text){details=await response.text()}}catch{}
@@ -79,9 +80,10 @@ async function fishdexVerifyPhoto(){
   await fishdexRefreshVerified();
   if(!data.alreadyUnlocked){document.getElementById('search').value='';document.getElementById('filter').value='all';render();const target=document.querySelector('[data-species-id="'+Number(data.speciesId)+'"]');if(target){target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});setTimeout(()=>{target.classList.add('unlock-celebrate');discover(species.find(s=>s.id===Number(data.speciesId)))},850)}}
  }catch(e){status.textContent='Verification failed: '+e.message}
- finally{button.disabled=false}
+ finally{button.disabled=false;redo.disabled=false}
 }
 document.getElementById('fishdex-verify-button').addEventListener('click',fishdexVerifyPhoto);
+document.getElementById('fishdex-redo-button').addEventListener('click',fishdexVerifyPhoto);
 window.addEventListener('fishdex-auth-change',fishdexRefreshVerified);
 setTimeout(fishdexRefreshVerified,900);
 $('#award-close').onclick=()=>$('#award').close();
