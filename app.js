@@ -10,8 +10,8 @@ function render(){
  $('#stats').textContent=found.size+' / '+species.length+' discovered';$('#progress-fill').style.width=(found.size/species.length*100)+'%';$('.progress').setAttribute('aria-valuenow',found.size);
  $('#grid').replaceChildren(...species.filter(s=>(s.name.toLowerCase().includes(q)||(s.scientificName||'').toLowerCase().includes(q))&&(f==='all'||(f==='caught'?found.has(s.id):!found.has(s.id)))).sort((a,b)=>sort==='rarity-asc'?(rank[a.rarity]-rank[b.rarity]||a.id-b.id):sort==='rarity-desc'?(rank[b.rarity]-rank[a.rarity]||a.id-b.id):sort==='name'?a.name.localeCompare(b.name):a.id-b.id).map(s=>{
   const b=document.createElement('button'),isFound=found.has(s.id);
-  b.className='card '+(isFound?'discovered':'undiscovered');
-  b.innerHTML='<div class="number"></div><div class="image-wrap"></div><strong></strong><span class="rarity"></span>';
+  b.className='card '+(isFound?'discovered':'undiscovered');b.dataset.speciesId=String(s.id);
+  b.innerHTML='<div class="number"></div><div class="image-wrap"></div><strong></strong><span class="rarity"></span>';if(!isFound){const lock=document.createElement('span');lock.className='fish-lock';lock.textContent='🔒';lock.setAttribute('aria-hidden','true');b.append(lock)}
   b.querySelector('.number').textContent='#'+String(s.id).padStart(3,'0');
   b.querySelector('strong').textContent=s.name;
   const rarity=b.querySelector('.rarity');rarity.textContent=tiers[s.rarity];rarity.style.color=colors[s.rarity];
@@ -54,6 +54,7 @@ async function fishdexVerifyPhoto(){
   if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'AI could not confidently identify a FishDex species.');return}
   status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Already in your collection.':'New species unlocked!');
   await fishdexRefreshVerified();
+  if(!data.alreadyUnlocked){document.getElementById('search').value='';document.getElementById('filter').value='all';render();const target=document.querySelector('[data-species-id="'+Number(data.speciesId)+'"]');if(target){target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});setTimeout(()=>{target.classList.add('unlock-celebrate');discover(species.find(s=>s.id===Number(data.speciesId)))},850)}}
  }catch(e){status.textContent='Verification failed: '+e.message}
  finally{button.disabled=false}
 }
