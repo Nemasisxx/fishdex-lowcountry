@@ -46,11 +46,15 @@ async function fishdexVerifyPhoto(){
  try{
   const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
   const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type}});
-  if(error)throw Error(error.message||'Verification unavailable');
+  if(error){
+   let details='';
+   try{const response=error.context;if(response?.json){const payload=await response.json();details=payload?.reason||payload?.error||payload?.message||''}else if(response?.text){details=await response.text()}}catch{}
+   throw Error(details||error.message||'Verification unavailable');
+  }
   if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'AI could not confidently identify a FishDex species.');return}
   status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Already in your collection.':'New species unlocked!');
   await fishdexRefreshVerified();
- }catch(e){status.textContent='Verification failed: '+e.message+'. The Supabase verification function must be deployed and configured.'}
+ }catch(e){status.textContent='Verification failed: '+e.message}
  finally{button.disabled=false}
 }
 document.getElementById('fishdex-verify-button').addEventListener('click',fishdexVerifyPhoto);
