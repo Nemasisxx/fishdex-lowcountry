@@ -58,7 +58,7 @@ async function fishdexRefreshVerified(){
  if(error){document.getElementById('fishdex-verify-status').textContent='Verified progress unavailable: '+error.message;return}
  verifiedIds=new Set((data||[]).map(x=>Number(x.species_id)));render();
 }
-async function fishdexVerifyPhoto(){
+async function fishdexVerifyPhoto(redoMode=false){
  const redo=document.getElementById('fishdex-redo-button');
  const status=document.getElementById('fishdex-verify-status'),file=document.getElementById('fishdex-photo').files?.[0],button=document.getElementById('fishdex-verify-button');
  if(!file){status.textContent='Take a photo or select an image first.';return}
@@ -69,7 +69,7 @@ async function fishdexVerifyPhoto(){
  button.disabled=true;redo.disabled=true;status.textContent='Analyzing photo securely…';
  try{
   const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
-  const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type,fishermanHint:document.getElementById('fishdex-fisherman-hint').value.trim()}});
+  const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type,fishermanHint:document.getElementById('fishdex-fisherman-hint').value.trim(),redo:redoMode===true}});
   if(error){
    let details='';
    try{const response=error.context;if(response?.json){const payload=await response.json();details=payload?.reason||payload?.error||payload?.message||''}else if(response?.text){details=await response.text()}}catch{}
@@ -82,8 +82,8 @@ async function fishdexVerifyPhoto(){
  }catch(e){status.textContent='Verification failed: '+e.message}
  finally{button.disabled=false;redo.disabled=false}
 }
-document.getElementById('fishdex-verify-button').addEventListener('click',fishdexVerifyPhoto);
-document.getElementById('fishdex-redo-button').addEventListener('click',fishdexVerifyPhoto);
+document.getElementById('fishdex-verify-button').addEventListener('click',()=>fishdexVerifyPhoto(false));
+document.getElementById('fishdex-redo-button').addEventListener('click',()=>fishdexVerifyPhoto(true));
 window.addEventListener('fishdex-auth-change',fishdexRefreshVerified);
 setTimeout(fishdexRefreshVerified,900);
 $('#award-close').onclick=()=>$('#award').close();
