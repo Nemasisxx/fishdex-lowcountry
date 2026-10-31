@@ -21,7 +21,7 @@ function render(){
  }));
 }
 function discover(s){
- if(!discovered().has(s.id)){document.getElementById('fishdex-verify-status').textContent='🔒 '+s.name+' is locked. Submit a fish photo for AI verification to unlock it.';document.getElementById('fishdex-verify-panel').scrollIntoView({behavior:'smooth',block:'center'});return}
+ if(!discovered().has(s.id)){document.getElementById('fishdex-verify-status').textContent='🔒 '+s.name+' is locked. Submit a fish photo for verification to unlock it.';document.getElementById('fishdex-verify-panel').scrollIntoView({behavior:'smooth',block:'center'});return}
  const dlg=$('#award'),image=$('#award-image');image.replaceChildren();
  const art=new Image();art.alt=s.name;FishDexArt.attach(s,art);image.append(art);
  $('#award-kicker').textContent='VERIFIED COLLECTION ENTRY';$('#award-title').textContent=s.name;
@@ -75,7 +75,7 @@ async function fishdexVerifyPhoto(redoMode=false){
    try{const response=error.context;if(response?.json){const payload=await response.json();details=payload?.reason||payload?.error||payload?.message||''}else if(response?.text){details=await response.text()}}catch{}
    throw Error(details||error.message||'Verification unavailable');
   }
-  if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'AI could not confidently identify a FishDex species.');return}
+  if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'The photo could not be confidently matched to a FishDex species.');return}
   status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Already in your collection.':'New species unlocked!');
   await fishdexRefreshVerified();
   if(!data.alreadyUnlocked){document.getElementById('search').value='';document.getElementById('filter').value='all';render();const target=document.querySelector('[data-species-id="'+Number(data.speciesId)+'"]');if(target){target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});setTimeout(()=>{target.classList.add('unlock-celebrate');discover(species.find(s=>s.id===Number(data.speciesId)))},850)}}
@@ -125,7 +125,7 @@ function renderTank(){
  choices.replaceChildren();
  const available=species;
  if(!available.length){
-  status.textContent='No catch logs yet. Only AI-verified catches count toward collection progress.';
+  status.textContent='No catch logs yet. Only verified catches count toward collection progress.';
  }else{
   status.textContent=selected.length+' / 5 selected · All 99 fish are available for aquarium preview; only actual catches count toward achievements.';
   available.forEach(f=>{
