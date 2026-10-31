@@ -15,6 +15,7 @@ function init(){
   name.textContent=user?'Signed in: '+(user.email||'Angler'):'Browsing as guest';
   open.hidden=!!user;logout.hidden=!user;
   if(user&&dialog.open)dialog.close();
+  window.dispatchEvent(new Event('fishdex-auth-change'));
  }
  client.auth.getSession().then(({data,error})=>{if(error)msg.textContent=error.message;showUser(data?.session)}).catch(()=>{msg.textContent='Unable to check login status.'});
  client.auth.onAuthStateChange((_event,session)=>showUser(session));
