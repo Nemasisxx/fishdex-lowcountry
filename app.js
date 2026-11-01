@@ -51,12 +51,40 @@ function fishdexPreviewUnlock(){
  },850);
 }
 document.getElementById('fishdex-preview-unlock').addEventListener('click',fishdexPreviewUnlock);
+async function fishdexRefreshCatchLog(client,user){
+ const summary=document.getElementById('fishdex-catch-summary'),list=document.getElementById('fishdex-catch-log'),recent=document.getElementById('fishdex-recent-list');
+ if(!user){summary.textContent='Sign in to see your catch totals.';list.replaceChildren();return}
+ const {data,error}=await client.from('verified_fish_catches').select('species_id,species_name,length_inches,verified_at').eq('user_id',user.id).order('verified_at',{ascending:false}).limit(5000);
+ if(error){summary.textContent='Catch log unavailable: '+error.message+' (database migration may still need to run).';list.replaceChildren();return}
+ const records=data||[],grouped=new Map();
+ for(const item of records){
+  const id=Number(item.species_id),entry=grouped.get(id)||{name:item.species_name,count:0,best:null};
+  entry.count++;
+  if(item.length_inches!==null&&item.length_inches!==undefined){const n=Number(item.length_inches);if(Number.isFinite(n))entry.best=Math.max(entry.best??0,n)}
+  grouped.set(id,entry);
+ }
+ summary.textContent=records.length+' verified catches · '+grouped.size+' species logged'+(records.length===5000?' · Showing most recent 5,000':'');
+ list.replaceChildren();
+ if(!grouped.size){list.textContent='No verified catches logged yet.'}
+ else for(const [id,item] of [...grouped].sort((a,b)=>b[1].count-a[1].count||a[1].name.localeCompare(b[1].name))){
+  const row=document.createElement('div');row.className='recent-entry';
+  const title=document.createElement('strong');title.textContent=item.name;
+  const details=document.createElement('span');details.textContent=item.count+' caught · Best: '+(item.best===null?'Not measured':item.best+' in (reported)');
+  row.append(title,details);list.append(row);
+ }
+ if(recent){recent.replaceChildren();if(!records.length)recent.textContent='No verified catches yet.';else for(const item of records.slice(0,5)){
+  const row=document.createElement('div');row.className='recent-entry';
+  const title=document.createElement('strong');title.textContent=item.species_name;
+  const detail=document.createElement('span');detail.textContent=new Date(item.verified_at).toLocaleDateString()+(item.length_inches===null?'':' · '+item.length_inches+' in');
+  row.append(title,detail);recent.append(row)
+ }}
+}
 async function fishdexRefreshVerified(){
  const client=window.fishdexSupabase;if(!client)return;
- const {data:{user}}=await client.auth.getUser();if(!user){verifiedIds=new Set();const recent=document.getElementById('fishdex-recent-list');if(recent)recent.textContent='Sign in to view verified catches.';render();return}
+ const {data:{user}}=await client.auth.getUser();if(!user){verifiedIds=new Set();const recent=document.getElementById('fishdex-recent-list');if(recent)recent.textContent='Sign in to view verified catches.';await fishdexRefreshCatchLog(client,null);render();return}
  const {data,error}=await client.from('verified_fish_unlocks').select('species_id,verified_at').eq('user_id',user.id).order('verified_at',{ascending:false});
  if(error){document.getElementById('fishdex-verify-status').textContent='Verified progress unavailable: '+error.message;return}
- verifiedIds=new Set((data||[]).map(x=>Number(x.species_id)));const recent=document.getElementById('fishdex-recent-list');if(recent){recent.replaceChildren();if(!data?.length)recent.textContent='No verified catches yet.';else for(const item of data.slice(0,5)){const fish=species.find(x=>x.id===Number(item.species_id));if(!fish)continue;const row=document.createElement('div');row.className='recent-entry';const name=document.createElement('strong');name.textContent=fish.name;const badge=document.createElement('span');badge.textContent='✓ Verified';badge.style.color='#7cf2ce';row.append(name,badge);recent.append(row)}}render();
+ verifiedIds=new Set((data||[]).map(x=>Number(x.species_id)));const recent=document.getElementById('fishdex-recent-list');if(recent){recent.replaceChildren();if(!data?.length)recent.textContent='No verified catches yet.';else for(const item of data.slice(0,5)){const fish=species.find(x=>x.id===Number(item.species_id));if(!fish)continue;const row=document.createElement('div');row.className='recent-entry';const name=document.createElement('strong');name.textContent=fish.name;const badge=document.createElement('span');badge.textContent='✓ Verified';badge.style.color='#7cf2ce';row.append(name,badge);recent.append(row)}}render();await fishdexRefreshCatchLog(client,user);
 }
 async function fishdexVerifyPhoto(redoMode=false){
  const redo=document.getElementById('fishdex-redo-button');
@@ -69,14 +97,16 @@ async function fishdexVerifyPhoto(redoMode=false){
  button.disabled=true;redo.disabled=true;status.textContent='Analyzing photo securely…';
  try{
   const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
-  const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type,fishermanHint:document.getElementById('fishdex-fisherman-hint').value.trim(),redo:redoMode===true}});
+  const lengthInput=document.getElementById('fishdex-length');const lengthText=lengthInput.value.trim();const lengthInches=lengthText===''?null:Number(lengthText);
+  if(lengthText!==''&&(!Number.isFinite(lengthInches)||lengthInches<=0||lengthInches>300)){status.textContent='Enter a valid length in inches (0–300), or leave it blank.';return}
+  const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type,fishermanHint:document.getElementById('fishdex-fisherman-hint').value.trim(),lengthInches,redo:redoMode===true}});
   if(error){
    let details='';
    try{const response=error.context;if(response?.json){const payload=await response.json();details=payload?.reason||payload?.error||payload?.message||''}else if(response?.text){details=await response.text()}}catch{}
    throw Error(details||error.message||'Verification unavailable');
   }
   if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'The photo could not be confidently matched to a FishDex species.');return}
-  status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Already in your collection.':'New species unlocked!');
+  status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Another catch logged!':'New species unlocked!')+(data.catchCount?' Total: '+data.catchCount+'.':'')+(data.bestLengthInches?' Best: '+data.bestLengthInches+' in (reported).':'');
   await fishdexRefreshVerified();
   if(!data.alreadyUnlocked){document.getElementById('search').value='';document.getElementById('filter').value='all';render();const target=document.querySelector('[data-species-id="'+Number(data.speciesId)+'"]');if(target){target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});setTimeout(()=>{target.classList.add('unlock-celebrate');discover(species.find(s=>s.id===Number(data.speciesId)))},850)}}
  }catch(e){status.textContent='Verification failed: '+e.message}
