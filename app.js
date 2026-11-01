@@ -179,7 +179,7 @@ function renderTank(){
 }
 
 $('#player').addEventListener('change',()=>{const name=location.hash.slice(1);if(name==='achievements')renderAchievements();if(name==='leaderboards')renderLeaderboard();if(name==='fishtank')renderTank()});
-const initialTab=location.hash.slice(1);if(['fishdex','achievements','leaderboards','hotspots'].includes(initialTab))showTab(initialTab);
+const initialTab=location.hash.slice(1);if(['fishdex','achievements','leaderboards','multiplayer','hotspots','hub','fishtank'].includes(initialTab))showTab(initialTab);
 
 $('#tank-change').onclick=()=>{$('#tank-picker').hidden=!$('#tank-picker').hidden;renderTank()};
 $('#tank-settings-toggle').onclick=()=>{$('#tank-settings').hidden=!$('#tank-settings').hidden};
