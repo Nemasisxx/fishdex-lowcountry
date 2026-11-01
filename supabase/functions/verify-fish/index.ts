@@ -23,7 +23,7 @@ Deno.serve(async req=>{
  if(!signature)return json({reason:'Image format mismatch'},400);
  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))).map(x=>x.toString(16).padStart(2,'0')).join('');
  const admin=createClient(url,service);
- const {data:duplicate}=await admin.from('verified_fish_unlocks').select('user_id').eq('photo_sha256',digest).limit(1);
+ const {data:duplicate}=await admin.from('verified_fish_catches').select('user_id').eq('photo_sha256',digest).limit(1);
  if(duplicate?.length&&!body?.redo)return json({verified:false,reason:'This photo has already been used for a verified unlock. Capture a new photo.'});
  const hint=typeof body.fishermanHint==='string'?body.fishermanHint.trim().slice(0,100):'';
  const prompt='Identify the single fish in this real photograph. Only return a catalog species if strongly supported by visible anatomy and markings. Reject screenshots, drawings, AI-generated pictures, blurry or unclear photos, multiple ambiguous fish, or images without a fish. Return JSON with speciesId (integer from list, or null), confidence (0 to 1), and reason (brief observable identification evidence). Identify fish even when photographed vertically or at an angle. Spotted Seatrout has dark spots across upper body, dorsal fin, and tail; Red Drum usually has one or more spots near its tail base. Do not reject a clear photo just because the fish is lying on a dock. The fisherman's suggested species is unverified context, not evidence. Consider it as a candidate only when visible features support it; never increase confidence merely because the fisherman suggested it. Never infer ownership or whether fish was caught by submitter. FishDex catalog: '+catalog.map(x=>x.id+':'+x.name).join('; ');
@@ -36,9 +36,18 @@ Deno.serve(async req=>{
  const match=catalog.find(x=>x.id===Number(result.speciesId));
  if(!match||!Number.isFinite(Number(result.confidence))||Number(result.confidence)<0.8)return json({verified:false,reason:'Identification uncertain: '+String(result.reason||'Try a clear side-on photo with the whole fish visible.').slice(0,240)});
  if(body?.redo)return json({verified:false,reviewOnly:true,speciesId:match.id,speciesName:match.name,reason:'Recheck suggests '+match.name+'. This preview does not change saved unlocks.'});
- const {data:existing}=await admin.from('verified_fish_unlocks').select('species_id').eq('user_id',user.id).eq('species_id',match.id).maybeSingle();
- if(existing)return json({verified:true,alreadyUnlocked:true,speciesId:match.id,speciesName:match.name});
- const {error}=await admin.from('verified_fish_unlocks').insert({user_id:user.id,species_id:match.id,species_name:match.name,photo_sha256:digest});
- if(error){console.error('Unlock insert failed',error);return json({reason:'Could not save verified unlock'},500)}
- return json({verified:true,alreadyUnlocked:false,speciesId:match.id,speciesName:match.name});
+ const length=body.lengthInches===null||body.lengthInches===undefined||body.lengthInches===''?null:Number(body.lengthInches);
+ if(length!==null&&(!Number.isFinite(length)||length<=0||length>300||Math.round(length*100)!==length*100))return json({reason:'Length must be between 0 and 300 inches (up to two decimals).'},400);
+ const {data:existing,error:existingError}=await admin.from('verified_fish_unlocks').select('species_id').eq('user_id',user.id).eq('species_id',match.id).maybeSingle();
+ if(existingError)return json({reason:'Unable to check collection'},500);
+ const {error:logError}=await admin.from('verified_fish_catches').insert({user_id:user.id,species_id:match.id,species_name:match.name,photo_sha256:digest,length_inches:length});
+ if(logError){console.error('Catch log failed',logError);return json({reason:'Could not save verified catch. Check that the catch-log migration is applied.'},500)}
+ if(!existing){
+  const {error:unlockError}=await admin.from('verified_fish_unlocks').insert({user_id:user.id,species_id:match.id,species_name:match.name,photo_sha256:digest});
+  if(unlockError){console.error('Unlock insert failed',unlockError);return json({reason:'Catch logged, but collection unlock failed. Please contact support.'},500)}
+ }
+ const {data:history}=await admin.from('verified_fish_catches').select('length_inches').eq('user_id',user.id).eq('species_id',match.id);
+ const count=history?.length||1;
+ const best=history?.reduce((v,c)=>Math.max(v,Number(c.length_inches)||0),0)||null;
+ return json({verified:true,alreadyUnlocked:!!existing,speciesId:match.id,speciesName:match.name,catchCount:count,bestLengthInches:best});
 });
