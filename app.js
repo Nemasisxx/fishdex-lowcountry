@@ -107,6 +107,23 @@ async function fishdexVerifyPhoto(redoMode=false){
   }
   if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'The photo could not be confidently matched to a FishDex species.');return}
   status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Another catch logged!':'New species unlocked!')+(data.catchCount?' Total: '+data.catchCount+'.':'')+(data.bestLengthInches?' Best: '+data.bestLengthInches+' in (reported).':'');
+  // Preserve the exact submitted image for this verified catch.
+  if(data.catchId){
+   try{
+    const {data:authData,error:authError}=await client.auth.getUser();
+    if(authError)throw authError;
+    const uid=authData?.user?.id;
+    if(!uid)throw Error('You must be signed in to save catch photos.');
+    const extension=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+    const path=uid+'/'+data.catchId+'.'+extension;
+    const {error:uploadError}=await client.storage.from('catch-photos').upload(path,file,{contentType:file.type,upsert:false});
+    if(uploadError)throw uploadError;
+    const {error:linkError}=await client.from('verified_fish_catches').update({photo_path:path}).eq('id',data.catchId).eq('user_id',uid);
+    if(linkError)throw linkError;
+   }catch(photoError){
+    status.textContent+=' Photo not saved: '+(photoError?.message||String(photoError));
+   }
+  }
   await fishdexRefreshVerified();
   if(!data.alreadyUnlocked){document.getElementById('search').value='';document.getElementById('filter').value='all';render();const target=document.querySelector('[data-species-id="'+Number(data.speciesId)+'"]');if(target)target.classList.add('unlock-celebrate')}
   window.dispatchEvent(new CustomEvent('fishdex-catch-verified',{detail:data}));
