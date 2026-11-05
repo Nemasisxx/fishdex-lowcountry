@@ -193,13 +193,35 @@ function setupPersonalLocation(){
  });
  window.addEventListener('pagehide',stopActiveTracking);
 }
-function tackleFor(species){
- const el=document.getElementById('hotspot-tackle');el.replaceChildren();
- const strong=document.createElement('strong');strong.textContent='Suggested bait & tackle';el.append(strong);
- if(species==='all'){const p=document.createElement('p');p.textContent='Choose a target species above for fishing suggestions.';el.append(p);return}
- const data=TACKLE[species];if(!data){const p=document.createElement('p');p.textContent='No species-specific recommendation has been reviewed for '+species+' yet.';el.append(p);return}
- for(const [i,value] of data.entries()){const p=document.createElement('p');p.textContent=['Bait / lures: ','Tackle: ','Technique: '][i]+value;el.append(p)}
- const caveat=document.createElement('small');caveat.textContent='General fishing guidance, not a catch guarantee. Check current regulations.';el.append(caveat);
+// Species-specific tips live in FishDex locked-fish guides, not on the map.
+function tackleFor(){}
+let baitShopLayer=null;
+async function findBaitShops(){
+ const button=document.getElementById('hotspot-find-shops'),status=document.getElementById('hotspot-shops-status'),list=document.getElementById('hotspot-shop-list');
+ if(!map||!button||!status||!list)return;
+ button.disabled=true;status.textContent='Searching map area for bait and tackle shops…';list.replaceChildren();
+ try{
+  const center=map.getCenter(),radius=Math.min(35000,Math.max(8000,Math.round(map.distance(center,map.getBounds().getNorthEast()))));
+  const query='[out:json][timeout:20];(nwr["shop"="fishing"](around:'+radius+','+center.lat+','+center.lng+');nwr["shop"="hunting_fishing"](around:'+radius+','+center.lat+','+center.lng+');nwr["fishing:shop"="yes"](around:'+radius+','+center.lat+','+center.lng+'););out center 50;';
+  const response=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({data:query}),signal:AbortSignal.timeout(25000)});
+  if(!response.ok)throw Error('Shop search is temporarily unavailable');
+  const payload=await response.json(),items=(payload.elements||[]).filter(x=>x.tags?.name).slice(0,35);
+  if(baitShopLayer)baitShopLayer.clearLayers();else baitShopLayer=L.layerGroup().addTo(map);
+  if(!items.length){status.textContent='No mapped fishing shops found here. Move the map toward a town and try again.';return}
+  status.textContent=items.length+' mapped fishing shops found. Live bait and inventory are not confirmed.';
+  for(const item of items){
+   const lat=item.lat??item.center?.lat,lng=item.lon??item.center?.lon;if(!Number.isFinite(lat)||!Number.isFinite(lng))continue;
+   const name=item.tags.name,location=[lat,lng],row=document.createElement('div');row.className='hotspot-shop-result';
+   const title=document.createElement('strong');title.textContent=name;row.append(title);
+   const details=document.createElement('small');details.textContent=[item.tags['addr:street'],item.tags['addr:city'],item.tags.phone||item.tags['contact:phone']].filter(Boolean).join(' · ')||'Fishing supply shop';row.append(details);
+   const actions=document.createElement('div');actions.className='hotspot-shop-actions';
+   const focus=document.createElement('button');focus.type='button';focus.textContent='Show on map';focus.onclick=()=>{map.setView(location,14);marker.openPopup()};
+   const directions=document.createElement('a');directions.textContent='Directions ↗';directions.href='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(lat+','+lng);directions.target='_blank';directions.rel='noopener noreferrer';
+   actions.append(focus,directions);row.append(actions);list.append(row);
+   const marker=L.marker(location).addTo(baitShopLayer).bindPopup('<strong>'+esc(name)+'</strong><br>Call ahead to confirm bait availability.');
+  }
+ }catch(e){status.textContent='Unable to load shops right now. Try again later or search your map app for “bait and tackle shop”.'}
+ finally{button.disabled=false}
 }
 function drawTideGraph(container,predictions){
  const rows=predictions.map(p=>({time:new Date(p.t.replace(' ','T')),height:Number(p.v)})).filter(p=>Number.isFinite(p.height)&&!Number.isNaN(p.time.getTime()));
@@ -404,6 +426,7 @@ function init(){
   speciesSelect.replaceChildren(new Option('All species','all'));
   for(const fish of species){speciesSelect.add(new Option(fish.name,fish.name))}
  }
+ document.getElementById('hotspot-find-shops')?.addEventListener('click',findBaitShops);
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:true}).setView([32.77,-79.92],10);
  map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
  document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
