@@ -54,7 +54,7 @@ document.getElementById('fishdex-preview-unlock').addEventListener('click',fishd
 async function fishdexRefreshCatchLog(client,user){
  const summary=document.getElementById('fishdex-catch-summary'),list=document.getElementById('fishdex-catch-log'),recent=document.getElementById('fishdex-recent-list');
  if(!user){summary.textContent='Sign in to see your catch totals.';list.replaceChildren();return}
- const {data,error}=await client.from('verified_fish_catches').select('species_id,species_name,length_inches,verified_at').eq('user_id',user.id).order('verified_at',{ascending:false}).limit(5000);
+ const {data,error}=await client.from('verified_fish_catches').select('species_id,species_name,length_inches,weight_lbs,catch_location,catch_method,verified_at').eq('user_id',user.id).order('verified_at',{ascending:false}).limit(5000);
  if(error){summary.textContent='Catch log unavailable: '+error.message+' (database migration may still need to run).';list.replaceChildren();return}
  const records=data||[],grouped=new Map();
  for(const item of records){
@@ -75,7 +75,7 @@ async function fishdexRefreshCatchLog(client,user){
  if(recent){recent.replaceChildren();if(!records.length)recent.textContent='No verified catches yet.';else for(const item of records.slice(0,5)){
   const row=document.createElement('div');row.className='recent-entry';
   const title=document.createElement('strong');title.textContent=item.species_name;
-  const detail=document.createElement('span');detail.textContent=new Date(item.verified_at).toLocaleDateString()+(item.length_inches===null?'':' · '+item.length_inches+' in');
+  const detail=document.createElement('span');detail.textContent=new Date(item.verified_at).toLocaleDateString()+(item.length_inches===null?'':' · '+item.length_inches+' in')+(item.weight_lbs===null?'':' · '+item.weight_lbs+' lbs')+(item.catch_location?' · '+item.catch_location:'');
   row.append(title,detail);recent.append(row)
  }}
 }
