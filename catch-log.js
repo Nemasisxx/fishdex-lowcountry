@@ -17,7 +17,7 @@ function init(){
   current={catchId:data.catchId,speciesId:Number(data.speciesId)};
   method=null;form.reset();$('cl-status').textContent='';
   document.querySelectorAll('.cl-method').forEach(x=>x.setAttribute('aria-pressed','false'));
-  const fish=window.species?.find?.(x=>x.id===current.speciesId);
+  const fish=(typeof species!=='undefined'?species:[]).find(x=>x.id===current.speciesId);
   $('catch-log-title').textContent=data.speciesName||fish?.name||'Verified Fish';
   $('cl-type').firstChild.textContent=data.speciesName||fish?.name||'Verified Fish';
   $('cl-species-number').textContent='#'+String(current.speciesId).padStart(3,'0')+' · '+(data.alreadyUnlocked?'Another verified catch':'New species unlocked');
