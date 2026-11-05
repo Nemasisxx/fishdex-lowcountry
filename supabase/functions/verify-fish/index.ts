@@ -40,7 +40,7 @@ Deno.serve(async req=>{
  if(length!==null&&(!Number.isFinite(length)||length<=0||length>300||Math.round(length*100)!==length*100))return json({reason:'Length must be between 0 and 300 inches (up to two decimals).'},400);
  const {data:existing,error:existingError}=await admin.from('verified_fish_unlocks').select('species_id').eq('user_id',user.id).eq('species_id',match.id).maybeSingle();
  if(existingError)return json({reason:'Unable to check collection'},500);
- const {error:logError}=await admin.from('verified_fish_catches').insert({user_id:user.id,species_id:match.id,species_name:match.name,photo_sha256:digest,length_inches:length});
+ const {data:savedCatch,error:logError}=await admin.from('verified_fish_catches').insert({user_id:user.id,species_id:match.id,species_name:match.name,photo_sha256:digest,length_inches:length}).select('id').single();
  if(logError){console.error('Catch log failed',logError);return json({reason:'Could not save verified catch. Check that the catch-log migration is applied.'},500)}
  if(!existing){
   const {error:unlockError}=await admin.from('verified_fish_unlocks').insert({user_id:user.id,species_id:match.id,species_name:match.name,photo_sha256:digest});
@@ -49,5 +49,5 @@ Deno.serve(async req=>{
  const {data:history}=await admin.from('verified_fish_catches').select('length_inches').eq('user_id',user.id).eq('species_id',match.id);
  const count=history?.length||1;
  const best=history?.reduce((v,c)=>Math.max(v,Number(c.length_inches)||0),0)||null;
- return json({verified:true,alreadyUnlocked:!!existing,speciesId:match.id,speciesName:match.name,catchCount:count,bestLengthInches:best});
+ return json({verified:true,alreadyUnlocked:!!existing,speciesId:match.id,speciesName:match.name,catchId:savedCatch.id,catchCount:count,bestLengthInches:best});
 });
