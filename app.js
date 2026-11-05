@@ -16,8 +16,8 @@ function render(){
   b.querySelector('strong').textContent=s.name;
   const rarity=b.querySelector('.rarity');rarity.textContent=tiers[s.rarity];rarity.style.color=colors[s.rarity];
   const img=new Image();img.alt=s.name;img.loading='lazy';b.querySelector('.image-wrap').append(img);FishDexArt.attach(s,img);
-  b.setAttribute('aria-label',s.name+(isFound?' verified':' locked. Submit a photo to unlock'));
-  b.onclick=()=>discover(s,b);return b;
+  b.setAttribute('aria-label',s.name+(isFound?' verified':' locked. Click for fishing tips and where to find it'));
+  b.onclick=()=>{if(!isFound&&typeof window.FishDexOpenGuide==='function')window.FishDexOpenGuide(s.id);else discover(s,b)};return b;
  }));
 }
 function discover(s){
