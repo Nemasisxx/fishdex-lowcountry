@@ -26,6 +26,7 @@ function discover(s){
  const art=new Image();art.alt=s.name;FishDexArt.attach(s,art);image.append(art);
  $('#award-kicker').textContent='VERIFIED COLLECTION ENTRY';$('#award-title').textContent=s.name;
  $('#award-number').textContent='#'+String(s.id).padStart(3,'0')+' · '+tiers[s.rarity];
+ window.FishDexSelectedSpeciesId=s.id;
  dlg.showModal();
 }
 function fishdexPreviewUnlock(){
