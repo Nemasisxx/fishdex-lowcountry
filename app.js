@@ -97,8 +97,7 @@ async function fishdexVerifyPhoto(redoMode=false){
  button.disabled=true;redo.disabled=true;status.textContent='Analyzing photo securely…';
  try{
   const base64=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(file)});
-  const lengthInput=document.getElementById('fishdex-length');const lengthText=lengthInput.value.trim();const lengthInches=lengthText===''?null:Number(lengthText);
-  if(lengthText!==''&&(!Number.isFinite(lengthInches)||lengthInches<=0||lengthInches>300)){status.textContent='Enter a valid length in inches (0–300), or leave it blank.';return}
+  const lengthInches=null; // Measurements are entered in the post-verification journal.
   const {data,error}=await client.functions.invoke('verify-fish',{body:{image:base64,mimeType:file.type,fishermanHint:document.getElementById('fishdex-fisherman-hint').value.trim(),lengthInches,redo:redoMode===true}});
   if(error){
    let details='';
@@ -108,13 +107,15 @@ async function fishdexVerifyPhoto(redoMode=false){
   if(!data?.verified){status.textContent='Not unlocked: '+(data?.reason||'The photo could not be confidently matched to a FishDex species.');return}
   status.textContent='🏆 Verified '+data.speciesName+'! '+(data.alreadyUnlocked?'Another catch logged!':'New species unlocked!')+(data.catchCount?' Total: '+data.catchCount+'.':'')+(data.bestLengthInches?' Best: '+data.bestLengthInches+' in (reported).':'');
   await fishdexRefreshVerified();
-  if(!data.alreadyUnlocked){document.getElementById('search').value='';document.getElementById('filter').value='all';render();const target=document.querySelector('[data-species-id="'+Number(data.speciesId)+'"]');if(target){target.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});setTimeout(()=>{target.classList.add('unlock-celebrate');discover(species.find(s=>s.id===Number(data.speciesId)))},850)}}
+  if(!data.alreadyUnlocked){document.getElementById('search').value='';document.getElementById('filter').value='all';render();const target=document.querySelector('[data-species-id="'+Number(data.speciesId)+'"]');if(target)target.classList.add('unlock-celebrate')}
+  window.dispatchEvent(new CustomEvent('fishdex-catch-verified',{detail:data}));
  }catch(e){status.textContent='Verification failed: '+e.message}
  finally{button.disabled=false;redo.disabled=false}
 }
 document.getElementById('fishdex-verify-button').addEventListener('click',()=>fishdexVerifyPhoto(false));
 document.getElementById('fishdex-redo-button').addEventListener('click',()=>fishdexVerifyPhoto(true));
 window.addEventListener('fishdex-auth-change',fishdexRefreshVerified);
+window.addEventListener('fishdex-catch-details-saved',fishdexRefreshVerified);
 setTimeout(fishdexRefreshVerified,900);
 $('#award-close').onclick=()=>$('#award').close();
 $('#award').onclick=e=>{if(e.target.id==='award')e.target.close()};
