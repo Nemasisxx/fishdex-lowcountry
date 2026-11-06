@@ -16,7 +16,7 @@ const historic={
 };
 const freshwater=new Set('Largemouth Bass|Bluegill|Redear Sunfish|Redbreast Sunfish|Warmouth|Green Sunfish|Pumpkinseed|Black Crappie|White Crappie|Channel Catfish|Blue Catfish|Flathead Catfish|Brown Bullhead|Yellow Bullhead|Bowfin|Longnose Gar|Florida Gar|Chain Pickerel|American Eel|White Perch|Striped Bass|American Shad|Hickory Shad|Common Carp|Grass Carp|Spotted Sucker|Golden Shiner|Creek Chubsucker|Blueback Herring|Gizzard Shad|Threadfin Shad|Flier|Spotted Sunfish|Redfin Pickerel|Eastern Mosquitofish|Hybrid Striped Bass|White Bass'.split('|'));
 const offshore=new Set('Black Sea Bass|Vermilion Snapper|Red Snapper|Gag Grouper|Scamp|Mahi-mahi|Gray Triggerfish|Greater Amberjack|Blackfin Tuna|Wahoo|Yellowfin Tuna|Sailfish|Blue Marlin|King Mackerel|Cobia'.split('|'));
-const protectedNames=new Set(['Atlantic Sturgeon','Shortnose Sturgeon','Great White Shark']);
+const protectedNames=new Set(['Atlantic Sturgeon','Shortnose Sturgeon','Great White Shark','Sandbar Shark']);
 const catalog=()=>{
  if(typeof species!=='undefined'&&Array.isArray(species))return species;
  return Array.isArray(window.FishDexSpecies)?window.FishDexSpecies:[];
@@ -33,13 +33,14 @@ function show(){
  const heading=create('strong',name+(fish?' · Species #'+String(fish.id).padStart(3,'0'):''));
  body.append(heading);
  const status=create('p','','margin:10px 0;line-height:1.6;color:#e5f7fb');
- const h=historic[name];
- if(h){
-  status.textContent='Historical SCDNR reference (NOT verified for 2026): Length: '+h.size+'; daily bag: '+h.bag+'. '+h.notes;
-  body.append(status,link(h.source,'Historical SCDNR species publication ↗'));
+ const entry=(window.FISHDEX_REGULATIONS_2026||[]).find(x=>x.name===name);
+ if(entry && entry.status==='published-2026-reference'){
+  status.textContent='2026–2027 published reference: Length: '+entry.size+'; daily limit: '+entry.bag+'. '+entry.notes;
+  body.append(status,link(entry.source,'2026–2027 regulation table ↗'));
  }else{
-  status.textContent='Current minimum/maximum length, daily bag limit and season: NOT YET VERIFIED for this species and fishing location. Unknown does not mean unrestricted.';
+  status.textContent='Individual 2026–2027 limit review incomplete. Size and bag limit: NOT CONFIRMED. '+(entry?.notes||'');
   body.append(status);
+  if(entry?.source)body.append(link(entry.source,'Review applicable regulations ↗'));
  }
  if(protectedNames.has(name))body.append(create('p','⚠ Protected or specially regulated species: check all applicable retention prohibitions before fishing or handling.','font-weight:700;color:#ffd58d;line-height:1.5'));
  if(kind==='offshore')body.append(create('p','Offshore species may be governed by federal rules, regional management, closures, permits, and aggregate bag limits.','color:#b7d5de;line-height:1.5'));
