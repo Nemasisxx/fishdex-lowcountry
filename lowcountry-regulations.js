@@ -27,9 +27,9 @@ function inches(value){
 function plainSize(value){
  if(typeof value!=='string')return value;
  let result=inches(value);
- result=result.replace(/(\d+(?:\.\d+)?[–-]\d+(?:\.\d+)?)"\s*TL\s*slot\b/gi,'Must be between $1 long (nose to tail tip)');
- result=result.replace(/(\d+(?:\.\d+)?)"\s*TL\s*minimum\b/gi,'Must be at least $1 long (nose to tail tip)');
- result=result.replace(/(\d+(?:\.\d+)?)"\s*TL\s*maximum\b/gi,'Must be no longer than $1 (nose to tail tip)');
+ result=result.replace(/(\d+(?:\.\d+)?[–-]\d+(?:\.\d+)?)"\s*TL\s*slot\b/gi,'Must be between $1\" long (nose to tail tip)');
+ result=result.replace(/(\d+(?:\.\d+)?)"\s*TL\s*minimum\b/gi,'Must be at least $1\" long (nose to tail tip)');
+ result=result.replace(/(\d+(?:\.\d+)?)"\s*TL\s*maximum\b/gi,'Must be no longer than $1\" (nose to tail tip)');
  result=result.replace(/\bTL\b/g,'total length (nose to tail tip)').replace(/\bFL\b/g,'fork length (nose to middle of tail fork)');
  result=result.replace(/\bminimum\b/gi,'at least').replace(/\bmaximum\b/gi,'at most');
  return result;
