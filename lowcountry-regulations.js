@@ -73,7 +73,7 @@ function show(){
  const seasonCard=el('div','','width:100%;background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px');
  seasonCard.append(el('div','📅 Fishing season','color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',seasonText,'font-size:17px;font-weight:800;line-height:1.4;color:'+seasonColor));
  box.append(seasonCard);
- if(!known)box.append(el('div','⚠ Ask an adult to check the rules before keeping this fish.','width:100%;font-size:13px;color:#ffd58d'));
+ if(!known)box.append(el('div','⚠ Limits not confirmed. Check current regulations before keeping this fish.','width:100%;font-size:13px;color:#ffd58d'));
 }
 function init(){
  const dialog=document.getElementById('fish-guide-dialog');if(!dialog)return;
