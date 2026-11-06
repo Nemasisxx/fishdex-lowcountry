@@ -5,8 +5,9 @@ function show(){
  const name=document.getElementById('fg-title')?.textContent?.trim();
  const fish=(window.FISHDEX_REGULATIONS_2026||[]).find(x=>x.name===name);
  box.replaceChildren();
- const known=fish?.status==='published-2026-reference';
- const fields=[['📏','Fish size',known?fish.size:'Not confirmed'],['🐟','You can keep',known?fish.bag:'Not confirmed']];
+ const extra=window.FISHDEX_REGULATIONS_EXTRA?.[name];
+ const known=!!extra||fish?.status==='published-2026-reference';
+ const fields=[['📏','Fish size',known?(extra?.size||fish.size):'Not confirmed'],['🐟','You can keep',known?(extra?.bag||fish.bag):'Not confirmed']];
  for(const [emoji,label,value] of fields){
   const card=el('div','','background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px;flex:1;min-width:145px');
   card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',value,'font-size:19px;font-weight:800;line-height:1.4;color:white'));
