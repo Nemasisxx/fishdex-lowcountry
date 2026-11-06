@@ -7,6 +7,13 @@ function show(){
  box.replaceChildren();
  const extra=window.FISHDEX_REGULATIONS_EXTRA?.[name];
  const known=!!extra||fish?.status==='published-2026-reference';
+ const protectedFish=new Set(['Atlantic Sturgeon','Shortnose Sturgeon','Great White Shark','Sandbar Shark']);
+ if(protectedFish.has(name)){
+  const notice=el('div','','width:100%;padding:18px;border-radius:12px;background:#123d4e;border:1px solid #2d7181;text-align:center');
+  notice.append(el('div','🛡️ Protected Species','font-size:22px;font-weight:800;color:#a8e7e3;margin-bottom:8px'),el('div','Catch & Release','font-size:25px;font-weight:900;color:#ffffff'));
+  box.append(notice);
+  return;
+ }
  const fields=[['📏','Fish size',known?(extra?.size||fish.size):'Not confirmed'],['🐟','You can keep',known?(extra?.bag||fish.bag):'Not confirmed']];
  for(const [emoji,label,value] of fields){
   const card=el('div','','background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px;flex:1;min-width:145px');
