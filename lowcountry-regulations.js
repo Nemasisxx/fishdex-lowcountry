@@ -21,7 +21,8 @@ function applyHomeWaters(home){
 }
 function inches(value){
  if(typeof value!=='string')return value;
- return value.replace(/(\\d+(?:\\.\\d+)?)\\s*(?:inches|inch|in\\.?)\\b/gi,(_,n)=>n+'"');
+ return value
+  .replace(/(\d+(?:\.\d+)?(?:\s*[–-]\s*\d+(?:\.\d+)?)?)\s*(?:inches|inch|in\.?)\b/gi,(_,n)=>n.replace(/\s+/g,'')+'"');
 }
 function show(){
  const box=document.getElementById('fd-regulations-detail');if(!box)return;
