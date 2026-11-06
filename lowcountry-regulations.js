@@ -1,6 +1,24 @@
 (()=>{'use strict';
 function el(tag,text,css){const n=document.createElement(tag);n.textContent=text;n.style.cssText=css||'';return n}
-let selectedWater='unknown';
+let selectedWater='unknown',manualWater=false;
+const hubWaters={
+ 'Georgetown / Winyah Bay':'state-coastal',
+ 'Pawleys Island / Murrells Inlet':'state-coastal',
+ 'Charleston Harbor':'state-coastal',
+ 'Wando / Cooper Rivers':'coastal-river',
+ 'Edisto / ACE Basin':'state-coastal',
+ 'Beaufort / Port Royal':'state-coastal',
+ 'Hilton Head / Daufuskie':'state-coastal',
+ 'Lake Marion / Lake Moultrie':'santee',
+ 'Other Lowcountry waters':'unknown'
+};
+function applyHomeWaters(home){
+ if(manualWater)return;
+ selectedWater=hubWaters[home]||'unknown';
+ const select=document.getElementById('fd-water-select');
+ if(select)select.value=selectedWater;
+ show();
+}
 function inches(value){
  if(typeof value!=='string')return value;
  return value.replace(/(\\d+(?:\\.\\d+)?)\\s*(?:inches|inch|in\\.?)\\b/gi,(_,n)=>n+'"');
@@ -68,12 +86,15 @@ function init(){
  const waterSelect=el('select','','width:100%;padding:10px;border-radius:9px;background:#123d4e;color:#fff;border:1px solid #368b9d;font-size:15px');
  const options=[['unknown','Choose fishing waters'],['state-coastal','SC coastal state waters'],['south-jeremy','SC coastal waters south of Jeremy Inlet'],['federal','Federal offshore waters'],['coastal-river','Lowcountry coastal river'],['santee','Santee / Marion / Moultrie'],['other-fresh','Other freshwater lake or river']];
  for(const [value,label] of options){const opt=document.createElement('option');opt.value=value;opt.textContent=label;waterSelect.append(opt)}
- waterSelect.value=selectedWater;
- waterSelect.addEventListener('change',()=>{selectedWater=waterSelect.value;show()});
+ waterSelect.id='fd-water-select';waterSelect.value=selectedWater;
+ waterSelect.addEventListener('change',()=>{manualWater=true;selectedWater=waterSelect.value;show()});
  waterWrap.append(waterSelect);panel.append(waterWrap);
  const body=el('div','','display:flex;flex-wrap:wrap;gap:10px');body.id='fd-regulations-detail';panel.append(body);
  const title=document.getElementById('fg-title');
  if(title)new MutationObserver(show).observe(title,{childList:true,characterData:true,subtree:true});
+ window.addEventListener('fishdex:home-waters-changed',event=>applyHomeWaters(event.detail?.homeWaters));
+ const client=window.fishdexSupabase;
+ if(client)client.auth.getUser().then(({data})=>applyHomeWaters(data?.user?.user_metadata?.fishdex_home_waters)).catch(()=>{});
  show();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
