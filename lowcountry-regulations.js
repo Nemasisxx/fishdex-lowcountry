@@ -1,5 +1,6 @@
 (()=>{'use strict';
 function el(tag,text,css){const n=document.createElement(tag);n.textContent=text;n.style.cssText=css||'';return n}
+let selectedWater='unknown';
 function show(){
  const box=document.getElementById('fd-regulations-detail');if(!box)return;
  const name=document.getElementById('fg-title')?.textContent?.trim();
@@ -14,6 +15,8 @@ function show(){
   box.append(notice);
   return;
  }
+ const locationNote=selectedWater==='unknown'?'⚠ Select fishing waters to check location-specific rules.':selectedWater==='federal'?'⚠ Federal limits and closures may differ. Verify before keeping fish.':selectedWater==='other-fresh'||selectedWater==='santee'||selectedWater==='coastal-river'?'⚠ River and lake rules may differ. Verify before keeping fish.':'⚠ Local restrictions may differ. Verify before keeping fish.';
+ box.append(el('div',locationNote,'width:100%;font-size:13px;color:#ffd58d'));
  const fields=[['📏','Fish size',known?(extra?.size||fish.size):'Not confirmed'],['🐟','You can keep',known?(extra?.bag||fish.bag):'Not confirmed']];
  for(const [emoji,label,value] of fields){
   const card=el('div','','background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px;flex:1;min-width:145px');
@@ -35,8 +38,13 @@ function show(){
   let closed=season.months.includes(month);
   if(name==='Gag Grouper'&&month===8&&day<2)closed=false;
   if(name==='Striped Bass'&&month===6&&day<16)closed=false;
-  seasonText=(closed?'🔴 Closed in some waters':'🟢 Outside listed closure')+' — '+season.label;
-  seasonColor=closed?'#ffc4a9':'#b7f5d0';
+  const applies=season.type==='federal'?selectedWater==='federal':name==='Cobia'?selectedWater==='south-jeremy':name==='Striped Bass'?selectedWater==='coastal-river':false;
+  if(selectedWater==='unknown'||!applies){
+   seasonText=(selectedWater==='unknown'?'⚠ Choose fishing waters':'⚠ Check local rules')+' — '+season.label;
+  }else{
+   seasonText=(closed?'🔴 Harvest closed':'🟢 Outside listed closure')+' — '+season.label;
+  }
+  seasonColor=applies&&closed?'#ffc4a9':'#ffd58d';
  }else if(name==='Red Drum'||name==='Spotted Seatrout'||name==='Black Drum'||name==='Sheepshead'){
   seasonText='🟢 Open year-round (harvest season)';seasonColor='#b7f5d0';
  }
@@ -51,6 +59,14 @@ function init(){
  if(!panel){panel=el('section','','margin:18px 0;padding:16px;border:1px solid #368b9d;border-radius:15px;background:#092b3b');panel.id='fd-regulations';const shell=dialog.querySelector('.fg-shell')||dialog;const actions=shell.querySelector('.fg-actions');if(actions)actions.before(panel);else shell.append(panel)}
  panel.replaceChildren();
  panel.append(el('h3','Can I keep this fish?','margin:0 0 12px;color:#7cebdc;font-size:20px'));
+ const waterWrap=el('div','','margin-bottom:12px');
+ waterWrap.append(el('label','📍 Where are you fishing?','display:block;color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:7px'));
+ const waterSelect=el('select','','width:100%;padding:10px;border-radius:9px;background:#123d4e;color:#fff;border:1px solid #368b9d;font-size:15px');
+ const options=[['unknown','Choose fishing waters'],['state-coastal','SC coastal state waters'],['south-jeremy','SC coastal waters south of Jeremy Inlet'],['federal','Federal offshore waters'],['coastal-river','Lowcountry coastal river'],['santee','Santee / Marion / Moultrie'],['other-fresh','Other freshwater lake or river']];
+ for(const [value,label] of options){const opt=document.createElement('option');opt.value=value;opt.textContent=label;waterSelect.append(opt)}
+ waterSelect.value=selectedWater;
+ waterSelect.addEventListener('change',()=>{selectedWater=waterSelect.value;show()});
+ waterWrap.append(waterSelect);panel.append(waterWrap);
  const body=el('div','','display:flex;flex-wrap:wrap;gap:10px');body.id='fd-regulations-detail';panel.append(body);
  const title=document.getElementById('fg-title');
  if(title)new MutationObserver(show).observe(title,{childList:true,characterData:true,subtree:true});
