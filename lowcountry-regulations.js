@@ -40,17 +40,18 @@ function show(){
  const fish=(window.FISHDEX_REGULATIONS_2026||[]).find(x=>x.name===name);
  box.replaceChildren();
  const extra=window.FISHDEX_REGULATIONS_EXTRA?.[name];
- const known=!!extra||fish?.status==='published-2026-reference'||fish?.status==='state-table-no-specific-limit-listed';
- const protectedFish=new Set(['Atlantic Sturgeon','Shortnose Sturgeon','Great White Shark','Sandbar Shark']);
+ const known=!!fish?.size&&!!fish?.bag||!!extra;
+ const protectedFish=new Set(['Atlantic Sturgeon','Shortnose Sturgeon','Great White Shark','Sandbar Shark','Grass Carp','Hardhead Catfish','Gafftopsail Catfish']);
  if(protectedFish.has(name)){
   const notice=el('div','','width:100%;padding:18px;border-radius:12px;background:#123d4e;border:1px solid #2d7181;text-align:center');
   notice.append(el('div','🛡️ Protected Species','font-size:22px;font-weight:800;color:#a8e7e3;margin-bottom:8px'),el('div','Catch & Release','font-size:25px;font-weight:900;color:#ffffff'));
   box.append(notice);
+  const link=el('a','View regulation source ↗','color:#a8e7e3;text-decoration:underline');link.href=fish?.source||'https://www.eregulations.com/southcarolina/fishing';link.target='_blank';link.rel='noopener noreferrer';box.append(link);
   return;
  }
  const locationNote=selectedWater==='unknown'?'⚠ Select fishing waters to check location-specific rules.':selectedWater==='federal'?'⚠ Federal limits and closures may differ. Verify before keeping fish.':selectedWater==='other-fresh'||selectedWater==='santee'||selectedWater==='coastal-river'?'⚠ River and lake rules may differ. Verify before keeping fish.':'⚠ Local restrictions may differ. Verify before keeping fish.';
  box.append(el('div',locationNote,'width:100%;font-size:13px;color:#ffd58d'));
- const fields=[['📏','Fish size',known?(extra?.size||fish.size):'Not confirmed'],['🐟','You can keep',known?(extra?.bag||fish.bag):'Not confirmed']];
+ const fields=[['📏','Fish size',known?(fish?.size||extra?.size):'Not confirmed'],['🐟','You can keep',known?(fish?.bag||extra?.bag):'Not confirmed']];
  for(const [emoji,label,value] of fields){
   const card=el('div','','background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px;flex:1;min-width:145px');
   card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',label==='Fish size'?plainSize(value):inches(value),'font-size:19px;font-weight:800;line-height:1.4;color:white'));
@@ -122,9 +123,30 @@ function show(){
   else if(noSeasonConfirmed.includes(name))details=['No general species-specific state-water harvest closure is listed in the FishDex reference.','Gear restrictions, federal-water rules or temporary closures may still apply.'];
   else details=['The FishDex reference does not list a species-specific seasonal closure for this fish.','This does not establish that harvest is open all year. Check applicable state or federal rules for your fishing waters.'];
   if(fish?.notes&&!fish.notes.startsWith('Species-specific current recreational retention limits not established'))details.push('Other listed rule: '+fish.notes);
+  if(name==='Largemouth Bass'&&selectedWater==='santee')details.unshift('Lake Marion and Lake Moultrie: minimum length is 14" and the combined black bass daily limit is 5.');
+  if(name==='Blue Catfish')details=['Lake Marion, Lake Moultrie and upper Santee River: 25 fish per person per day. Most other state waters: 150 per person per day.','Only two fish longer than 32" may be kept daily in designated waters, including Marion and Moultrie.'];
+  if(name==='Red Snapper'&&selectedWater==='federal')details=['The published 2026–27 table prohibits possession in federal waters.','An official NOAA announcement may authorize a limited opening; verify before harvesting.'];
   for(const detail of details)modal.append(el('p',detail,'line-height:1.6;color:#e0eef3;margin:12px 0'));
   modal.append(el('p','Season dates may change. Check current SCDNR or federal regulations before harvesting.','font-size:13px;color:#ffd58d;margin-top:16px'));
+  const sourceLink=el('a','Open regulation source ↗','display:inline-block;margin-top:12px;color:#7cebdc;text-decoration:underline;font-weight:700');
+  sourceLink.href=fish?.source||'https://www.eregulations.com/southcarolina/fishing';sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';modal.append(sourceLink);
+  modal.append(el('p',fish?.lastReviewed?'Reference reviewed: '+fish.lastReviewed:'Reference review: still pending for this species','font-size:12px;color:#b4d2dd'));
   overlay.append(modal);document.body.append(overlay);overlay.showModal();close.focus();
+ }
+ if(name==='Striped Bass'||name==='Hybrid Striped Bass'){
+  const coastal=selectedWater==='coastal-river';
+  const santee=selectedWater==='santee';
+  if(coastal||santee){
+   const closed=(month>6&&month<10)||(month===6&&day>=16);
+   seasonText=closed?'🔴 Harvest closed June 16–September 30':'🟢 Harvest season October 1–June 15';
+   seasonColor=closed?'#ffc4a9':'#b7f5d0';
+  }else seasonText='⚠ Striped bass rules vary by river and reservoir';
+ }
+ if(name==='Red Snapper'&&selectedWater==='federal'){
+  seasonText='🔴 Federal possession prohibited under published rules; check NOAA for announced openings';seasonColor='#ffc4a9';
+ }
+ if(name==='Largemouth Bass'&&selectedWater==='santee'){
+  seasonText='🟢 No general freshwater game-fish closed season; special lake-area closures may apply';seasonColor='#b7f5d0';
  }
  const seasonCard=el('div','','width:100%;background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px');
  seasonCard.append(el('div','📅 Fishing season','color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',seasonText,'font-size:17px;font-weight:800;line-height:1.4;color:'+seasonColor));
@@ -133,6 +155,8 @@ function show(){
  seasonCard.addEventListener('click',openSeasonDetails);
  seasonCard.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openSeasonDetails()}});
  box.append(seasonCard);
+ const sourceLink=el('a','View official regulation table ↗','color:#7cebdc;font-size:13px;text-decoration:underline');sourceLink.href=fish?.source||'https://www.eregulations.com/southcarolina/fishing';sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';box.append(sourceLink);
+ box.append(el('div',fish?.lastReviewed?'Reference checked: '+fish.lastReviewed:'Reference not individually audited yet','font-size:12px;color:#b4d2dd'));
  if(!known)box.append(el('div','⚠ Limits not confirmed. Check current regulations before keeping this fish.','width:100%;font-size:13px;color:#ffd58d'));
 }
 function init(){
