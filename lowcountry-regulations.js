@@ -70,8 +70,37 @@ function show(){
  }else if(name==='Red Drum'||name==='Spotted Seatrout'||name==='Black Drum'||name==='Sheepshead'){
   seasonText='🟢 Open year-round (harvest season)';seasonColor='#b7f5d0';
  }
+ const seasonDetails={
+  'Cobia':['Southern Cobia Management Zone (south of Jeremy Inlet): harvest closed May 1–31 in state waters.','Other state and federal waters may have different rules. Check current SCDNR limits before harvesting.'],
+  'Gag Grouper':['Federal waters: listed harvest closure Aug 2, 2026–Apr 30, 2027.','State waters and later seasons may differ. Federal seasons can change by notice.'],
+  'Scamp':['Federal waters: listed seasonal closure Jan 1–Apr 30.','Other snapper-grouper restrictions and emergency closures may apply.'],
+  'Greater Amberjack':['Federal waters: listed closure Apr 1–30.','Additional seasonal or emergency closures may apply.'],
+  'Striped Bass':['Many Lowcountry coastal rivers: listed harvest closure Jun 16–Sep 30.','Exact dates, exceptions and legal harvest sizes depend on the specific river or lake.']
+ };
+ function openSeasonDetails(){
+  document.getElementById('fd-season-popup')?.remove();
+  const overlay=el('div','','position:fixed;inset:0;z-index:2147483647;background:#000b;display:flex;align-items:center;justify-content:center;padding:18px');
+  overlay.id='fd-season-popup';overlay.setAttribute('role','presentation');
+  const modal=el('section','','width:min(100%,460px);max-height:85vh;overflow:auto;background:#092b3b;border:1px solid #4aa4b6;border-radius:16px;padding:22px;color:white;box-shadow:0 16px 45px #0008');
+  modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Fishing season details');
+  const close=el('button','✕','','');close.type='button';close.setAttribute('aria-label','Close season details');close.style.cssText='float:right;background:#123d4e;border:1px solid #4aa4b6;border-radius:8px;padding:7px 11px;color:white;cursor:pointer';
+  const dismiss=()=>{overlay.remove();document.removeEventListener('keydown',onKey)};
+  const onKey=e=>{if(e.key==='Escape')dismiss()};
+  close.addEventListener('click',dismiss);overlay.addEventListener('click',e=>{if(e.target===overlay)dismiss()});
+  modal.append(close,el('h3','📅 '+name+' — Fishing season','color:#7cebdc;font-size:21px;margin:0 0 16px'));
+  modal.append(el('p','Selected waters: '+(document.getElementById('fd-water-select')?.selectedOptions[0]?.textContent||'Not selected'),'color:#a8e7e3;font-size:14px'));
+  modal.append(el('p',seasonText,'font-weight:800;font-size:17px;line-height:1.5'));
+  const details=seasonDetails[name]||['No verified species-specific harvest season is available in FishDex yet.','Check the current rules for your exact location before keeping this fish.'];
+  for(const detail of details)modal.append(el('p',detail,'line-height:1.6;color:#e0eef3;margin:12px 0'));
+  modal.append(el('p','Season dates may change. Check current SCDNR or federal regulations before harvesting.','font-size:13px;color:#ffd58d;margin-top:16px'));
+  overlay.append(modal);document.body.append(overlay);document.addEventListener('keydown',onKey);close.focus();
+ }
  const seasonCard=el('div','','width:100%;background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px');
  seasonCard.append(el('div','📅 Fishing season','color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',seasonText,'font-size:17px;font-weight:800;line-height:1.4;color:'+seasonColor));
+ seasonCard.setAttribute('role','button');seasonCard.tabIndex=0;seasonCard.setAttribute('aria-label','Show exact fishing season details for '+name);seasonCard.style.cursor='pointer';
+ seasonCard.append(el('div','Tap or click for season details ›','font-size:12px;color:#a8e7e3;margin-top:8px'));
+ seasonCard.addEventListener('click',openSeasonDetails);
+ seasonCard.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openSeasonDetails()}});
  box.append(seasonCard);
  if(!known)box.append(el('div','⚠ Limits not confirmed. Check current regulations before keeping this fish.','width:100%;font-size:13px;color:#ffd58d'));
 }
