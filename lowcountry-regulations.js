@@ -51,7 +51,34 @@ function show(){
  }
  const locationNote=selectedWater==='unknown'?'⚠ Select fishing waters to check location-specific rules.':selectedWater==='federal'?'⚠ Federal limits and closures may differ. Verify before keeping fish.':selectedWater==='other-fresh'||selectedWater==='santee'||selectedWater==='coastal-river'?'⚠ River and lake rules may differ. Verify before keeping fish.':'⚠ Local restrictions may differ. Verify before keeping fish.';
  box.append(el('div',locationNote,'width:100%;font-size:13px;color:#ffd58d'));
- const fields=[['📏','Fish size',known?(fish?.size||extra?.size):'Not confirmed'],['🐟','You can keep',known?(fish?.bag||extra?.bag):'Not confirmed']];
+ const exactRules={
+  'santee-lakes':{
+   'Largemouth Bass':['At least 14" long (nose to tail tip)','5 per person per day, combined black bass'],
+   'Blue Catfish':['Only 2 longer than 32" per person per day','25 per person per day'],
+   'Striped Bass':['Varies between Lake Marion, Lake Moultrie and the Santee River','Exact lake or river needed before showing a daily limit'],
+   'Hybrid Striped Bass':['Varies between Lake Marion, Lake Moultrie and the Santee River','Exact lake or river needed before showing a daily limit']
+  },
+  'pee-dee-upper':{'Blue Catfish':['Only 2 longer than 32" per person per day','25 per person per day']},
+  'santee-upper':{'Blue Catfish':['Only 2 longer than 32" per person per day','25 per person per day']},
+  'congaree-wateree':{'Blue Catfish':['Only 2 longer than 32" per person per day','150 per person per day']},
+  'coastal-listed':{
+   'Striped Bass':['At least 26" long (nose to tail tip)','3 per person per day October 1–June 15; harvest closed June 16–September 30'],
+   'Hybrid Striped Bass':['At least 26" long (nose to tail tip)','3 per person per day October 1–June 15; harvest closed June 16–September 30']
+  },
+  'savannah-lower':{
+   'Striped Bass':['At least 27" long (nose to tail tip)','2 per person per day, year-round'],
+   'Hybrid Striped Bass':['At least 27" long (nose to tail tip)','2 per person per day'],
+   'White Bass':['At least 27" long (nose to tail tip)','2 per person per day']
+  },
+  'santee-system':{
+   'Striped Bass':['October 1–June 15: 23–25" or one longer than 26"','3 per person per day; closed June 16–September 30'],
+   'Hybrid Striped Bass':['Check Santee system special size rules','3 per person per day; closed June 16–September 30']
+  }
+ };
+ const override=exactRules[selectedWater]?.[name];
+ const needsExact=(selectedWater==='santee'||selectedWater==='coastal-river')&&['Striped Bass','Hybrid Striped Bass','White Bass','Blue Catfish'].includes(name);
+ const fields=[['📏','Fish size',needsExact?'Choose an exact waterbody':override?.[0]||(known?(fish?.size||extra?.size):'Not confirmed')],['🐟','You can keep',needsExact?'Choose an exact waterbody':override?.[1]||(known?(fish?.bag||extra?.bag):'Not confirmed')]];
+
  for(const [emoji,label,value] of fields){
   const card=el('div','','background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px;flex:1;min-width:145px');
   card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',label==='Fish size'?plainSize(value):inches(value),'font-size:19px;font-weight:800;line-height:1.4;color:white'));
@@ -123,8 +150,9 @@ function show(){
   else if(noSeasonConfirmed.includes(name))details=['No general species-specific state-water harvest closure is listed in the FishDex reference.','Gear restrictions, federal-water rules or temporary closures may still apply.'];
   else details=['The FishDex reference does not list a species-specific seasonal closure for this fish.','This does not establish that harvest is open all year. Check applicable state or federal rules for your fishing waters.'];
   if(fish?.notes&&!fish.notes.startsWith('Species-specific current recreational retention limits not established'))details.push('Other listed rule: '+fish.notes);
-  if(name==='Largemouth Bass'&&selectedWater==='santee')details.unshift('Lake Marion and Lake Moultrie: minimum length is 14" and the combined black bass daily limit is 5.');
-  if(name==='Blue Catfish')details=['Lake Marion, Lake Moultrie and upper Santee River: 25 fish per person per day. Most other state waters: 150 per person per day.','Only two fish longer than 32" may be kept daily in designated waters, including Marion and Moultrie.'];
+  if(name==='Largemouth Bass'&&selectedWater==='santee-lakes')details.unshift('Lake Marion and Lake Moultrie: minimum length is 14" and the combined black bass daily limit is 5.');
+  if(name==='Blue Catfish')details=['Lake Marion, Lake Moultrie, upper Santee River and upper Pee Dee River (NC border to Highway 301): 25 per person per day. Other state waters: 150 per person per day.','Only two fish longer than 32" may be kept in designated waters, including Marion, Moultrie, upper Santee, upper Pee Dee, Congaree and Wateree rivers.'];
+  if(override)details.unshift('Selected waterbody: '+override[0]+'. Daily limit: '+override[1]+'.');
   if(name==='Red Snapper'&&selectedWater==='federal')details=['The published 2026–27 table prohibits possession in federal waters.','An official NOAA announcement may authorize a limited opening; verify before harvesting.'];
   for(const detail of details)modal.append(el('p',detail,'line-height:1.6;color:#e0eef3;margin:12px 0'));
   modal.append(el('p','Season dates may change. Check current SCDNR or federal regulations before harvesting.','font-size:13px;color:#ffd58d;margin-top:16px'));
@@ -134,13 +162,14 @@ function show(){
   overlay.append(modal);document.body.append(overlay);overlay.showModal();close.focus();
  }
  if(name==='Striped Bass'||name==='Hybrid Striped Bass'){
-  const coastal=selectedWater==='coastal-river';
+  const coastal=selectedWater==='coastal-listed'||selectedWater==='santee-system';
   const santee=selectedWater==='santee';
   if(coastal){
    const closed=(month>6&&month<10)||(month===6&&day>=16);
    seasonText=closed?'🔴 Harvest closed June 16–September 30':'🟢 Harvest season October 1–June 15';
    seasonColor=closed?'#ffc4a9':'#b7f5d0';
-  }else seasonText='⚠ Striped bass rules vary by river and reservoir; choose an exact waterbody';
+  }else if(selectedWater==='savannah-lower'){seasonText='🟢 No seasonal harvest closure listed for lower Savannah River';seasonColor='#b7f5d0';}
+  else seasonText='⚠ Striped bass rules vary by river and reservoir; choose an exact waterbody';
  }
  if(name==='Red Snapper'&&selectedWater==='federal'){
   seasonText='🔴 Federal possession prohibited under published rules; check NOAA for announced openings';seasonColor='#ffc4a9';
@@ -168,7 +197,7 @@ function init(){
  const waterWrap=el('div','','margin-bottom:12px');
  waterWrap.append(el('label','📍 Where are you fishing?','display:block;color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:7px'));
  const waterSelect=el('select','','width:100%;padding:10px;border-radius:9px;background:#123d4e;color:#fff;border:1px solid #368b9d;font-size:15px');
- const options=[['unknown','Choose fishing waters'],['state-coastal','SC coastal state waters'],['south-jeremy','SC coastal waters south of Jeremy Inlet'],['federal','Federal offshore waters'],['coastal-river','Lowcountry coastal river'],['santee','Santee / Marion / Moultrie'],['other-fresh','Other freshwater lake or river']];
+ const options=[['unknown','Choose fishing waters'],['state-coastal','SC coastal state waters'],['south-jeremy','SC coastal waters south of Jeremy Inlet'],['federal','Federal offshore waters'],['coastal-river','Lowcountry coastal river'],['santee','Santee / Marion / Moultrie'],['other-fresh','Other freshwater lake or river'],['santee-lakes','Lake Marion or Lake Moultrie'],['santee-system','Santee River system (not the lakes)'],['santee-upper','Upper Santee River'],['coastal-listed','Listed Lowcountry coastal rivers'],['savannah-lower','Lower Savannah River'],['pee-dee-upper','Pee Dee River: NC line to Highway 301'],['congaree-wateree','Congaree or Wateree River']];
  for(const [value,label] of options){const opt=document.createElement('option');opt.value=value;opt.textContent=label;waterSelect.append(opt)}
  waterSelect.id='fd-water-select';waterSelect.value=selectedWater;
  waterSelect.addEventListener('change',()=>{manualWater=true;selectedWater=waterSelect.value;show()});
