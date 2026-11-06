@@ -6,8 +6,9 @@ window.FISHDEX_REGULATIONS_2026=[
     "size": "18–25 in TL slot",
     "bag": "1/person/day; 2/boat/day",
     "notes": "State waters only; federal possession prohibited; no gig harvest Dec 1–Feb 28. Changed July 1, 2026.",
-    "status": "published-2026-reference",
-    "source": "https://www.eregulations.com/southcarolina/fishing/finfish-size-catch-limits"
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/finfish-size-catch-limits",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 2,
@@ -263,11 +264,12 @@ window.FISHDEX_REGULATIONS_2026=[
     "id": 27,
     "name": "Red Snapper",
     "water": "saltwater",
-    "size": "20 in TL minimum in state waters",
-    "bag": "2/person/day in state waters",
-    "notes": "Federal-water possession prohibited in published table; check emergency federal openings.",
-    "status": "published-2026-reference",
-    "source": "https://www.eregulations.com/southcarolina/fishing/snapper-grouper-complex-size-catch-limits"
+    "size": "20 in TL minimum in state waters; federal possession prohibited except an announced opening",
+    "bag": "2/person/day in state waters; federal possession prohibited except an announced opening",
+    "notes": "Federal possession prohibited under the published 2026–27 table unless NOAA announces an authorized opening; state waters have separate limits.",
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/snapper-grouper-complex-size-catch-limits",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 28,
@@ -436,8 +438,9 @@ window.FISHDEX_REGULATIONS_2026=[
     "size": "Any length statewide generally; 14 in TL minimum in Marion, Moultrie and listed waters",
     "bag": "5/person/day combined black bass",
     "notes": "Local waterbody exceptions apply; e.g. Lakes Marion and Moultrie.",
-    "status": "published-2026-reference",
-    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-fish-size-possession-limits"
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-fish-size-possession-limits",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 45,
@@ -533,11 +536,12 @@ window.FISHDEX_REGULATIONS_2026=[
     "id": 54,
     "name": "Blue Catfish",
     "water": "freshwater",
-    "size": null,
-    "bag": null,
+    "size": "Only 2 fish over 32 inches in designated waters",
+    "bag": "150/person/day statewide; 25/person/day in designated waters",
     "notes": "Species-specific current recreational retention limits not established from reviewed tables. Check current regulations and local restrictions.",
-    "status": "requires-individual-review",
-    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-nongame-fishing-regulations"
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-nongame-fishing-regulations",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 55,
@@ -606,8 +610,9 @@ window.FISHDEX_REGULATIONS_2026=[
     "size": "Any length",
     "bag": "30/person/day",
     "notes": "40 total freshwater game fish/day statewide.",
-    "status": "published-2026-reference",
-    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-fish-size-possession-limits"
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-fish-size-possession-limits",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 62,
@@ -633,11 +638,12 @@ window.FISHDEX_REGULATIONS_2026=[
     "id": 64,
     "name": "Striped Bass",
     "water": "freshwater",
-    "size": "Varies by waterbody and season",
-    "bag": "Varies: 3/day in listed Lowcountry rivers Oct 1–Jun 15; other waters differ",
-    "notes": "Many Lowcountry rivers closed June 16–Sep 30; 26 in TL minimum Oct 1–Jun 15 in listed rivers. Santee and Savannah exceptions.",
-    "status": "published-2026-reference",
-    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-fish-size-possession-limits"
+    "size": "26 in TL minimum in listed coastal rivers; location-specific exceptions",
+    "bag": "3/person/day Oct 1–Jun 15 in listed coastal rivers; no possession Jun 16–Sep 30; other waters differ",
+    "notes": "Listed coastal rivers: 26-inch minimum, 3 per day Oct 1–Jun 15, no possession Jun 16–Sep 30. Lower Savannah River and reservoirs differ.",
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-fish-size-possession-limits",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 65,
@@ -653,11 +659,12 @@ window.FISHDEX_REGULATIONS_2026=[
     "id": 66,
     "name": "Hickory Shad",
     "water": "freshwater",
-    "size": null,
-    "bag": null,
+    "size": "No species-specific minimum listed",
+    "bag": "10/person/day; 20 in Santee River and Rediversion Canal",
     "notes": "Species-specific current recreational retention limits not established from reviewed tables. Check current regulations and local restrictions.",
-    "status": "requires-individual-review",
-    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-nongame-fishing-regulations"
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-nongame-fishing-regulations",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 67,
@@ -675,9 +682,10 @@ window.FISHDEX_REGULATIONS_2026=[
     "water": "freshwater",
     "size": "Retention prohibited in public waters",
     "bag": "0 — return immediately",
-    "notes": "Taking, harming or killing grass carp in public waters prohibited.",
-    "status": "published-2026-reference",
-    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-game-fishing-regulations"
+    "notes": "Illegal to take, harm, or kill grass carp from public waters; return immediately.",
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/freshwater-game-fishing-regulations",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 69,
@@ -883,21 +891,23 @@ window.FISHDEX_REGULATIONS_2026=[
     "id": 89,
     "name": "Atlantic Sturgeon",
     "water": "saltwater",
-    "size": null,
-    "bag": null,
+    "size": "Protected — do not keep",
+    "bag": "0 — release",
     "notes": "Species-specific current recreational retention limits not established from reviewed tables. Check current regulations and local restrictions.",
-    "status": "requires-individual-review",
-    "source": "https://www.eregulations.com/southcarolina/fishing/finfish-size-catch-limits"
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/finfish-size-catch-limits",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 90,
     "name": "Shortnose Sturgeon",
     "water": "saltwater",
-    "size": null,
-    "bag": null,
+    "size": "Protected — do not keep",
+    "bag": "0 — release",
     "notes": "Species-specific current recreational retention limits not established from reviewed tables. Check current regulations and local restrictions.",
-    "status": "requires-individual-review",
-    "source": "https://www.eregulations.com/southcarolina/fishing/finfish-size-catch-limits"
+    "status": "reviewed-official-reference",
+    "source": "https://www.eregulations.com/southcarolina/fishing/finfish-size-catch-limits",
+    "lastReviewed": "2026-11-06"
   },
   {
     "id": 91,
