@@ -1,6 +1,10 @@
 (()=>{'use strict';
 function el(tag,text,css){const n=document.createElement(tag);n.textContent=text;n.style.cssText=css||'';return n}
 let selectedWater='unknown';
+function inches(value){
+ if(typeof value!=='string')return value;
+ return value.replace(/(\\d+(?:\\.\\d+)?)\\s*(?:inches|inch|in\\.?)\\b/gi,(_,n)=>n+'"');
+}
 function show(){
  const box=document.getElementById('fd-regulations-detail');if(!box)return;
  const name=document.getElementById('fg-title')?.textContent?.trim();
@@ -20,7 +24,7 @@ function show(){
  const fields=[['📏','Fish size',known?(extra?.size||fish.size):'Not confirmed'],['🐟','You can keep',known?(extra?.bag||fish.bag):'Not confirmed']];
  for(const [emoji,label,value] of fields){
   const card=el('div','','background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px;flex:1;min-width:145px');
-  card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',value,'font-size:19px;font-weight:800;line-height:1.4;color:white'));
+  card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',inches(value),'font-size:19px;font-weight:800;line-height:1.4;color:white'));
   box.append(card);
  }
  const seasonal={
