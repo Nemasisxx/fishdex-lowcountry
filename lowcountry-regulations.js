@@ -158,6 +158,11 @@ function show(){
   modal.append(el('p','Season dates may change. Check current SCDNR or federal regulations before harvesting.','font-size:13px;color:#ffd58d;margin-top:16px'));
   const sourceLink=el('a','Open regulation source ↗','display:inline-block;margin-top:12px;color:#7cebdc;text-decoration:underline;font-weight:700');
   sourceLink.href=fish?.source||'https://www.eregulations.com/southcarolina/fishing';sourceLink.target='_blank';sourceLink.rel='noopener noreferrer';modal.append(sourceLink);
+  if(selectedWater==='federal'){
+   const federalLink=el('a','Check current NOAA federal fishery notices ↗','display:block;margin-top:10px;color:#7cebdc;text-decoration:underline');
+   federalLink.href='https://www.fisheries.noaa.gov/southeast/rules-and-regulations';federalLink.target='_blank';federalLink.rel='noopener noreferrer';modal.append(federalLink);
+   modal.append(el('p','FishDex does not receive live federal closure updates. Confirm the current federal opening before keeping fish.','font-size:13px;color:#ffd58d'));
+  }
   modal.append(el('p',fish?.lastReviewed?'Reference reviewed: '+fish.lastReviewed:'Reference review: still pending for this species','font-size:12px;color:#b4d2dd'));
   overlay.append(modal);document.body.append(overlay);overlay.showModal();close.focus();
  }
