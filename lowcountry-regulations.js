@@ -79,21 +79,22 @@ function show(){
  };
  function openSeasonDetails(){
   document.getElementById('fd-season-popup')?.remove();
-  const overlay=el('div','','position:fixed;inset:0;z-index:2147483647;background:#000b;display:flex;align-items:center;justify-content:center;padding:18px');
-  overlay.id='fd-season-popup';overlay.setAttribute('role','presentation');
+  const overlay=el('dialog','','border:0;padding:0;background:transparent;color:white;max-width:calc(100vw - 28px);max-height:90vh;overflow:visible');
+  overlay.id='fd-season-popup';overlay.setAttribute('aria-label','Fishing season details');
   const modal=el('section','','width:min(100%,460px);max-height:85vh;overflow:auto;background:#092b3b;border:1px solid #4aa4b6;border-radius:16px;padding:22px;color:white;box-shadow:0 16px 45px #0008');
   modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','Fishing season details');
   const close=el('button','✕','','');close.type='button';close.setAttribute('aria-label','Close season details');close.style.cssText='float:right;background:#123d4e;border:1px solid #4aa4b6;border-radius:8px;padding:7px 11px;color:white;cursor:pointer';
-  const dismiss=()=>{overlay.remove();document.removeEventListener('keydown',onKey)};
-  const onKey=e=>{if(e.key==='Escape')dismiss()};
-  close.addEventListener('click',dismiss);overlay.addEventListener('click',e=>{if(e.target===overlay)dismiss()});
+  const dismiss=()=>overlay.close();
+  close.addEventListener('click',dismiss);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)dismiss()});
+  overlay.addEventListener('close',()=>overlay.remove(),{once:true});
   modal.append(close,el('h3','📅 '+name+' — Fishing season','color:#7cebdc;font-size:21px;margin:0 0 16px'));
   modal.append(el('p','Selected waters: '+(document.getElementById('fd-water-select')?.selectedOptions[0]?.textContent||'Not selected'),'color:#a8e7e3;font-size:14px'));
   modal.append(el('p',seasonText,'font-weight:800;font-size:17px;line-height:1.5'));
   const details=seasonDetails[name]||['No verified species-specific harvest season is available in FishDex yet.','Check the current rules for your exact location before keeping this fish.'];
   for(const detail of details)modal.append(el('p',detail,'line-height:1.6;color:#e0eef3;margin:12px 0'));
   modal.append(el('p','Season dates may change. Check current SCDNR or federal regulations before harvesting.','font-size:13px;color:#ffd58d;margin-top:16px'));
-  overlay.append(modal);document.body.append(overlay);document.addEventListener('keydown',onKey);close.focus();
+  overlay.append(modal);document.body.append(overlay);overlay.showModal();close.focus();
  }
  const seasonCard=el('div','','width:100%;background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px');
  seasonCard.append(el('div','📅 Fishing season','color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',seasonText,'font-size:17px;font-weight:800;line-height:1.4;color:'+seasonColor));
