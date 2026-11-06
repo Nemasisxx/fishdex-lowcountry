@@ -24,6 +24,16 @@ function inches(value){
  return value
   .replace(/(\d+(?:\.\d+)?(?:\s*[–-]\s*\d+(?:\.\d+)?)?)\s*(?:inches|inch|in\.?)\b/gi,(_,n)=>n.replace(/\s+/g,'')+'"');
 }
+function plainSize(value){
+ if(typeof value!=='string')return value;
+ let result=inches(value);
+ result=result.replace(/(\d+(?:\.\d+)?[–-]\d+(?:\.\d+)?)"\s*TL\s*slot\b/gi,'Must be between $1 long (nose to tail tip)');
+ result=result.replace(/(\d+(?:\.\d+)?)"\s*TL\s*minimum\b/gi,'Must be at least $1 long (nose to tail tip)');
+ result=result.replace(/(\d+(?:\.\d+)?)"\s*TL\s*maximum\b/gi,'Must be no longer than $1 (nose to tail tip)');
+ result=result.replace(/\bTL\b/g,'total length (nose to tail tip)').replace(/\bFL\b/g,'fork length (nose to middle of tail fork)');
+ result=result.replace(/\bminimum\b/gi,'at least').replace(/\bmaximum\b/gi,'at most');
+ return result;
+}
 function show(){
  const box=document.getElementById('fd-regulations-detail');if(!box)return;
  const name=document.getElementById('fg-title')?.textContent?.trim();
@@ -43,7 +53,7 @@ function show(){
  const fields=[['📏','Fish size',known?(extra?.size||fish.size):'Not confirmed'],['🐟','You can keep',known?(extra?.bag||fish.bag):'Not confirmed']];
  for(const [emoji,label,value] of fields){
   const card=el('div','','background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px;flex:1;min-width:145px');
-  card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',inches(value),'font-size:19px;font-weight:800;line-height:1.4;color:white'));
+  card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',label==='Fish size'?plainSize(value):inches(value),'font-size:19px;font-weight:800;line-height:1.4;color:white'));
   box.append(card);
  }
  const seasonal={
