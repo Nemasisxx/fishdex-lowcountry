@@ -20,6 +20,29 @@ function show(){
   card.append(el('div',emoji+' '+label,'color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',value,'font-size:19px;font-weight:800;line-height:1.4;color:white'));
   box.append(card);
  }
+ const seasonal={
+  'Cobia':{months:[5],label:'Closed May 1–31 south of Jeremy Inlet',type:'area'},
+  'Gag Grouper':{months:[8,9,10,11,12,1,2,3,4],label:'Federal waters: closed Aug 2–Apr 30',type:'federal',dayStart:2},
+  'Scamp':{months:[1,2,3,4],label:'Federal waters: closed Jan 1–Apr 30',type:'federal'},
+  'Greater Amberjack':{months:[4],label:'Federal waters: closed Apr 1–30',type:'federal'},
+  'Striped Bass':{months:[6,7,8,9],label:'Many Lowcountry rivers: closed Jun 16–Sep 30',type:'area',dayStart:16}
+ };
+ const season=seasonal[name];
+ const today=new Date();
+ const month=today.getMonth()+1,day=today.getDate();
+ let seasonText='Check Season',seasonColor='#ffd58d';
+ if(season){
+  let closed=season.months.includes(month);
+  if(name==='Gag Grouper'&&month===8&&day<2)closed=false;
+  if(name==='Striped Bass'&&month===6&&day<16)closed=false;
+  seasonText=(closed?'🔴 Closed in some waters':'🟢 Outside listed closure')+' — '+season.label;
+  seasonColor=closed?'#ffc4a9':'#b7f5d0';
+ }else if(name==='Red Drum'||name==='Spotted Seatrout'||name==='Black Drum'||name==='Sheepshead'){
+  seasonText='🟢 Open year-round (harvest season)';seasonColor='#b7f5d0';
+ }
+ const seasonCard=el('div','','width:100%;background:#123d4e;border:1px solid #2d7181;border-radius:12px;padding:14px');
+ seasonCard.append(el('div','📅 Fishing season','color:#a8e7e3;font-size:14px;font-weight:700;margin-bottom:8px'),el('div',seasonText,'font-size:17px;font-weight:800;line-height:1.4;color:'+seasonColor));
+ box.append(seasonCard);
  if(!known)box.append(el('div','⚠ Ask an adult to check the rules before keeping this fish.','width:100%;font-size:13px;color:#ffd58d'));
 }
 function init(){
