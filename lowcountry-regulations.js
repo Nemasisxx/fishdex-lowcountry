@@ -40,7 +40,7 @@ function show(){
  const fish=(window.FISHDEX_REGULATIONS_2026||[]).find(x=>x.name===name);
  box.replaceChildren();
  const extra=window.FISHDEX_REGULATIONS_EXTRA?.[name];
- const known=!!extra||fish?.status==='published-2026-reference';
+ const known=!!extra||fish?.status==='published-2026-reference'||fish?.status==='state-table-no-specific-limit-listed';
  const protectedFish=new Set(['Atlantic Sturgeon','Shortnose Sturgeon','Great White Shark','Sandbar Shark']);
  if(protectedFish.has(name)){
   const notice=el('div','','width:100%;padding:18px;border-radius:12px;background:#123d4e;border:1px solid #2d7181;text-align:center');
@@ -109,6 +109,7 @@ function show(){
   const freshwaterGroup=['Largemouth Bass','Bluegill','Redear Sunfish','Redbreast Sunfish','Warmouth','Green Sunfish','Pumpkinseed','Black Crappie','White Crappie','Channel Catfish','Blue Catfish','Flathead Catfish','Brown Bullhead','Yellow Bullhead','Bowfin','Longnose Gar','Florida Gar','Chain Pickerel','American Eel','White Perch','Striped Bass','American Shad','Hickory Shad','Common Carp','Grass Carp','Spotted Sucker','Golden Shiner','Creek Chubsucker','Blueback Herring','Gizzard Shad','Threadfin Shad','Flier','Spotted Sunfish','Redfin Pickerel','Eastern Mosquitofish','Hybrid Striped Bass','White Bass'];
   let details=specific?[...specific]:[];
   if(protectedNames.includes(name)||name==='Grass Carp')details=['Harvest is not permitted in the applicable protected waters. Release immediately.','This is not a seasonal harvest opportunity.'];
+  else if(fish?.status==='state-table-no-specific-limit-listed')details=['South Carolina’s reviewed state-water finfish table does not list a species-specific size limit, daily catch limit, or closed season for this fish.','This is not a guarantee of unrestricted harvest. General rules, fishing methods, protected areas, and federal-water restrictions may apply.'];
   else if(name==='Red Drum')details=['No general state-water harvest season closure listed.','Federal waters: possession prohibited. Gig harvest prohibited Dec 1–Feb 28.'];
   else if(name==='Spotted Seatrout')details=['No general state-water harvest season closure listed.','Gig harvest prohibited Dec 1–Feb 28.'];
   else if(name==='Red Snapper')details=['Federal harvest is restricted to specially announced openings or permits; do not assume an open season.','State-water and federal rules differ. Confirm the current announcement before keeping a fish.'];
