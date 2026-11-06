@@ -136,11 +136,11 @@ function show(){
  if(name==='Striped Bass'||name==='Hybrid Striped Bass'){
   const coastal=selectedWater==='coastal-river';
   const santee=selectedWater==='santee';
-  if(coastal||santee){
+  if(coastal){
    const closed=(month>6&&month<10)||(month===6&&day>=16);
    seasonText=closed?'🔴 Harvest closed June 16–September 30':'🟢 Harvest season October 1–June 15';
    seasonColor=closed?'#ffc4a9':'#b7f5d0';
-  }else seasonText='⚠ Striped bass rules vary by river and reservoir';
+  }else seasonText='⚠ Striped bass rules vary by river and reservoir; choose an exact waterbody';
  }
  if(name==='Red Snapper'&&selectedWater==='federal'){
   seasonText='🔴 Federal possession prohibited under published rules; check NOAA for announced openings';seasonColor='#ffc4a9';
