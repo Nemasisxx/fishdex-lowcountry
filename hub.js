@@ -20,6 +20,7 @@ function init(){
   const metadata=user?.user_metadata||{};
   name.value=metadata.fishdex_display_name||'';
   waters.value=metadata.fishdex_home_waters||'';
+  window.dispatchEvent(new CustomEvent('fishdex:home-waters-changed',{detail:{homeWaters:waters.value}}));
   style.value=metadata.fishdex_fishing_style||'';
   save.disabled=!user;
   name.disabled=!user;waters.disabled=!user;style.disabled=!user;
