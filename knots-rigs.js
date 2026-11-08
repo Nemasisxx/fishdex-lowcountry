@@ -87,53 +87,88 @@ function svg(g,step=-1){
 }
 function imageFor(g){
  const ns='http://www.w3.org/2000/svg',root=document.createElementNS(ns,'svg');
- root.setAttribute('viewBox','0 0 960 520');root.setAttribute('role','img');
- root.setAttribute('aria-label','FishDex close-up illustration of '+g.name);
+ root.setAttribute('viewBox','0 0 960 420');root.setAttribute('role','img');
+ root.setAttribute('aria-label','FishDex '+g.name+' tackle illustration');
  root.classList.add('kr-hero-illustration');
  const E=(tag,attrs={},parent=root)=>{const node=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))node.setAttribute(k,String(v));parent.append(node);return node};
- const p=(d,color,width=6,attrs={})=>E('path',{d,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',...attrs});
- const defs=E('defs'),lg=(id,colors)=>{const n=E('linearGradient',{id,x1:'0%',y1:'0%',x2:'0%',y2:'100%'},defs);colors.forEach(([offset,color])=>E('stop',{offset,'stop-color':color},n))};
- lg('krmetal',[['0%','#f8ffff'],['18%','#c5d4da'],['43%','#637581'],['62%','#293b46'],['82%','#8b9fa8'],['100%','#e3ecee']]);
- lg('krplastic',[['0%','#e2ff88'],['35%','#98c841'],['65%','#557c28'],['100%','#263d1a']]);
- lg('krline',[['0%','#e1ffff'],['45%','#56b9d1'],['100%','#247a99']]);
- const glow=E('radialGradient',{id:'krglow',cx:'50%',cy:'50%',r:'65%'},defs);[['0%','#28575a'],['65%','#112a30'],['100%','#07151b']].forEach(([offset,color])=>E('stop',{offset,'stop-color':color},glow));
- const shadow=E('filter',{id:'krshadow',x:'-50%',y:'-50%',width:'200%',height:'200%'},defs);E('feGaussianBlur',{stdDeviation:11},shadow);
- E('rect',{width:960,height:520,fill:'url(#krglow)'});
- for(let i=0;i<90;i++)E('circle',{cx:(i*197)%960,cy:(i*113)%520,r:i%7===0?1.6:.7,fill:'#9bd8cf',opacity:.11});
- E('ellipse',{cx:490,cy:396,rx:370,ry:34,fill:'#000',opacity:.55,filter:'url(#krshadow)'});
- const hook=(x,y,scale=1)=>{const group=E('g',{transform:'translate('+x+' '+y+') scale('+scale+')'});E('path',{d:'M-58 -120 L-58 16 C-58 114 55 128 85 58 C94 34 87 8 72 -7',fill:'none',stroke:'#04131a','stroke-width':29,'stroke-linecap':'round'},group);E('path',{d:'M-58 -120 L-58 16 C-58 114 55 128 85 58 C94 34 87 8 72 -7',fill:'none',stroke:'url(#krmetal)','stroke-width':22,'stroke-linecap':'round'},group);E('path',{d:'M-65 -119 L-65 15 C-65 110 51 123 78 56',fill:'none',stroke:'#e9fbff','stroke-width':4,'stroke-linecap':'round',opacity:.85},group);E('path',{d:'M72 -7 L52 22 L92 10 Z',fill:'url(#krmetal)',stroke:'#d6e7e9','stroke-width':2},group);E('ellipse',{cx:-58,cy:-119,rx:12,ry:13,fill:'#132c37',stroke:'#c7d9e0','stroke-width':6},group)};
- const sinker=(x,y)=>{E('ellipse',{cx:x,cy:y+13,rx:95,ry:53,fill:'#000',opacity:.35,filter:'url(#krshadow)'});E('path',{d:'M'+(x-104)+' '+y+' Q'+(x-75)+' '+(y-58)+' '+x+' '+(y-57)+' Q'+(x+83)+' '+(y-58)+' '+(x+109)+' '+y+' Q'+(x+73)+' '+(y+55)+' '+x+' '+(y+54)+' Q'+(x-81)+' '+(y+55)+' '+(x-104)+' '+y+' Z',fill:'url(#krmetal)',stroke:'#bdcbd1','stroke-width':3});p('M'+(x-75)+' '+(y-18)+' Q'+x+' '+(y-45)+' '+(x+78)+' '+(y-13),'#f0fcff',4,{opacity:.6})};
- const swivel=(x,y)=>{for(const dx of [-46,46])E('ellipse',{cx:x+dx,cy:y,rx:33,ry:23,fill:'none',stroke:'url(#krmetal)','stroke-width':12});E('rect',{x:x-30,y:y-19,width:60,height:38,rx:16,fill:'url(#krmetal)',stroke:'#c3d7dc','stroke-width':2});p('M'+(x-20)+' '+(y-7)+' H'+(x+17),'#efffff',3,{opacity:.7})};
- const bead=(x,y)=>{E('circle',{cx:x,cy:y,r:35,fill:'#a9341c'});E('circle',{cx:x,cy:y,r:31,fill:'#e66a37'});E('ellipse',{cx:x-12,cy:y-13,rx:13,ry:8,fill:'#ffd5a1',opacity:.8})};
- const worm=(x,y)=>{const d='M'+(x-120)+' '+(y+9)+' C'+(x-70)+' '+(y-60)+' '+(x+20)+' '+(y-53)+' '+(x+92)+' '+(y-5)+' Q'+(x+134)+' '+(y+33)+' '+(x+148)+' '+(y-18);p(d,'#1a2e18',47);p(d,'url(#krplastic)',39);for(let j=0;j<16;j++){const xx=x-105+j*15;p('M'+xx+' '+(y-19)+' l7 35','#31551c',2,{opacity:.75})}};
- const cork=(x,y)=>{E('ellipse',{cx:x,cy:y,rx:75,ry:52,fill:'#e3452b',stroke:'#ffd8a9','stroke-width':5});E('path',{d:'M'+(x-10)+' '+(y-50)+' L'+(x+15)+' '+(y-50)+' L'+(x+15)+' '+(y+50)+' L'+(x-10)+' '+(y+50)+' Z',fill:'#fff2c9'});E('ellipse',{cx:x-31,cy:y-22,rx:18,ry:9,fill:'#ffdb9f',opacity:.65})};
+ const p=(d,color='#72d9ed',width=5)=>E('path',{d,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round'});
+ const defs=E('defs');
+ const gradient=(id,colors)=>{const g1=E('linearGradient',{id,x1:'0%',y1:'0%',x2:'0%',y2:'100%'},defs);colors.forEach(([offset,c])=>E('stop',{offset,'stop-color':c},g1))};
+ gradient('kr-metal-v2',[['0%','#f5ffff'],['35%','#a2b8c2'],['65%','#425a68'],['100%','#dce9ef']]);
+ gradient('kr-plastic-v2',[['0%','#d8f67d'],['50%','#7da83e'],['100%','#345b27']]);
+ const bg=E('radialGradient',{id:'kr-bg-v2'},defs);[['0%','#24474d'],['100%','#071720']].forEach(([offset,c])=>E('stop',{offset,'stop-color':c},bg));
+ E('rect',{width:960,height:420,fill:'url(#kr-bg-v2)'});
+ E('ellipse',{cx:480,cy:346,rx:345,ry:19,fill:'#000',opacity:.3});
+ const lineY=211;
+ const line=(x1,x2,y=lineY)=>{p('M'+x1+' '+y+' H'+x2,'#173644',10);p('M'+x1+' '+y+' H'+x2,'#86dbea',5)};
+ const hook=(x,y,scale=1)=>{const g1=E('g',{transform:'translate('+x+' '+y+') scale('+scale+')'});const d='M0 -63 L0 9 C0 84 100 85 105 21 L105 7';E('path',{d,stroke:'#0a2029','stroke-width':18,fill:'none','stroke-linecap':'round'},g1);E('path',{d,stroke:'url(#kr-metal-v2)','stroke-width':12,fill:'none','stroke-linecap':'round'},g1);E('path',{d:'M105 7 L92 26 L113 23 Z',fill:'#d7e6ea'},g1);E('ellipse',{cx:0,cy:-63,rx:8,ry:9,fill:'#09232e',stroke:'#e2eff2','stroke-width':4},g1)};
+ const weight=(x,y)=>{E('ellipse',{cx:x,cy:y,rx:58,ry:30,fill:'url(#kr-metal-v2)',stroke:'#e0ebed','stroke-width':2});p('M'+(x-43)+' '+(y-12)+' Q'+x+' '+(y-29)+' '+(x+40)+' '+(y-9),'#e9fbff',3)};
+ const bead=(x,y)=>{E('circle',{cx:x,cy:y,r:17,fill:'#ec7643',stroke:'#ffd4a3','stroke-width':3})};
+ const swivel=(x,y)=>{[-22,22].forEach(dx=>E('ellipse',{cx:x+dx,cy:y,rx:19,ry:13,fill:'none',stroke:'#c8e1e7','stroke-width':6}));E('rect',{x:x-13,y:y-10,width:26,height:20,rx:8,fill:'url(#kr-metal-v2)'})};
+ const worm=(x,y)=>{const d='M'+(x-65)+' '+(y+5)+' Q'+x+' '+(y-39)+' '+(x+75)+' '+(y+5);p(d,'#253e1d',29);p(d,'url(#kr-plastic-v2)',24)};
+ const cork=(x,y)=>{E('ellipse',{cx:x,cy:y,rx:41,ry:31,fill:'#e95538',stroke:'#ffceaa','stroke-width':3});E('rect',{x:x-8,y:y-30,width:16,height:60,fill:'#fff0b9'})};
+ const k=g.name.toLowerCase(),parts=g.parts.toLowerCase();
  if(g.type==='Rig'){
-  const n=g.name.toLowerCase(),parts=g.parts.toLowerCase();
-  p('M45 270 H915','#08131a',13);p('M45 267 H915','url(#krline)',7);p('M45 263 H915','#d8ffff',2,{opacity:.75});
-  if(/cork|float|bobber/.test(n+' '+parts))cork(255,267);
-  else if(/sinker|weight|bullet|jig|drop shot|carolina|texas|fish finder|surf|bottom|three-way/.test(n+' '+parts))sinker(245,267);
-  if(/swivel/.test(parts))swivel(495,267);
-  else if(/bead/.test(parts))bead(430,267);
-  if(/bead/.test(parts)&&/swivel/.test(parts))bead(385,267);
-  if(/soft plastic|worm|lure|jig|ned|wacky|texas|drop shot/.test(n+' '+parts))worm(740,269);
-  hook(795,267,.75);
+   const isDrop=/drop shot/.test(k),isNed=/ned rig/.test(k),isWacky=/wacky|neko/.test(k),isTexas=/texas/.test(k);
+   const isCork=/cork|bobber|float/.test(k+' '+parts);
+   const hasSwivel=/swivel/.test(parts);
+   const hasWeight=/weight|sinker|bullet|jig|drop shot|carolina|fish finder|surf|bottom|three-way/.test(k+' '+parts);
+   const hasWorm=/worm|soft plastic|lure|jig|ned|wacky|neko|texas|drop shot/.test(k+' '+parts);
+   // All terminal hooks sit at the line end, never in the middle of the rig.
+   // Drop shot is the intentional exception: its weight hangs below the hook.
+   if(isDrop){
+     line(75,725,180);hook(725,243,.55);worm(735,178);
+     p('M725 180 V325','#86dbea',5);weight(725,337);
+   }else if(isNed){
+     line(75,745,220);weight(739,220);hook(755,255,.55);worm(790,214);
+   }else if(isWacky){
+     line(75,740,205);worm(775,206);hook(747,255,.55);
+     if(/neko/.test(k))weight(839,215);
+   }else{
+     line(70,765,211);
+     if(isCork)cork(225,211);
+     else if(hasWeight)weight(215,211);
+     if(/bead/.test(parts))bead(350,211);
+     if(hasSwivel)swivel(465,211);
+     if(hasWorm)worm(784,208);
+     hook(790,262,.62);
+   }
  }else{
-  const k=g.name.toLowerCase();
-  p('M60 265 H865','#051822',17);p('M60 262 H865','url(#krline)',11);p('M60 257 H865','#c4f9ff',2,{opacity:.8});
-  if(/loop|palomar|rapala|surgeon|perfection|bimini/.test(k)){
-   p('M255 265 C305 95 595 100 620 257 C580 375 342 382 255 265','#092533',17);
-   p('M255 265 C305 95 595 100 620 257 C580 375 342 382 255 265','url(#krline)',11);
-   p('M275 254 C340 116 567 135 601 245','#e3ffff',2,{opacity:.7});
-  }else{
-   const count=/fg/.test(k)?23:/double uni|blood|albright/.test(k)?15:11;
-   const width=410/count;
-   for(let i=0;i<count;i++){const x=265+i*width;p('M'+x+' 262 C'+(x-26)+' 230 '+(x-16)+' 205 '+(x+2)+' 208 C'+(x+31)+' 215 '+(x+22)+' 260 '+x+' 262','#102d3a',14);p('M'+x+' 262 C'+(x-26)+' 230 '+(x-16)+' 205 '+(x+2)+' 208 C'+(x+31)+' 215 '+(x+22)+' 260 '+x+' 262','url(#krline)',9);p('M'+(x-12)+' 219 q11 -9 18 0','#e2ffff',2,{opacity:.8})}
-  }
-  if(/double uni|blood|albright|fg|yucatan/.test(k)){p('M55 285 H865','#f4ac68',7);p('M55 282 H865','#ffe1ad',1.5)}
-  if(/clinch|palomar|uni knot|snell|trilene|rapala|arbor/.test(k))hook(810,270,.75);
+   const hasHook=/clinch|palomar|uni knot|snell|trilene|rapala|arbor/.test(k);
+   const end=hasHook?760:885;line(75,end,212);
+   if(/loop|palomar|rapala|surgeon|perfection|bimini/.test(k)){
+     p('M270 212 C330 85 540 85 595 212 C555 310 360 320 270 212','#153745',13);
+     p('M270 212 C330 85 540 85 595 212 C555 310 360 320 270 212','#81deef',7);
+   }else{
+     const count=/fg/.test(k)?19:/double uni|blood|albright/.test(k)?13:9;
+     for(let i=0;i<count;i++){const x=275+i*(340/count);p('M'+x+' 212 C'+(x-18)+' 184 '+(x-11)+' 164 '+(x+5)+' 167 C'+(x+24)+' 171 '+(x+18)+' 208 '+x+' 212','#0e3442',11);p('M'+x+' 212 C'+(x-18)+' 184 '+(x-11)+' 164 '+(x+5)+' 167 C'+(x+24)+' 171 '+(x+18)+' 208 '+x+' 212','#85dbea',6)}
+   }
+   if(/fg|double uni|blood|albright|yucatan/.test(k))p('M80 237 H870','#eeb476',4);
+   if(hasHook)hook(760,265,.7);
  }
  return root;
 }
-function init(){const list=$('kr-list'),detail=$('kr-detail'),search=$('kr-search'),sel=$('kr-filter');if(!list||!detail)return;function draw(){const filtered=guides.map((g,i)=>({...g,i})).filter(g=>(filter==='all'||(filter==='favorites'&&favorites.has(g.name))||g.type===filter)&&[g.name,g.use,g.parts].join(' ').toLowerCase().includes(query));list.replaceChildren();$('kr-count').textContent=filtered.length+' guides';if(!filtered.some(g=>g.i===selected)&&filtered.length)selected=filtered[0].i;filtered.forEach(g=>{let b=document.createElement('button');b.type='button';b.className='kr-tile'+(g.i===selected?' active':'');const visual=document.createElement('div');visual.className='kr-tile-art';visual.append(imageFor(g));const name=document.createElement('strong');name.textContent=g.name;const type=document.createElement('small');type.textContent=g.type;b.append(visual,name,type);b.addEventListener('click',()=>{selected=g.i;draw();if(matchMedia('(max-width:900px)').matches)detail.scrollIntoView({behavior:'smooth',block:'start'})});list.append(b)});if(!filtered.length){list.textContent='No matching guides found.';detail.replaceChildren();return}const g=guides[selected];detail.replaceChildren();const banner=document.createElement('div');banner.className='kr-detail-head';const title=document.createElement('h2');title.textContent=g.name;const desc=document.createElement('p');desc.textContent=g.use;const fav=document.createElement('button');fav.className='kr-favorite';fav.textContent=favorites.has(g.name)?'★ Saved':'☆ Add to Favorites';fav.onclick=()=>{favorites.has(g.name)?favorites.delete(g.name):favorites.add(g.name);localStorage.setItem('fishdex-kr-favorites',JSON.stringify([...favorites]));draw()};banner.append(fav,title,desc);const badges=document.createElement('div');badges.className='kr-badges';for(const t of [g.type,g.type==='Rig'?'Tackle setup':'Line technique','Step-by-step']){const span=document.createElement('span');span.textContent=t;badges.append(span)}banner.append(badges);detail.append(banner);const diagram=document.createElement('div');diagram.className='kr-big-diagram';const label=document.createElement('h3');label.textContent='Tackle & Line Diagram';diagram.append(label,imageFor(g));detail.append(diagram);const info=document.createElement('div');info.className='kr-info';const setup=document.createElement('article');const st=document.createElement('h3');st.textContent='⚙ Tackle & Setup';const sp=document.createElement('p');sp.textContent=g.parts;setup.append(st,sp);const usage=document.createElement('article');const ut=document.createElement('h3');ut.textContent='◎ When to Use';const up=document.createElement('p');up.textContent=g.use;usage.append(ut,up);info.append(setup,usage);detail.append(info);const steps=document.createElement('section');steps.className='kr-steps';const heading=document.createElement('h3');heading.textContent='☷ How to Do It — Step by Step';steps.append(heading);const caution=document.createElement('p');caution.textContent='Original FishDex learning sketches. Follow the written steps and verify knot geometry with a demonstrated tutorial before relying on a connection.';caution.style.cssText='color:#f4d3a0;font-size:13px;line-height:1.5';steps.append(caution);const grid=document.createElement('div');grid.className='kr-step-grid';g.steps.forEach((instruction,i)=>{const tile=document.createElement('article');const art=document.createElement('div');art.className='kr-step-art';art.append(svg(g,i));const num=document.createElement('span');num.className='kr-step-num';num.textContent=i+1;art.append(num);const text=document.createElement('p');text.textContent=instruction;tile.append(art,text);grid.append(tile)});steps.append(grid);if(g.type==='Knot'){const reference=document.createElement('a');reference.href='https://www.netknots.com/fishing_knots';reference.target='_blank';reference.rel='noopener noreferrer';reference.textContent='Compare with a demonstrated fishing-knot tutorial ↗';reference.style.cssText='display:inline-block;margin-top:14px;color:#70e9e2;text-decoration:underline';steps.append(reference)}detail.append(steps);const tip=document.createElement('div');tip.className='kr-tip-panel';const h=document.createElement('h3');h.textContent='✧ Pro Tip';const p=document.createElement('p');p.textContent=g.tip;tip.append(h,p);detail.append(tip)}
+
+function init(){const list=$('kr-list'),detail=$('kr-detail'),search=$('kr-search'),sel=$('kr-filter');if(!list||!detail)return;function draw(){const filtered=guides.map((g,i)=>({...g,i})).filter(g=>(filter==='all'||(filter==='favorites'&&favorites.has(g.name))||g.type===filter)&&[g.name,g.use,g.parts].join(' ').toLowerCase().includes(query));list.replaceChildren();$('kr-count').textContent=filtered.length+' guides';if(!filtered.some(g=>g.i===selected)&&filtered.length)selected=filtered[0].i;filtered.forEach(g=>{let b=document.createElement('button');b.type='button';b.className='kr-tile'+(g.i===selected?' active':'');const visual=document.createElement('div');visual.className='kr-tile-art';visual.append(imageFor(g));const name=document.createElement('strong');name.textContent=g.name;const type=document.createElement('small');type.textContent=g.type;b.append(visual,name,type);b.addEventListener('click',()=>{selected=g.i;draw();if(matchMedia('(max-width:900px)').matches)detail.scrollIntoView({behavior:'smooth',block:'start'})});list.append(b)});if(!filtered.length){list.textContent='No matching guides found.';detail.replaceChildren();return}const g=guides[selected];detail.replaceChildren();const banner=document.createElement('div');banner.className='kr-detail-head';const title=document.createElement('h2');title.textContent=g.name;const desc=document.createElement('p');desc.textContent=g.use;const fav=document.createElement('button');fav.className='kr-favorite';fav.textContent=favorites.has(g.name)?'★ Saved':'☆ Add to Favorites';fav.onclick=()=>{favorites.has(g.name)?favorites.delete(g.name):favorites.add(g.name);localStorage.setItem('fishdex-kr-favorites',JSON.stringify([...favorites]));draw()};banner.append(fav,title,desc);const badges=document.createElement('div');badges.className='kr-badges';for(const t of [g.type,g.type==='Rig'?'Tackle setup':'Line technique','Step-by-step']){const span=document.createElement('span');span.textContent=t;badges.append(span)}banner.append(badges);detail.append(banner);const diagram=document.createElement('div');diagram.className='kr-big-diagram';const label=document.createElement('h3');label.textContent='Tackle & Line Diagram';diagram.append(label,imageFor(g));detail.append(diagram);const info=document.createElement('div');info.className='kr-info';const setup=document.createElement('article');const st=document.createElement('h3');st.textContent='⚙ Tackle & Setup';const sp=document.createElement('p');sp.textContent=g.parts;setup.append(st,sp);const usage=document.createElement('article');const ut=document.createElement('h3');ut.textContent='◎ When to Use';const up=document.createElement('p');up.textContent=g.use;usage.append(ut,up);info.append(setup,usage);detail.append(info);const steps=document.createElement('section');steps.className='kr-steps';const heading=document.createElement('h3');heading.textContent='☷ How to Do It — Step by Step';steps.append(heading);const caution=document.createElement('p');caution.textContent='Original FishDex learning sketches. Follow the written steps and verify knot geometry with a demonstrated tutorial before relying on a connection.';caution.style.cssText='color:#f4d3a0;font-size:13px;line-height:1.5';steps.append(caution);const grid=document.createElement('div');grid.className='kr-step-grid';g.steps.forEach((instruction,i)=>{const tile=document.createElement('article');const art=document.createElement('div');art.className='kr-step-art';art.append(svg(g,i));const num=document.createElement('span');num.className='kr-step-num';num.textContent=i+1;art.append(num);const text=document.createElement('p');text.textContent=instruction;tile.append(art,text);grid.append(tile)});steps.append(grid);
+ // An interactive progression: one instructional drawing at a time, with
+ // controls to play/pause or manually advance. This does not claim to be
+ // a physically accurate animation of the tying process.
+ const player=document.createElement('section');player.className='kr-step-player';
+ const playerTitle=document.createElement('h4');playerTitle.textContent='Follow the steps';
+ const stage=document.createElement('div');stage.className='kr-player-stage';
+ const playerText=document.createElement('p');playerText.className='kr-player-caption';
+ const controls=document.createElement('div');controls.className='kr-player-controls';
+ const previous=document.createElement('button'),play=document.createElement('button'),next=document.createElement('button');
+ previous.type=play.type=next.type='button';
+ previous.textContent='← Previous';play.textContent='▶ Play';next.textContent='Next →';
+ controls.append(previous,play,next);player.append(playerTitle,stage,playerText,controls);steps.insertBefore(player,grid);
+ let frame=0,timer=null;
+ const renderFrame=()=>{stage.replaceChildren(svg(g,frame));playerText.textContent='Step '+(frame+1)+' of '+g.steps.length+': '+g.steps[frame];previous.disabled=frame===0;next.disabled=frame===g.steps.length-1};
+ const stop=()=>{if(timer!==null){clearInterval(timer);timer=null}play.textContent='▶ Play'};
+ previous.onclick=()=>{stop();frame=Math.max(0,frame-1);renderFrame()};
+ next.onclick=()=>{stop();frame=Math.min(g.steps.length-1,frame+1);renderFrame()};
+ play.onclick=()=>{if(timer!==null){stop();return}if(frame===g.steps.length-1)frame=0;renderFrame();play.textContent='Ⅱ Pause';timer=setInterval(()=>{if(!player.isConnected){stop();return}if(frame===g.steps.length-1){stop();return}frame++;renderFrame()},2400)};
+ renderFrame();
+ if(g.type==='Knot'){const reference=document.createElement('a');reference.href='https://www.netknots.com/fishing_knots';reference.target='_blank';reference.rel='noopener noreferrer';reference.textContent='Compare with a demonstrated fishing-knot tutorial ↗';reference.style.cssText='display:inline-block;margin-top:14px;color:#70e9e2;text-decoration:underline';steps.append(reference)}detail.append(steps);const tip=document.createElement('div');tip.className='kr-tip-panel';const h=document.createElement('h3');h.textContent='✧ Pro Tip';const p=document.createElement('p');p.textContent=g.tip;tip.append(h,p);detail.append(tip)}
 search.addEventListener('input',()=>{query=search.value.toLowerCase().trim();draw()});sel.addEventListener('change',()=>{filter=sel.value;draw()});document.querySelectorAll('[data-kr-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.krFilter;sel.value=filter;draw()});draw()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();})();
