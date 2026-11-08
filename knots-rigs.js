@@ -11,7 +11,23 @@ function palomarDrawing(step=-1,hero=false){
  svg.classList.add(hero?'kr-hero-illustration':'kr-diagram','kr-palomar-diagram');
  const make=(tag,attrs={},parent=svg)=>{const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));parent.append(e);return e};
  const text=(x,y,t,color='#cceff1')=>{const e=make('text',{x,y,fill:color,'font-size':15,'font-family':'system-ui','text-anchor':'middle'});e.textContent=t};
- const stroke=(d,color,width=6)=>make('path',{d,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',class:'kr-line-motion'});
+ const stroke=(d,color,width=9)=>{const group=make('g',{class:'kr-strand'});
+  make('path',{d,fill:'none',stroke:'#010f18','stroke-width':width+7,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.85},group);
+  make('path',{d,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',class:'kr-line-motion'},group);
+  make('path',{d,fill:'none',stroke:'#f4ffff','stroke-width':1.8,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.75},group);
+  return group;
+ };
+ const crossing=(x,y,upper='orange')=>{
+  make('circle',{cx:x,cy:y,r:22,fill:'#09232b',stroke:'#476974','stroke-width':1,'stroke-dasharray':'3 4'});
+  const top=upper==='orange'?'#ffc27d':'#75ddef';
+  stroke('M'+(x-25)+' '+(y+11)+' Q'+x+' '+(y-3)+' '+(x+25)+' '+(y-13),top,9);
+  text(x,y-29,'OVER',top);
+ };
+ const arrow=(x,y,angle,color='#ffc27d')=>{
+  make('path',{d:'M-19 0 H15 M4 -9 L16 0 L4 9',fill:'none',stroke:color,'stroke-width':4,'stroke-linecap':'round','stroke-linejoin':'round',transform:'translate('+x+' '+y+') rotate('+angle+')'});
+ };
+ const pill=(x,y,t,color)=>{make('rect',{x:x-58,y:y-21,width:116,height:28,rx:14,fill:'#123842',stroke:color,'stroke-width':1.5});text(x,y,t,color)};
+
  make('rect',{width:800,height:360,rx:18,fill:'#09232b'});
  make('ellipse',{cx:590,cy:310,rx:125,ry:16,fill:'#000',opacity:.25});
  const hook=(x=570,y=165)=>{const group=make('g',{transform:'translate('+x+' '+y+')'});
@@ -27,32 +43,32 @@ function palomarDrawing(step=-1,hero=false){
   // Doubled bight passes through the eye, two parallel strands lead back left.
   stroke('M90 142 C230 139 400 143 570 158',cyan,6);
   stroke('M90 163 C230 160 400 165 570 172',cyan,6);
-  stroke('M570 158 C635 151 671 126 655 109 C631 84 595 114 570 172',amber,6);
+  stroke('M570 158 C635 151 671 126 655 109 C631 84 595 114 570 172',amber,9);arrow(668,109,135);
   text(225,117,'Two parallel strands');text(685,84,'Folded loop',amber);
  }else if(n===1){
   // Loose overhand in the doubled line; the bight remains large and free.
   stroke('M75 142 C192 140 252 154 320 178 C380 205 409 117 465 127 C515 137 511 201 560 162 L570 165',cyan,6);
   stroke('M75 163 C195 163 259 177 316 195 C382 219 429 132 475 144 C526 156 513 212 560 177 L570 165',cyan,5);
   stroke('M320 178 C268 96 390 65 455 96 C502 118 500 170 465 193',amber,6);
-  text(388,58,'Loose overhand with both strands');
+  crossing(411,143,'orange');arrow(480,94,55);text(388,43,'Cross the doubled line to form an overhand');
  }else if(n===2){
   // The entire hook passes through the large doubled-line bight.
   stroke('M75 145 C190 142 295 159 378 183 C447 207 505 170 570 165',cyan,6);
   stroke('M75 166 C188 166 295 182 378 201 C449 227 512 185 570 165',cyan,5);
   stroke('M378 183 C335 85 466 36 617 64 C749 90 746 265 625 289 C520 308 449 257 378 183',amber,7);
-  text(580,45,'Pass entire hook through this loop',amber);
+  arrow(689,179,90);pill(655,43,'HOOK THROUGH',amber);
  }else if(n===3){
   // The doubled overhand tightens at the eye; two strands remain distinguishable.
   stroke('M76 141 C245 143 404 147 536 161 C551 165 559 163 570 165',cyan,7);
   stroke('M76 166 C243 164 405 169 537 176 C551 174 562 167 570 165',amber,6);
   stroke('M524 163 C527 135 549 135 553 161 C554 185 531 190 529 171',cyan,6);
   stroke('M535 164 C542 145 560 146 565 164',amber,5);
-  text(390,106,'Moisten, then pull both strands evenly');
+  arrow(165,124,180,cyan);arrow(166,184,180,amber);text(390,106,'Pull BOTH strands until the knot seats');
  }else{
   stroke('M77 145 C254 144 411 151 542 164 L570 165',cyan,7);
   stroke('M460 177 C511 174 543 170 570 165',amber,6);
   stroke('M534 163 C536 147 553 145 556 162 C558 177 542 178 541 167',cyan,5);
-  text(325,106,'Standing line',cyan);text(464,210,'Trimmed tag end',amber);
+  pill(302,110,'STANDING LINE',cyan);pill(453,224,'TAG END',amber);
  }
  if(step>=0)text(400,333,'PALOMAR · '+['Double the line and pass the bight through the eye','Tie a loose overhand in both strands','Pass the whole hook through the large loop','Moisten and tighten both strands','Check and trim the tag'][n]);
  else text(400,333,'PALOMAR · finished connection');
