@@ -86,49 +86,53 @@ function svg(g,step=-1){
  return s;
 }
 function imageFor(g){
- const ns='http://www.w3.org/2000/svg',s=document.createElementNS(ns,'svg');
- s.setAttribute('viewBox','0 0 900 300');s.setAttribute('role','img');s.setAttribute('aria-label','Detailed FishDex illustration of '+g.name);
- s.style.cssText='width:100%;height:100%;object-fit:contain;display:block;background:#08151a';
- const el=(tag,attrs,parent=s)=>{const n=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,String(v)));parent.append(n);return n};
- const defs=el('defs',{}),grad=(id,stops)=>{const g=el('linearGradient',{id,x1:'0%',y1:'0%',x2:'0%',y2:'100%'},defs);stops.forEach(([offset,color])=>el('stop',{offset,'stop-color':color},g))};
- grad('kr-metal',[['0%','#f2f7f8'],['30%','#8b9da8'],['60%','#344653'],['100%','#c2d4d8']]);grad('kr-bg',[['0%','#19373c'],['100%','#06151c']]);grad('kr-lure',[['0%','#c1e873'],['45%','#719b2b'],['100%','#354b1b']]);
- const path=(d,stroke='#72e5e6',width=5,fill='none')=>el('path',{d,fill,stroke,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round'});
- const text=(x,y,t,size=15)=>{const e=el('text',{x,y,fill:'#c8e8e7','font-size':size,'text-anchor':'middle','font-family':'system-ui'});e.textContent=t;return e};
- el('rect',{width:900,height:300,fill:'url(#kr-bg)'});
- for(let i=0;i<80;i++){const x=(i*167)%900,y=(i*71)%300;el('circle',{cx:x,cy:y,r:i%5===0?1.5:.7,fill:'#5b9c9d',opacity:.12})}
- el('ellipse',{cx:450,cy:242,rx:375,ry:22,fill:'#000',opacity:.35});
+ const ns='http://www.w3.org/2000/svg',root=document.createElementNS(ns,'svg');
+ root.setAttribute('viewBox','0 0 960 520');root.setAttribute('role','img');
+ root.setAttribute('aria-label','FishDex close-up illustration of '+g.name);
+ root.classList.add('kr-hero-illustration');
+ const E=(tag,attrs={},parent=root)=>{const node=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))node.setAttribute(k,String(v));parent.append(node);return node};
+ const p=(d,color,width=6,attrs={})=>E('path',{d,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',...attrs});
+ const defs=E('defs'),lg=(id,colors)=>{const n=E('linearGradient',{id,x1:'0%',y1:'0%',x2:'0%',y2:'100%'},defs);colors.forEach(([offset,color])=>E('stop',{offset,'stop-color':color},n))};
+ lg('krmetal',[['0%','#f8ffff'],['18%','#c5d4da'],['43%','#637581'],['62%','#293b46'],['82%','#8b9fa8'],['100%','#e3ecee']]);
+ lg('krplastic',[['0%','#e2ff88'],['35%','#98c841'],['65%','#557c28'],['100%','#263d1a']]);
+ lg('krline',[['0%','#e1ffff'],['45%','#56b9d1'],['100%','#247a99']]);
+ const glow=E('radialGradient',{id:'krglow',cx:'50%',cy:'50%',r:'65%'},defs);[['0%','#28575a'],['65%','#112a30'],['100%','#07151b']].forEach(([offset,color])=>E('stop',{offset,'stop-color':color},glow));
+ const shadow=E('filter',{id:'krshadow',x:'-50%',y:'-50%',width:'200%',height:'200%'},defs);E('feGaussianBlur',{stdDeviation:11},shadow);
+ E('rect',{width:960,height:520,fill:'url(#krglow)'});
+ for(let i=0;i<90;i++)E('circle',{cx:(i*197)%960,cy:(i*113)%520,r:i%7===0?1.6:.7,fill:'#9bd8cf',opacity:.11});
+ E('ellipse',{cx:490,cy:396,rx:370,ry:34,fill:'#000',opacity:.55,filter:'url(#krshadow)'});
+ const hook=(x,y,scale=1)=>{const group=E('g',{transform:'translate('+x+' '+y+') scale('+scale+')'});E('path',{d:'M-58 -120 L-58 16 C-58 114 55 128 85 58 C94 34 87 8 72 -7',fill:'none',stroke:'#04131a','stroke-width':29,'stroke-linecap':'round'},group);E('path',{d:'M-58 -120 L-58 16 C-58 114 55 128 85 58 C94 34 87 8 72 -7',fill:'none',stroke:'url(#krmetal)','stroke-width':22,'stroke-linecap':'round'},group);E('path',{d:'M-65 -119 L-65 15 C-65 110 51 123 78 56',fill:'none',stroke:'#e9fbff','stroke-width':4,'stroke-linecap':'round',opacity:.85},group);E('path',{d:'M72 -7 L52 22 L92 10 Z',fill:'url(#krmetal)',stroke:'#d6e7e9','stroke-width':2},group);E('ellipse',{cx:-58,cy:-119,rx:12,ry:13,fill:'#132c37',stroke:'#c7d9e0','stroke-width':6},group)};
+ const sinker=(x,y)=>{E('ellipse',{cx:x,cy:y+13,rx:95,ry:53,fill:'#000',opacity:.35,filter:'url(#krshadow)'});E('path',{d:'M'+(x-104)+' '+y+' Q'+(x-75)+' '+(y-58)+' '+x+' '+(y-57)+' Q'+(x+83)+' '+(y-58)+' '+(x+109)+' '+y+' Q'+(x+73)+' '+(y+55)+' '+x+' '+(y+54)+' Q'+(x-81)+' '+(y+55)+' '+(x-104)+' '+y+' Z',fill:'url(#krmetal)',stroke:'#bdcbd1','stroke-width':3});p('M'+(x-75)+' '+(y-18)+' Q'+x+' '+(y-45)+' '+(x+78)+' '+(y-13),'#f0fcff',4,{opacity:.6})};
+ const swivel=(x,y)=>{for(const dx of [-46,46])E('ellipse',{cx:x+dx,cy:y,rx:33,ry:23,fill:'none',stroke:'url(#krmetal)','stroke-width':12});E('rect',{x:x-30,y:y-19,width:60,height:38,rx:16,fill:'url(#krmetal)',stroke:'#c3d7dc','stroke-width':2});p('M'+(x-20)+' '+(y-7)+' H'+(x+17),'#efffff',3,{opacity:.7})};
+ const bead=(x,y)=>{E('circle',{cx:x,cy:y,r:35,fill:'#a9341c'});E('circle',{cx:x,cy:y,r:31,fill:'#e66a37'});E('ellipse',{cx:x-12,cy:y-13,rx:13,ry:8,fill:'#ffd5a1',opacity:.8})};
+ const worm=(x,y)=>{const d='M'+(x-120)+' '+(y+9)+' C'+(x-70)+' '+(y-60)+' '+(x+20)+' '+(y-53)+' '+(x+92)+' '+(y-5)+' Q'+(x+134)+' '+(y+33)+' '+(x+148)+' '+(y-18);p(d,'#1a2e18',47);p(d,'url(#krplastic)',39);for(let j=0;j<16;j++){const xx=x-105+j*15;p('M'+xx+' '+(y-19)+' l7 35','#31551c',2,{opacity:.75})}};
+ const cork=(x,y)=>{E('ellipse',{cx:x,cy:y,rx:75,ry:52,fill:'#e3452b',stroke:'#ffd8a9','stroke-width':5});E('path',{d:'M'+(x-10)+' '+(y-50)+' L'+(x+15)+' '+(y-50)+' L'+(x+15)+' '+(y+50)+' L'+(x-10)+' '+(y+50)+' Z',fill:'#fff2c9'});E('ellipse',{cx:x-31,cy:y-22,rx:18,ry:9,fill:'#ffdb9f',opacity:.65})};
  if(g.type==='Rig'){
-  path('M35 156 H865','#263a40',9);path('M35 153 H865','#a7e0df',3);
-  const parts=g.parts.split('→').map(p=>p.trim()).slice(0,7);
-  parts.forEach((p,i)=>{const x=75+i*750/Math.max(1,parts.length-1),k=p.toLowerCase();
-   if(/weight|sinker|bullet|pyramid|jig head/.test(k)){
-    el('ellipse',{cx:x,cy:153,rx:30,ry:18,fill:'url(#kr-metal)',stroke:'#d0d9d9','stroke-width':1.5});
-    path('M'+(x-18)+' 146 Q'+x+' 139 '+(x+20)+' 148','#d8e2e2',2);
-   }else if(/swivel/.test(k)){
-    for(const dx of [-20,20])el('ellipse',{cx:x+dx,cy:153,rx:13,ry:9,fill:'none',stroke:'#c1cbd0','stroke-width':4});
-    el('rect',{x:x-9,y:147,width:18,height:12,rx:4,fill:'url(#kr-metal)'});
-   }else if(/bead/.test(k)){el('circle',{cx:x,cy:153,r:13,fill:'#ff7c4a',stroke:'#ffd2a6','stroke-width':3})}
-   else if(/cork|float/.test(k)){el('ellipse',{cx:x,cy:153,rx:29,ry:25,fill:'#ee5d3e',stroke:'#ffd2a6','stroke-width':2});el('rect',{x:x-8,y:129,width:16,height:48,fill:'#fff0ba'})}
-   else if(/hook/.test(k)){path('M'+(x-13)+' 130 v35 q0 28 23 23 q17 -4 17 -21','url(#kr-metal)',7);path('M'+(x+27)+' 167 l-12 9','#e4f3f2',3)}
-   else if(/worm|bait|plastic|lure/.test(k)){path('M'+(x-45)+' 160 Q'+x+' 129 '+(x+52)+' 156','url(#kr-lure)',17);for(let j=0;j<7;j++)path('M'+(x-34+j*11)+' 146 l4 16','#365d20',1.5)}
-   else{el('circle',{cx:x,cy:153,r:5,fill:'#e0f3f1'})}
-   path('M'+x+' 116 v-12','#497f82',1);
-   text(x,88,p.length>19?p.slice(0,17)+'…':p,Math.max(10,15-parts.length/2));
-  });
+  const n=g.name.toLowerCase(),parts=g.parts.toLowerCase();
+  p('M45 270 H915','#08131a',13);p('M45 267 H915','url(#krline)',7);p('M45 263 H915','#d8ffff',2,{opacity:.75});
+  if(/cork|float|bobber/.test(n+' '+parts))cork(255,267);
+  else if(/sinker|weight|bullet|jig|drop shot|carolina|texas|fish finder|surf|bottom|three-way/.test(n+' '+parts))sinker(245,267);
+  if(/swivel/.test(parts))swivel(495,267);
+  else if(/bead/.test(parts))bead(430,267);
+  if(/bead/.test(parts)&&/swivel/.test(parts))bead(385,267);
+  if(/soft plastic|worm|lure|jig|ned|wacky|texas|drop shot/.test(n+' '+parts))worm(740,269);
+  hook(795,267,.75);
  }else{
   const k=g.name.toLowerCase();
-  path('M50 165 H850','#132c32',13);path('M50 161 H850','#75bce4',6);path('M50 159 H850','#b4edff',1.5);
-  const hook=/clinch|palomar|uni knot|snell|trilene|rapala|arbor/.test(k);
-  if(hook){path('M710 150 v42 q0 52 41 45 q26 -4 25 -35','url(#kr-metal)',12);path('M775 202 l-17 12','#edf4f4',4);el('circle',{cx:710,cy:150,r:9,fill:'#08151a',stroke:'#d7e2e6','stroke-width':5})}
-  const loop=/loop|perfection|bimini|surgeon|palomar|rapala/.test(k);
-  if(loop){path('M250 160 C295 55 500 57 545 154 C510 234 327 241 250 160','#64d8ef',8);path('M250 158 C295 57 500 59 545 152','#c0f6ff',2)}
-  else{const count=/fg|bimini/.test(k)?17:/double uni|albright|blood|yucatan/.test(k)?12:9;
-   for(let i=0;i<count;i++){const x=255+i*(300/count);path('M'+x+' 159 q-13 -28 2 -35 q17 -5 17 19 q0 16 -17 16','#4cbce5',7);path('M'+x+' 155 q-10 -25 2 -28','#b1efff',1.8)}
-   if(/double uni|blood|yucatan|albright/.test(k))path('M65 182 H840','#f5ac65',5);
+  p('M60 265 H865','#051822',17);p('M60 262 H865','url(#krline)',11);p('M60 257 H865','#c4f9ff',2,{opacity:.8});
+  if(/loop|palomar|rapala|surgeon|perfection|bimini/.test(k)){
+   p('M255 265 C305 95 595 100 620 257 C580 375 342 382 255 265','#092533',17);
+   p('M255 265 C305 95 595 100 620 257 C580 375 342 382 255 265','url(#krline)',11);
+   p('M275 254 C340 116 567 135 601 245','#e3ffff',2,{opacity:.7});
+  }else{
+   const count=/fg/.test(k)?23:/double uni|blood|albright/.test(k)?15:11;
+   const width=410/count;
+   for(let i=0;i<count;i++){const x=265+i*width;p('M'+x+' 262 C'+(x-26)+' 230 '+(x-16)+' 205 '+(x+2)+' 208 C'+(x+31)+' 215 '+(x+22)+' 260 '+x+' 262','#102d3a',14);p('M'+x+' 262 C'+(x-26)+' 230 '+(x-16)+' 205 '+(x+2)+' 208 C'+(x+31)+' 215 '+(x+22)+' 260 '+x+' 262','url(#krline)',9);p('M'+(x-12)+' 219 q11 -9 18 0','#e2ffff',2,{opacity:.8})}
   }
-  text(450,265,'Illustrated finished connection — follow the steps below',15);
+  if(/double uni|blood|albright|fg|yucatan/.test(k)){p('M55 285 H865','#f4ac68',7);p('M55 282 H865','#ffe1ad',1.5)}
+  if(/clinch|palomar|uni knot|snell|trilene|rapala|arbor/.test(k))hook(810,270,.75);
  }
- return s;
+ return root;
 }
 function init(){const list=$('kr-list'),detail=$('kr-detail'),search=$('kr-search'),sel=$('kr-filter');if(!list||!detail)return;function draw(){const filtered=guides.map((g,i)=>({...g,i})).filter(g=>(filter==='all'||(filter==='favorites'&&favorites.has(g.name))||g.type===filter)&&[g.name,g.use,g.parts].join(' ').toLowerCase().includes(query));list.replaceChildren();$('kr-count').textContent=filtered.length+' guides';if(!filtered.some(g=>g.i===selected)&&filtered.length)selected=filtered[0].i;filtered.forEach(g=>{let b=document.createElement('button');b.type='button';b.className='kr-tile'+(g.i===selected?' active':'');const visual=document.createElement('div');visual.className='kr-tile-art';visual.append(imageFor(g));const name=document.createElement('strong');name.textContent=g.name;const type=document.createElement('small');type.textContent=g.type;b.append(visual,name,type);b.addEventListener('click',()=>{selected=g.i;draw();if(matchMedia('(max-width:900px)').matches)detail.scrollIntoView({behavior:'smooth',block:'start'})});list.append(b)});if(!filtered.length){list.textContent='No matching guides found.';detail.replaceChildren();return}const g=guides[selected];detail.replaceChildren();const banner=document.createElement('div');banner.className='kr-detail-head';const title=document.createElement('h2');title.textContent=g.name;const desc=document.createElement('p');desc.textContent=g.use;const fav=document.createElement('button');fav.className='kr-favorite';fav.textContent=favorites.has(g.name)?'★ Saved':'☆ Add to Favorites';fav.onclick=()=>{favorites.has(g.name)?favorites.delete(g.name):favorites.add(g.name);localStorage.setItem('fishdex-kr-favorites',JSON.stringify([...favorites]));draw()};banner.append(fav,title,desc);const badges=document.createElement('div');badges.className='kr-badges';for(const t of [g.type,g.type==='Rig'?'Tackle setup':'Line technique','Step-by-step']){const span=document.createElement('span');span.textContent=t;badges.append(span)}banner.append(badges);detail.append(banner);const diagram=document.createElement('div');diagram.className='kr-big-diagram';const label=document.createElement('h3');label.textContent='Tackle & Line Diagram';diagram.append(label,imageFor(g));detail.append(diagram);const info=document.createElement('div');info.className='kr-info';const setup=document.createElement('article');const st=document.createElement('h3');st.textContent='⚙ Tackle & Setup';const sp=document.createElement('p');sp.textContent=g.parts;setup.append(st,sp);const usage=document.createElement('article');const ut=document.createElement('h3');ut.textContent='◎ When to Use';const up=document.createElement('p');up.textContent=g.use;usage.append(ut,up);info.append(setup,usage);detail.append(info);const steps=document.createElement('section');steps.className='kr-steps';const heading=document.createElement('h3');heading.textContent='☷ How to Do It — Step by Step';steps.append(heading);const caution=document.createElement('p');caution.textContent='Original FishDex learning sketches. Follow the written steps and verify knot geometry with a demonstrated tutorial before relying on a connection.';caution.style.cssText='color:#f4d3a0;font-size:13px;line-height:1.5';steps.append(caution);const grid=document.createElement('div');grid.className='kr-step-grid';g.steps.forEach((instruction,i)=>{const tile=document.createElement('article');const art=document.createElement('div');art.className='kr-step-art';art.append(svg(g,i));const num=document.createElement('span');num.className='kr-step-num';num.textContent=i+1;art.append(num);const text=document.createElement('p');text.textContent=instruction;tile.append(art,text);grid.append(tile)});steps.append(grid);if(g.type==='Knot'){const reference=document.createElement('a');reference.href='https://www.netknots.com/fishing_knots';reference.target='_blank';reference.rel='noopener noreferrer';reference.textContent='Compare with a demonstrated fishing-knot tutorial ↗';reference.style.cssText='display:inline-block;margin-top:14px;color:#70e9e2;text-decoration:underline';steps.append(reference)}detail.append(steps);const tip=document.createElement('div');tip.className='kr-tip-panel';const h=document.createElement('h3');h.textContent='✧ Pro Tip';const p=document.createElement('p');p.textContent=g.tip;tip.append(h,p);detail.append(tip)}
 search.addEventListener('input',()=>{query=search.value.toLowerCase().trim();draw()});sel.addEventListener('change',()=>{filter=sel.value;draw()});document.querySelectorAll('[data-kr-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.krFilter;sel.value=filter;draw()});draw()}
