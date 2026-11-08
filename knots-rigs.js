@@ -6,72 +6,78 @@ let selected=0,filter='all',query='',favorites=new Set();try{favorites=new Set(J
 // Individually authored Palomar sequence; no shared decorative knot geometry.
 function palomarDrawing(step=-1,hero=false){
  const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
- svg.setAttribute('viewBox','0 0 800 360');svg.setAttribute('role','img');
- svg.setAttribute('aria-label','Palomar knot: '+(step<0?'finished connection':'tying step '+(step+1)));
+ svg.setAttribute('viewBox','0 0 900 490');svg.setAttribute('role','img');
+ svg.setAttribute('aria-label','Palomar knot close-up, '+(step<0?'finished connection':'step '+(step+1)));
  svg.classList.add(hero?'kr-hero-illustration':'kr-diagram','kr-palomar-diagram');
- const make=(tag,attrs={},parent=svg)=>{const e=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,String(v));parent.append(e);return e};
- const text=(x,y,t,color='#cceff1')=>{const e=make('text',{x,y,fill:color,'font-size':15,'font-family':'system-ui','text-anchor':'middle'});e.textContent=t};
- const stroke=(d,color,width=9)=>{const group=make('g',{class:'kr-strand'});
-  make('path',{d,fill:'none',stroke:'#010f18','stroke-width':width+7,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.85},group);
-  make('path',{d,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round',class:'kr-line-motion'},group);
-  make('path',{d,fill:'none',stroke:'#f4ffff','stroke-width':1.8,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.75},group);
-  return group;
+ const E=(tag,attrs={},parent=svg)=>{const el=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,String(v));parent.append(el);return el};
+ const defs=E('defs');
+ const grad=(id,stops)=>{const g=E('linearGradient',{id,x1:'0%',y1:'0%',x2:'100%',y2:'100%'},defs);stops.forEach(([offset,color])=>E('stop',{offset,'stop-color':color},g))};
+ grad('palSteel',[['0%','#f2ffff'],['27%','#9fb8c4'],['55%','#405c6d'],['78%','#9db4be'],['100%','#e1eff1']]);
+ grad('palBlue',[['0%','#d4ffff'],['40%','#64d8ee'],['100%','#197da6']]);
+ grad('palOrange',[['0%','#ffe9be'],['40%','#f6a44c'],['100%','#b35d23']]);
+ const label=(x,y,t,color='#d5f5f7',size=17)=>{const el=E('text',{x,y,fill:color,'font-size':size,'font-family':'system-ui','text-anchor':'middle','font-weight':600});el.textContent=t;return el};
+ const strand=(d,color='blue',w=13)=>{const g=E('g',{class:'kr-strand'});
+  E('path',{d,fill:'none',stroke:'#00141d','stroke-width':w+10,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+  E('path',{d,fill:'none',stroke:color==='blue'?'url(#palBlue)':'url(#palOrange)','stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round',class:'kr-line-motion'},g);
+  E('path',{d,fill:'none',stroke:'#f5ffff','stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.65},g);
  };
- const crossing=(x,y,upper='orange')=>{
-  make('circle',{cx:x,cy:y,r:22,fill:'#09232b',stroke:'#476974','stroke-width':1,'stroke-dasharray':'3 4'});
-  const top=upper==='orange'?'#ffc27d':'#75ddef';
-  stroke('M'+(x-25)+' '+(y+11)+' Q'+x+' '+(y-3)+' '+(x+25)+' '+(y-13),top,9);
-  text(x,y-29,'OVER',top);
+ const arrow=(x,y,rotation=0)=>E('path',{d:'M-25 0 H24 M9 -13 L25 0 L9 13',transform:'translate('+x+' '+y+') rotate('+rotation+')',fill:'none',stroke:'#ffcb79','stroke-width':5,'stroke-linecap':'round','stroke-linejoin':'round'});
+ E('rect',{width:900,height:490,rx:22,fill:'#08212a'});
+ E('ellipse',{cx:620,cy:360,rx:160,ry:20,fill:'#000',opacity:.25});
+ // The eye is the same attachment point for the line and hook shank.
+ const hook=()=>{E('path',{d:'M635 224 L635 320 C635 414 776 411 781 315 L781 302',fill:'none',stroke:'#03151c','stroke-width':30,'stroke-linecap':'round'});
+ E('path',{d:'M635 224 L635 320 C635 414 776 411 781 315 L781 302',fill:'none',stroke:'url(#palSteel)','stroke-width':21,'stroke-linecap':'round'});
+ E('path',{d:'M781 302 L764 328 L793 320 Z',fill:'#e5f4f5'});
+ E('ellipse',{cx:635,cy:224,rx:18,ry:21,fill:'#08212a',stroke:'#e4f4f6','stroke-width':9});
+ E('ellipse',{cx:635,cy:224,rx:8,ry:11,fill:'#041a23'});
  };
- const arrow=(x,y,angle,color='#ffc27d')=>{
-  make('path',{d:'M-19 0 H15 M4 -9 L16 0 L4 9',fill:'none',stroke:color,'stroke-width':4,'stroke-linecap':'round','stroke-linejoin':'round',transform:'translate('+x+' '+y+') rotate('+angle+')'});
- };
- const pill=(x,y,t,color)=>{make('rect',{x:x-58,y:y-21,width:116,height:28,rx:14,fill:'#123842',stroke:color,'stroke-width':1.5});text(x,y,t,color)};
-
- make('rect',{width:800,height:360,rx:18,fill:'#09232b'});
- make('ellipse',{cx:590,cy:310,rx:125,ry:16,fill:'#000',opacity:.25});
- const hook=(x=570,y=165)=>{const group=make('g',{transform:'translate('+x+' '+y+')'});
-  make('path',{d:'M0 0 L0 94 C0 169 120 169 123 85 L123 70',stroke:'#041a22','stroke-width':21,fill:'none','stroke-linecap':'round'},group);
-  make('path',{d:'M0 0 L0 94 C0 169 120 169 123 85 L123 70',stroke:'#c0d6dc','stroke-width':13,fill:'none','stroke-linecap':'round'},group);
-  make('path',{d:'M123 70 L109 90 L131 84 Z',fill:'#e1edf0'},group);
-  make('ellipse',{cx:0,cy:0,rx:12,ry:13,fill:'#09232b',stroke:'#d5e8ec','stroke-width':6},group);
- };
- hook();
- const n=step<0?4:Math.min(step,4);
- const cyan='#75ddef',amber='#ffc27d';
+ const n=step<0?4:Math.max(0,Math.min(4,step));
+ // Render strand paths before hook, then the metallic eye above the threading.
  if(n===0){
-  // Doubled bight passes through the eye, two parallel strands lead back left.
-  stroke('M90 142 C230 139 400 143 570 158',cyan,6);
-  stroke('M90 163 C230 160 400 165 570 172',cyan,6);
-  stroke('M570 158 C635 151 671 126 655 109 C631 84 595 114 570 172',amber,9);arrow(668,109,135);
-  text(225,117,'Two parallel strands');text(685,84,'Folded loop',amber);
+  strand('M70 194 C245 191 425 206 635 219');
+  strand('M70 226 C242 228 434 235 635 230');
+  strand('M635 219 C707 203 738 142 700 123 C660 102 635 168 635 230','orange');
+  hook();label(236,155,'DOUBLED LINE');label(741,96,'BIGHT / LOOP','#ffc27d');arrow(751,151,120);
  }else if(n===1){
-  // Loose overhand in the doubled line; the bight remains large and free.
-  stroke('M75 142 C192 140 252 154 320 178 C380 205 409 117 465 127 C515 137 511 201 560 162 L570 165',cyan,6);
-  stroke('M75 163 C195 163 259 177 316 195 C382 219 429 132 475 144 C526 156 513 212 560 177 L570 165',cyan,5);
-  stroke('M320 178 C268 96 390 65 455 96 C502 118 500 170 465 193',amber,6);
-  crossing(411,143,'orange');arrow(480,94,55);text(388,43,'Cross the doubled line to form an overhand');
+  strand('M70 195 C215 190 325 206 395 239 C457 267 494 170 552 184 C597 195 590 238 635 224');
+  strand('M70 225 C220 225 332 245 401 257 C469 285 507 193 565 203 C605 213 600 248 635 224');
+  // The two doubled strands cross with a deliberate visible interruption under the bight.
+  strand('M395 239 C346 143 464 102 555 130 C611 149 612 199 578 252','orange');
+  hook();label(447,76,'LOOSE OVERHAND');label(485,319,'Keep both strands together','#ffc27d');arrow(588,132,75);
  }else if(n===2){
-  // The entire hook passes through the large doubled-line bight.
-  stroke('M75 145 C190 142 295 159 378 183 C447 207 505 170 570 165',cyan,6);
-  stroke('M75 166 C188 166 295 182 378 201 C449 227 512 185 570 165',cyan,5);
-  stroke('M378 183 C335 85 466 36 617 64 C749 90 746 265 625 289 C520 308 449 257 378 183',amber,7);
-  arrow(689,179,90);pill(655,43,'HOOK THROUGH',amber);
+  strand('M70 197 C243 196 355 214 452 242 C520 266 577 227 635 224');
+  strand('M70 228 C244 227 355 246 455 261 C531 286 586 241 635 224');
+  // Enlarged doubled-line bight shown surrounding the entire hook.
+  strand('M452 242 C382 119 497 61 667 80 C840 103 856 333 729 399 C619 448 499 367 452 242','orange');
+  hook();label(630,57,'PASS ENTIRE HOOK THROUGH LOOP','#ffc27d',16);arrow(808,237,90);
  }else if(n===3){
-  // The doubled overhand tightens at the eye; two strands remain distinguishable.
-  stroke('M76 141 C245 143 404 147 536 161 C551 165 559 163 570 165',cyan,7);
-  stroke('M76 166 C243 164 405 169 537 176 C551 174 562 167 570 165',amber,6);
-  stroke('M524 163 C527 135 549 135 553 161 C554 185 531 190 529 171',cyan,6);
-  stroke('M535 164 C542 145 560 146 565 164',amber,5);
-  arrow(165,124,180,cyan);arrow(166,184,180,amber);text(390,106,'Pull BOTH strands until the knot seats');
+  strand('M70 198 C273 194 440 210 601 221 C615 224 626 224 635 224');
+  strand('M70 236 C275 233 442 241 603 237 C618 232 625 226 635 224','orange');
+  strand('M590 223 C583 193 612 184 626 208 C637 228 605 254 597 230');
+  hook();label(325,143,'PULL BOTH STRANDS');arrow(185,178,180);arrow(185,258,180);
  }else{
-  stroke('M77 145 C254 144 411 151 542 164 L570 165',cyan,7);
-  stroke('M460 177 C511 174 543 170 570 165',amber,6);
-  stroke('M534 163 C536 147 553 145 556 162 C558 177 542 178 541 167',cyan,5);
-  pill(302,110,'STANDING LINE',cyan);pill(453,224,'TAG END',amber);
+  strand('M70 202 C260 198 438 210 607 223 L635 224');
+  strand('M443 249 C529 245 593 236 635 224','orange');
+  strand('M598 223 C595 206 612 197 625 216 C629 225 617 237 606 225');
+  hook();label(230,157,'STANDING LINE');label(475,301,'TAG END','#ffc27d');label(708,179,'HOOK EYE');
  }
- if(step>=0)text(400,333,'PALOMAR · '+['Double the line and pass the bight through the eye','Tie a loose overhand in both strands','Pass the whole hook through the large loop','Moisten and tighten both strands','Check and trim the tag'][n]);
- else text(400,333,'PALOMAR · finished connection');
+ // Magnified detail is a separate inset; never mistaken for a second line segment.
+ const box=E('g',{transform:'translate(35 353)'});
+ E('rect',{x:0,y:0,width:320,height:100,rx:14,fill:'#12343f',stroke:'#368f9c','stroke-width':2},box);
+ const insetLabel=E('text',{x:160,y:22,fill:'#e3ffff','font-size':14,'text-anchor':'middle','font-family':'system-ui'},box);insetLabel.textContent=n===1?'CROSSING DETAIL: ONE PAIR OVER':n===2?'LOOP GOES AROUND THE HOOK':n===0?'EYE DETAIL: BOTH STRANDS PASS': 'TIGHTEN AT THE HOOK EYE';
+ if(n===1){
+  E('path',{d:'M30 70 Q160 30 290 75',fill:'none',stroke:'#61d7ed','stroke-width':12,'stroke-linecap':'round'},box);
+  E('path',{d:'M30 46 Q155 96 290 45',fill:'none',stroke:'#00141d','stroke-width':22,'stroke-linecap':'round'},box);
+  E('path',{d:'M30 46 Q155 96 290 45',fill:'none',stroke:'#ffbd71','stroke-width':12,'stroke-linecap':'round'},box);
+ }else if(n===0){
+  E('ellipse',{cx:175,cy:64,rx:25,ry:23,fill:'none',stroke:'#d5e9ed','stroke-width':10},box);
+  E('path',{d:'M25 58 H293 M25 72 H293',fill:'none',stroke:'#7addec','stroke-width':5},box);
+ }else{
+  E('ellipse',{cx:215,cy:64,rx:23,ry:23,fill:'none',stroke:'#d5e9ed','stroke-width':9},box);
+  E('path',{d:'M28 55 C110 48 166 62 215 64',fill:'none',stroke:'#7addec','stroke-width':9,'stroke-linecap':'round'},box);
+  E('path',{d:'M65 77 C132 71 182 67 215 64',fill:'none',stroke:'#ffc27d','stroke-width':8,'stroke-linecap':'round'},box);
+ }
+ label(628,465,'PALOMAR · '+['Thread doubled line','Tie loose overhand','Pass hook through bight','Moisten and tighten','Check and trim'][n],'#d5f5f7',15);
  return svg;
 }
 function svg(g,step=-1){
