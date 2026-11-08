@@ -100,7 +100,7 @@ function imageFor(g){
  E('rect',{width:960,height:420,fill:'url(#kr-bg-v2)'});
  E('ellipse',{cx:480,cy:346,rx:345,ry:19,fill:'#000',opacity:.3});
  const lineY=211;
- const line=(x1,x2,y=lineY)=>{p('M'+x1+' '+y+' H'+x2,'#173644',10);p('M'+x1+' '+y+' H'+x2,'#86dbea',5)};
+ const line=(x1,x2,y=lineY)=>{const d='M'+x1+' '+y+' C'+(x1+95)+' '+(y-28)+' '+(x2-120)+' '+(y+27)+' '+x2+' '+y;p(d,'#173644',10);p(d,'#86dbea',5)};
  const hook=(x,y,scale=1)=>{const g1=E('g',{transform:'translate('+x+' '+y+') scale('+scale+')'});const d='M0 -63 L0 9 C0 84 100 85 105 21 L105 7';E('path',{d,stroke:'#0a2029','stroke-width':18,fill:'none','stroke-linecap':'round'},g1);E('path',{d,stroke:'url(#kr-metal-v2)','stroke-width':12,fill:'none','stroke-linecap':'round'},g1);E('path',{d:'M105 7 L92 26 L113 23 Z',fill:'#d7e6ea'},g1);E('ellipse',{cx:0,cy:-63,rx:8,ry:9,fill:'#09232e',stroke:'#e2eff2','stroke-width':4},g1)};
  const weight=(x,y)=>{E('ellipse',{cx:x,cy:y,rx:58,ry:30,fill:'url(#kr-metal-v2)',stroke:'#e0ebed','stroke-width':2});p('M'+(x-43)+' '+(y-12)+' Q'+x+' '+(y-29)+' '+(x+40)+' '+(y-9),'#e9fbff',3)};
  const bead=(x,y)=>{E('circle',{cx:x,cy:y,r:17,fill:'#ec7643',stroke:'#ffd4a3','stroke-width':3})};
@@ -117,34 +117,53 @@ function imageFor(g){
    // All terminal hooks sit at the line end, never in the middle of the rig.
    // Drop shot is the intentional exception: its weight hangs below the hook.
    if(isDrop){
-     line(75,725,180);hook(725,243,.55);worm(735,178);
+     line(75,725,180);hook(725,215,.55);worm(810,178);
      p('M725 180 V325','#86dbea',5);weight(725,337);
    }else if(isNed){
-     line(75,745,220);weight(739,220);hook(755,255,.55);worm(790,214);
+     line(75,755,220);weight(655,220);hook(755,255,.55);worm(846,214);
    }else if(isWacky){
-     line(75,740,205);worm(775,206);hook(747,255,.55);
+     line(75,747,205);worm(825,206);hook(747,240,.55);
      if(/neko/.test(k))weight(839,215);
    }else{
-     line(70,765,211);
+     line(70,790,211);
      if(isCork)cork(225,211);
      else if(hasWeight)weight(215,211);
      if(/bead/.test(parts))bead(350,211);
      if(hasSwivel)swivel(465,211);
-     if(hasWorm)worm(784,208);
-     hook(790,262,.62);
+     if(hasWorm)worm(852,205);
+     hook(790,250,.62);
    }
  }else{
    const hasHook=/clinch|palomar|uni knot|snell|trilene|rapala|arbor/.test(k);
-   const end=hasHook?760:885;line(75,end,212);
-   if(/loop|palomar|rapala|surgeon|perfection|bimini/.test(k)){
-     p('M270 212 C330 85 540 85 595 212 C555 310 360 320 270 212','#153745',13);
-     p('M270 212 C330 85 540 85 595 212 C555 310 360 320 270 212','#81deef',7);
+   const end=hasHook?760:875;
+   // Two visibly distinct strands: standing line and tag end.
+   const standing='M65 218 C175 188 250 237 332 214 S540 201 610 213 S700 220 '+end+' 212';
+   p(standing,'#153d4a',12);p(standing,'#a0eaf4',6);
+   const coil=(x,y,r=20)=>{p('M'+x+' '+y+' c-24 -32 -9 -64 19 -55 c28 9 25 45 -2 56','#1a5263',12);p('M'+x+' '+y+' c-24 -32 -9 -64 19 -55 c28 9 25 45 -2 56','#60c7e8',6)};
+   if(/palomar/.test(k)){
+     p('M325 215 C280 94 425 68 493 124 S565 246 480 292 S325 274 325 215','#1a5363',13);
+     p('M325 215 C280 94 425 68 493 124 S565 246 480 292 S325 274 325 215','#70d9f3',7);
+     p('M405 215 C452 142 535 151 562 218','#ffbb79',5);
+   }else if(/non-slip|perfection|surgeon|bimini|loop|rapala/.test(k)){
+     p('M302 213 C295 112 401 82 486 117 C572 151 585 263 491 291 C393 324 305 282 302 213','#175369',13);
+     p('M302 213 C295 112 401 82 486 117 C572 151 585 263 491 291 C393 324 305 282 302 213','#70d8f2',7);
+     p('M480 218 Q522 170 565 220','#ffbc78',5);
+   }else if(/double uni|blood|alberto|albright|fg|yucatan/.test(k)){
+     p('M68 260 C178 245 259 269 355 251 S550 255 655 250 S777 260 870 251','#efb978',6);
+     const count=/fg/.test(k)?14:/double uni|blood/.test(k)?10:7;
+     for(let i=0;i<count;i++)coil(325+i*20,216);
+     if(/double uni|blood/.test(k))for(let i=0;i<5;i++)p('M'+(575+i*14)+' 251 q-22 -36 0 -48 q22 -12 19 14','#efb978',4);
    }else{
-     const count=/fg/.test(k)?19:/double uni|blood|albright/.test(k)?13:9;
-     for(let i=0;i<count;i++){const x=275+i*(340/count);p('M'+x+' 212 C'+(x-18)+' 184 '+(x-11)+' 164 '+(x+5)+' 167 C'+(x+24)+' 171 '+(x+18)+' 208 '+x+' 212','#0e3442',11);p('M'+x+' 212 C'+(x-18)+' 184 '+(x-11)+' 164 '+(x+5)+' 167 C'+(x+24)+' 171 '+(x+18)+' 208 '+x+' 212','#85dbea',6)}
+     const count=/snell/.test(k)?7:/clinch|trilene/.test(k)?6:5;
+     for(let i=0;i<count;i++)coil(370+i*31,214);
+     p('M'+(370+count*31)+' 213 C'+(430+count*31)+' 306 550 330 624 245 Q660 185 696 221','#ffbd7d',5);
    }
-   if(/fg|double uni|blood|albright|yucatan/.test(k))p('M80 237 H870','#eeb476',4);
-   if(hasHook)hook(760,265,.7);
+   if(hasHook){
+     // Hook eye is exactly on the endpoint of the line: x=760,y=212.
+     hook(760,256.1,.7);
+     E('circle',{cx:760,cy:212,r:5,fill:'#07242f',stroke:'#b4f6ff','stroke-width':2});
+   }
+
  }
  return root;
 }
