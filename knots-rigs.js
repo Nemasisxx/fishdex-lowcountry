@@ -29,38 +29,42 @@ function palomarDrawing(step=-1,hero=false){
  E('path',{d:'M635 224 L635 320 C635 414 776 411 781 315 L781 302',fill:'none',stroke:'url(#palSteel)','stroke-width':21,'stroke-linecap':'round'});
  E('path',{d:'M781 302 L764 328 L793 320 Z',fill:'#e5f4f5'});
  E('ellipse',{cx:635,cy:224,rx:18,ry:21,fill:'#08212a',stroke:'#e4f4f6','stroke-width':9});
- E('ellipse',{cx:635,cy:224,rx:8,ry:11,fill:'#041a23'});
+ E('ellipse',{cx:635,cy:224,rx:10,ry:13,fill:'#041a23'});
  };
  const n=step<0?4:Math.max(0,Math.min(4,step));
+ // Draw the hook behind the strands, so the line visibly crosses the open eye.
+ hook();
  // Render strand paths before hook, then the metallic eye above the threading.
  if(n===0){
-  strand('M70 194 C245 191 425 206 635 219');
-  strand('M70 226 C242 228 434 235 635 230');
-  strand('M635 219 C707 203 738 142 700 123 C660 102 635 168 635 230','orange');
-  hook();label(236,155,'DOUBLED LINE');label(741,96,'BIGHT / LOOP','#ffc27d');arrow(751,151,120);
+  strand('M70 194 C245 191 425 206 635 219 C647 219 657 214 670 204');
+  strand('M70 226 C242 228 434 235 635 230 C649 230 660 219 671 204');
+  strand('M670 204 C725 177 738 142 700 123 C660 102 636 172 635 224','orange');
+  label(236,155,'DOUBLED LINE');label(741,96,'BIGHT / LOOP','#ffc27d');arrow(751,151,120);
  }else if(n===1){
-  strand('M70 195 C215 190 325 206 395 239 C457 267 494 170 552 184 C597 195 590 238 635 224');
-  strand('M70 225 C220 225 332 245 401 257 C469 285 507 193 565 203 C605 213 600 248 635 224');
+  strand('M70 195 C215 190 325 206 395 239 C457 267 494 170 552 184 C597 195 590 238 635 224 C647 224 654 217 667 209');
+  strand('M70 225 C220 225 332 245 401 257 C469 285 507 193 565 203 C605 213 600 248 635 224 C647 224 654 217 667 209');
   // The two doubled strands cross with a deliberate visible interruption under the bight.
   strand('M395 239 C346 143 464 102 555 130 C611 149 612 199 578 252','orange');
-  hook();label(447,76,'LOOSE OVERHAND');label(485,319,'Keep both strands together','#ffc27d');arrow(588,132,75);
+  label(447,76,'LOOSE OVERHAND');label(485,319,'Keep both strands together','#ffc27d');arrow(588,132,75);
  }else if(n===2){
-  strand('M70 197 C243 196 355 214 452 242 C520 266 577 227 635 224');
-  strand('M70 228 C244 227 355 246 455 261 C531 286 586 241 635 224');
+  strand('M70 197 C243 196 355 214 452 242 C520 266 577 227 635 224 C646 223 656 218 668 209');
+  strand('M70 228 C244 227 355 246 455 261 C531 286 586 241 635 224 C646 223 656 218 668 209');
   // Enlarged doubled-line bight shown surrounding the entire hook.
   strand('M452 242 C382 119 497 61 667 80 C840 103 856 333 729 399 C619 448 499 367 452 242','orange');
-  hook();label(630,57,'PASS ENTIRE HOOK THROUGH LOOP','#ffc27d',16);arrow(808,237,90);
+  label(630,57,'PASS ENTIRE HOOK THROUGH LOOP','#ffc27d',16);arrow(808,237,90);
  }else if(n===3){
-  strand('M70 198 C273 194 440 210 601 221 C615 224 626 224 635 224');
-  strand('M70 236 C275 233 442 241 603 237 C618 232 625 226 635 224','orange');
+  strand('M70 198 C273 194 440 210 601 221 C615 224 626 224 635 224 C646 223 652 218 660 211');
+  strand('M70 236 C275 233 442 241 603 237 C618 232 625 226 635 224 C646 223 652 218 660 211','orange');
   strand('M590 223 C583 193 612 184 626 208 C637 228 605 254 597 230');
-  hook();label(325,143,'PULL BOTH STRANDS');arrow(185,178,180);arrow(185,258,180);
+  label(325,143,'PULL BOTH STRANDS');arrow(185,178,180);arrow(185,258,180);
  }else{
-  strand('M70 202 C260 198 438 210 607 223 L635 224');
-  strand('M443 249 C529 245 593 236 635 224','orange');
+  strand('M70 202 C260 198 438 210 607 223 L650 214');
+  strand('M443 249 C529 245 593 236 650 214','orange');
   strand('M598 223 C595 206 612 197 625 216 C629 225 617 237 606 225');
-  hook();label(230,157,'STANDING LINE');label(475,301,'TAG END','#ffc27d');label(708,179,'HOOK EYE');
+  label(230,157,'STANDING LINE');label(475,301,'TAG END','#ffc27d');label(708,179,'HOOK EYE');
  }
+ // A narrow front edge of the hook eye makes the threading depth readable.
+ E('path',{d:'M627 208 Q619 223 627 239',fill:'none',stroke:'#e4f4f6','stroke-width':5,'stroke-linecap':'round'});
  // Magnified detail is a separate inset; never mistaken for a second line segment.
  const box=E('g',{transform:'translate(35 353)'});
  E('rect',{x:0,y:0,width:320,height:100,rx:14,fill:'#12343f',stroke:'#368f9c','stroke-width':2},box);
