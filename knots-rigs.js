@@ -18,10 +18,10 @@ function palomarDrawing(step=-1,hero=false){
  const label=(x,y,t,color='#d5f5f7',size=17)=>{const el=E('text',{x,y,fill:color,'font-size':size,'font-family':'system-ui','text-anchor':'middle','font-weight':600});el.textContent=t;return el};
  const strand=(d,color='blue',w=13)=>{const g=E('g',{class:'kr-strand'});
   E('path',{d,fill:'none',stroke:'#00141d','stroke-width':w+10,'stroke-linecap':'round','stroke-linejoin':'round'},g);
-  E('path',{d,fill:'none',stroke:color==='blue'?'url(#palBlue)':'url(#palOrange)','stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round',class:'kr-line-motion'},g);
+  E('path',{d,fill:'none',stroke:'url(#palBlue)','stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round',class:'kr-line-static'},g);
   E('path',{d,fill:'none',stroke:'#f5ffff','stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round',opacity:.65},g);
  };
- const arrow=(x,y,rotation=0)=>E('path',{d:'M-25 0 H24 M9 -13 L25 0 L9 13',transform:'translate('+x+' '+y+') rotate('+rotation+')',fill:'none',stroke:'#ffcb79','stroke-width':5,'stroke-linecap':'round','stroke-linejoin':'round'});
+ const arrow=(x,y,rotation=0)=>E('path',{d:'M-25 0 H24 M9 -13 L25 0 L9 13',transform:'translate('+x+' '+y+') rotate('+rotation+')',fill:'none',stroke:'#61d7ed','stroke-width':5,'stroke-linecap':'round','stroke-linejoin':'round'});
  E('rect',{width:900,height:490,rx:22,fill:'#08212a'});
  E('ellipse',{cx:620,cy:360,rx:160,ry:20,fill:'#000',opacity:.25});
  // The eye is the same attachment point for the line and hook shank.
@@ -36,32 +36,24 @@ function palomarDrawing(step=-1,hero=false){
  hook();
  // Render strand paths before hook, then the metallic eye above the threading.
  if(n===0){
-  strand('M70 194 C245 191 425 206 635 219 C647 219 657 214 670 204');
-  strand('M70 226 C242 228 434 235 635 230 C649 230 660 219 671 204');
-  strand('M670 204 C725 177 738 142 700 123 C660 102 636 172 635 224','orange');
-  label(236,155,'DOUBLED LINE');label(741,96,'BIGHT / LOOP','#ffc27d');arrow(751,151,120);
+  strand('M70 194 C245 191 425 206 635 219 C647 219 687 191 708 155 C740 105 686 101 665 145 C650 175 639 209 635 230 C434 235 242 228 70 226');
+  label(236,155,'DOUBLED LINE');label(741,96,'BIGHT / LOOP');arrow(751,151,120);
  }else if(n===1){
-  strand('M70 195 C215 190 325 206 395 239 C457 267 494 170 552 184 C597 195 590 238 635 224 C647 224 654 217 667 209');
-  strand('M70 225 C220 225 332 245 401 257 C469 285 507 193 565 203 C605 213 600 248 635 224 C647 224 654 217 667 209');
-  // The two doubled strands cross with a deliberate visible interruption under the bight.
-  strand('M395 239 C346 143 464 102 555 130 C611 149 612 199 578 252','orange');
-  label(447,76,'LOOSE OVERHAND');label(485,319,'Keep both strands together','#ffc27d');arrow(588,132,75);
+  strand('M70 195 C215 190 325 206 395 239 C457 267 494 170 552 184 C597 195 590 238 635 224 C660 209 677 203 680 190 C690 155 657 150 649 188 C644 203 637 218 635 224 C600 248 605 213 565 203 C507 193 469 285 401 257 C332 245 220 225 70 225');
+  strand('M395 239 C346 143 464 102 555 130 C611 149 612 199 578 252');
+  label(447,76,'LOOSE OVERHAND');label(485,319,'Keep both strands together');arrow(588,132,75);
  }else if(n===2){
-  strand('M70 197 C243 196 355 214 452 242 C520 266 577 227 635 224 C646 223 656 218 668 209');
-  strand('M70 228 C244 227 355 246 455 261 C531 286 586 241 635 224 C646 223 656 218 668 209');
-  // Enlarged doubled-line bight shown surrounding the entire hook.
-  strand('M452 242 C382 119 497 61 667 80 C840 103 856 333 729 399 C619 448 499 367 452 242','orange');
-  label(630,57,'PASS ENTIRE HOOK THROUGH LOOP','#ffc27d',16);arrow(808,237,90);
+  strand('M70 197 C243 196 355 214 452 242 C520 266 577 227 635 224 C648 212 665 201 678 188 C705 156 680 140 658 169 C646 187 640 206 635 224 C586 241 531 286 455 261 C355 246 244 227 70 228');
+  strand('M452 242 C382 119 497 61 667 80 C840 103 856 333 729 399 C619 448 499 367 452 242');
+  label(630,57,'PASS ENTIRE HOOK THROUGH LOOP','#d5f5f7',16);arrow(808,237,90);
  }else if(n===3){
-  strand('M70 198 C273 194 440 210 601 221 C615 224 626 224 635 224 C646 223 652 218 660 211');
-  strand('M70 236 C275 233 442 241 603 237 C618 232 625 226 635 224 C646 223 652 218 660 211','orange');
+  strand('M70 198 C273 194 440 210 601 221 C615 224 626 224 635 224 C650 208 664 200 665 214 C666 226 648 233 635 224 C625 226 618 232 603 237 C442 241 275 233 70 236');
   strand('M590 223 C583 193 612 184 626 208 C637 228 605 254 597 230');
   label(325,143,'PULL BOTH STRANDS');arrow(185,178,180);arrow(185,258,180);
  }else{
-  strand('M70 202 C260 198 438 210 607 223 L650 214');
-  strand('M443 249 C529 245 593 236 650 214','orange');
+  strand('M70 202 C260 198 438 210 607 223 C624 225 635 224 650 214 C664 203 670 219 650 227 C620 235 593 236 529 245 L443 249');
   strand('M598 223 C595 206 612 197 625 216 C629 225 617 237 606 225');
-  label(230,157,'STANDING LINE');label(475,301,'TAG END','#ffc27d');label(708,179,'HOOK EYE');
+  label(230,157,'STANDING LINE');label(475,301,'TAG END');label(708,179,'HOOK EYE');
  }
  // A narrow front edge of the hook eye makes the threading depth readable.
  E('path',{d:'M627 208 Q619 223 627 239',fill:'none',stroke:'#e4f4f6','stroke-width':5,'stroke-linecap':'round'});
@@ -72,14 +64,14 @@ function palomarDrawing(step=-1,hero=false){
  if(n===1){
   E('path',{d:'M30 70 Q160 30 290 75',fill:'none',stroke:'#61d7ed','stroke-width':12,'stroke-linecap':'round'},box);
   E('path',{d:'M30 46 Q155 96 290 45',fill:'none',stroke:'#00141d','stroke-width':22,'stroke-linecap':'round'},box);
-  E('path',{d:'M30 46 Q155 96 290 45',fill:'none',stroke:'#ffbd71','stroke-width':12,'stroke-linecap':'round'},box);
+  E('path',{d:'M30 46 Q155 96 290 45',fill:'none',stroke:'#61d7ed','stroke-width':12,'stroke-linecap':'round'},box);
  }else if(n===0){
   E('ellipse',{cx:175,cy:64,rx:25,ry:23,fill:'none',stroke:'#d5e9ed','stroke-width':10},box);
   E('path',{d:'M25 58 H293 M25 72 H293',fill:'none',stroke:'#7addec','stroke-width':5},box);
  }else{
   E('ellipse',{cx:215,cy:64,rx:23,ry:23,fill:'none',stroke:'#d5e9ed','stroke-width':9},box);
   E('path',{d:'M28 55 C110 48 166 62 215 64',fill:'none',stroke:'#7addec','stroke-width':9,'stroke-linecap':'round'},box);
-  E('path',{d:'M65 77 C132 71 182 67 215 64',fill:'none',stroke:'#ffc27d','stroke-width':8,'stroke-linecap':'round'},box);
+  E('path',{d:'M65 77 C132 71 182 67 215 64',fill:'none',stroke:'#61d7ed','stroke-width':8,'stroke-linecap':'round'},box);
  }
  label(628,465,'PALOMAR · '+['Thread doubled line','Tie loose overhand','Pass hook through bight','Moisten and tighten','Check and trim'][n],'#d5f5f7',15);
  return svg;
