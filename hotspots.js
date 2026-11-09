@@ -196,16 +196,20 @@ function setupPersonalLocation(){
 // Species-specific tips live in FishDex locked-fish guides, not on the map.
 function tackleFor(){}
 let baitShopLayer=null;
+let baitShopRequest=0;
+let lastBaitShopCenter=null;
 async function findBaitShops(){
  const button=document.getElementById('hotspot-find-shops'),status=document.getElementById('hotspot-shops-status'),list=document.getElementById('hotspot-shop-list');
  if(!map||!button||!status||!list)return;
- button.disabled=true;status.textContent='Searching map area for bait and tackle shops…';list.replaceChildren();
+ const request=++baitShopRequest;
+ button.disabled=true;status.textContent='Loading nearby bait and tackle shops…';list.replaceChildren();
  try{
   const center=map.getCenter(),radius=Math.min(35000,Math.max(8000,Math.round(map.distance(center,map.getBounds().getNorthEast()))));
   const query='[out:json][timeout:20];(nwr["shop"="fishing"](around:'+radius+','+center.lat+','+center.lng+');nwr["shop"="hunting_fishing"](around:'+radius+','+center.lat+','+center.lng+');nwr["fishing:shop"="yes"](around:'+radius+','+center.lat+','+center.lng+'););out center 50;';
   const response=await fetch('https://overpass.kumi.systems/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({data:query}),signal:AbortSignal.timeout(25000)});
   if(!response.ok)throw Error('Shop search is temporarily unavailable');
-  const payload=await response.json(),items=(payload.elements||[]).filter(x=>x.tags?.name).slice(0,35);
+  const payload=await response.json();if(request!==baitShopRequest)return;
+  const items=(payload.elements||[]).filter(x=>x.tags?.name).slice(0,100).sort((a,b)=>{const c=map.getCenter();const pos=x=>[x.lat??x.center?.lat,x.lon??x.center?.lon];return map.distance(c,pos(a))-map.distance(c,pos(b))});
   if(baitShopLayer)baitShopLayer.clearLayers();else baitShopLayer=L.layerGroup().addTo(map);
   if(!items.length){status.textContent='No mapped fishing shops found here. Move the map toward a town and try again.';return}
   status.textContent=items.length+' mapped fishing shops found. Live bait and inventory are not confirmed.';
@@ -214,14 +218,19 @@ async function findBaitShops(){
    const name=item.tags.name,location=[lat,lng],row=document.createElement('div');row.className='hotspot-shop-result';
    const title=document.createElement('strong');title.textContent=name;row.append(title);
    const details=document.createElement('small');details.textContent=[item.tags['addr:street'],item.tags['addr:city'],item.tags.phone||item.tags['contact:phone']].filter(Boolean).join(' · ')||'Fishing supply shop';row.append(details);
+   const hours=item.tags.opening_hours||item.tags['opening_hours:covid19'];
+   const hoursEl=document.createElement('small');hoursEl.textContent=hours?'Hours: '+hours:'Hours not listed · check before visiting';row.append(hoursEl);
+   const website=item.tags.website||item.tags['contact:website'];
    const actions=document.createElement('div');actions.className='hotspot-shop-actions';
    const focus=document.createElement('button');focus.type='button';focus.textContent='Show on map';focus.onclick=()=>{map.setView(location,14);marker.openPopup()};
    const directions=document.createElement('a');directions.textContent='Directions ↗';directions.href='https://www.google.com/maps/dir/?api=1&destination='+encodeURIComponent(lat+','+lng);directions.target='_blank';directions.rel='noopener noreferrer';
-   actions.append(focus,directions);row.append(actions);list.append(row);
-   const marker=L.marker(location).addTo(baitShopLayer).bindPopup('<strong>'+esc(name)+'</strong><br>Call ahead to confirm bait availability.');
+   actions.append(focus,directions);
+   if(website&&/^https?:\/\//i.test(website)){const link=document.createElement('a');link.textContent='Website ↗';link.href=website;link.target='_blank';link.rel='noopener noreferrer';actions.append(link)}
+   row.append(actions);list.append(row);
+   const marker=L.marker(location).addTo(baitShopLayer).bindPopup('<strong>'+esc(name)+'</strong><br>'+esc(hours?'Hours: '+hours:'Hours not listed')+'<br>Call ahead to confirm bait availability.');
   }
- }catch(e){status.textContent='Unable to load shops right now. Try again later or search your map app for “bait and tackle shop”.'}
- finally{button.disabled=false}
+ }catch(e){if(request===baitShopRequest)status.textContent='Unable to load nearby listings right now. Try refreshing or checking Google Maps.'}
+ finally{if(request===baitShopRequest)button.disabled=false}
 }
 function drawTideGraph(container,predictions){
  const rows=predictions.map(p=>({time:new Date(p.t.replace(' ','T')),height:Number(p.v)})).filter(p=>Number.isFinite(p.height)&&!Number.isNaN(p.time.getTime()));
@@ -427,8 +436,15 @@ function init(){
   for(const fish of species){speciesSelect.add(new Option(fish.name,fish.name))}
  }
  document.getElementById('hotspot-find-shops')?.addEventListener('click',findBaitShops);
+ // Opening Bait Shops loads pins and listings automatically; moving the map refreshes nearby results.
+ document.querySelector('[data-hotspot-panel="tackle"]')?.addEventListener('click',()=>{
+  setTimeout(()=>{if(!document.getElementById('hotspot-panel-tackle')?.hidden)findBaitShops()},80);
+ });
+ let baitShopRefreshTimer;
+ document.getElementById('hotspot-map')?.addEventListener('fd-refresh-shops',()=>findBaitShops());
  initialized=true;map=L.map('hotspot-map',{scrollWheelZoom:true}).setView([32.77,-79.92],10);
  map.on('zoomend moveend',()=>{updateOpportunityZones();queueHabitatWays()});
+ map.on('moveend',()=>{if(document.getElementById('hotspot-panel-tackle')?.hidden)return;clearTimeout(baitShopRefreshTimer);baitShopRefreshTimer=setTimeout(findBaitShops,1100)});
  document.getElementById('hotspot-activity-toggle')?.addEventListener('change',()=>{updateOpportunityZones();queueHabitatWays()});
  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap contributors'});
  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Imagery © Esri and imagery providers'}).addTo(map);
