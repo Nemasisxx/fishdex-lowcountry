@@ -504,7 +504,7 @@ const fdFishProfiles={
  'Largemouth Bass':{season:[3,4,5,9,10],wind:15,temperature:[58,80]}
 };
 async function fdFetchWeather(lat,lng){
- const params=new URLSearchParams({latitude:String(lat),longitude:String(lng),hourly:'temperature_2m,precipitation,wind_speed_10m,wind_direction_10m,pressure_msl,cloud_cover',temperature_unit:'fahrenheit',wind_speed_unit:'mph',timezone:'America/New_York',forecast_days:'3',past_days:'2'});
+ const params=new URLSearchParams({latitude:String(lat),longitude:String(lng),hourly:'temperature_2m,precipitation,wind_speed_10m,wind_direction_10m,pressure_msl,cloud_cover',temperature_unit:'fahrenheit',precipitation_unit:'inch',wind_speed_unit:'mph',timezone:'America/New_York',forecast_days:'3',past_days:'2'});
  const response=await fetch('https://api.open-meteo.com/v1/forecast?'+params);
  if(!response.ok)throw Error('Weather unavailable');
  const data=await response.json();if(!data.hourly?.time?.length)throw Error('No weather forecast');
@@ -517,7 +517,7 @@ function fdScoreWindow(date,minute,weather,profile){
  const wind=num('wind_speed_10m'),rain=num('precipitation'),temp=num('temperature_2m'),cloud=num('cloud_cover'),pressure=num('pressure_msl');
  let score=65;const notes=[];
  if(Number.isFinite(wind)){if(wind>22){score-=30;notes.push('Strong wind')}else if(wind>15){score-=15;notes.push('Windy')}else{score+=5;notes.push('Manageable wind')}}
- if(Number.isFinite(rain)){if(rain>0.3){score-=20;notes.push('Heavy rain')}else if(rain>0.05){score-=7;notes.push('Rain possible')}}
+ if(Number.isFinite(rain)){if(rain>0.15){score-=20;notes.push('Heavy rain')}else if(rain>0.03){score-=7;notes.push('Rain possible')}}
  const idx=weather.time.findIndex(t=>t.slice(0,10)===date&&Number(t.slice(11,13))===Math.floor(minute/60));
  const prior=idx>=3?Number(weather.pressure_msl?.[idx-3]):NaN;
  if(Number.isFinite(pressure)&&Number.isFinite(prior)&&Math.abs(pressure-prior)>3){score-=6;notes.push('Pressure changing')}
@@ -574,7 +574,7 @@ function renderThreeDayTides(output,predictions,highLowPredictions=[],weather=nu
   const candidates=usable.map(e=>({minute:e.minute,...(fdScoreWindow(date,e.minute,weather,profile)||{score:50,notes:[]})})).sort((a,b)=>b.score-a.score);
   const best=candidates[0];
   bite.textContent='🎣 BEST TIME TO TRY: '+(best?fmt(Math.max(0,best.minute-90))+' – '+fmt(Math.min(1439,best.minute+90)):'Check tide times');
-  if(best&&weather){const summary=document.createElement('div');summary.className='fd-fishing-weather';summary.textContent=(best.score>=75?'🟢 Favorable':best.score>=55?'🟡 Mixed conditions':'🟠 Challenging')+' · '+Math.round(best.temp)+'°F · Wind '+Math.round(best.wind)+' mph · Rain '+best.rain.toFixed(2)+' in'+(best.notes.length?' · '+best.notes.slice(0,2).join(', '):'');card.append(summary)}
+  if(best&&weather){const summary=document.createElement('div');summary.className='fd-fishing-weather';summary.textContent=(best.score>=75?'🟢 Favorable':best.score>=55?'🟡 Mixed conditions':'🟠 Challenging')+' · '+(Number.isFinite(best.temp)?Math.round(best.temp)+'°F · ':'')+'Wind '+(Number.isFinite(best.wind)?Math.round(best.wind)+' mph':'unavailable')+' · Rain '+(Number.isFinite(best.rain)?best.rain.toFixed(2)+' in':'unavailable')+(best.notes.length?' · '+best.notes.slice(0,2).join(', '):'');card.append(summary)}
   else if(!weather){const summary=document.createElement('small');summary.textContent='Weather unavailable — tide-only suggestion';card.append(summary)}
   card.insertBefore(bite,chips);output.append(card);
  }
