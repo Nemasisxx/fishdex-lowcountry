@@ -771,4 +771,42 @@ document.addEventListener('DOMContentLoaded',()=>{
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 })();
+</script><style>
+/* FishDex Spot Map: app-style map-first layout, preserving existing map tools. */
+#tab-hotspots{position:relative}
+#tab-hotspots .hotspot-stage{border:0!important;border-radius:0!important;box-shadow:none!important}
+#tab-hotspots .fd-map-app-header{position:absolute;z-index:1000;top:16px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 34px));display:flex;align-items:center;gap:9px;padding:8px 10px 8px 17px;border-radius:26px;background:rgba(249,254,255,.96);color:#103847;box-shadow:0 6px 24px #001c2a55;pointer-events:auto}
+#tab-hotspots .fd-map-app-header strong{font-size:14px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#tab-hotspots .fd-map-app-header button{width:42px;height:42px;flex:none;display:grid;place-items:center;border:0;border-radius:50%;background:#e3f3f6;color:#07516b;font-size:19px;cursor:pointer}
+#tab-hotspots .fd-map-app-header button:focus-visible{outline:3px solid #0cb4c5;outline-offset:2px}
+#tab-hotspots .hotspot-stage>.hotspot-bubbles{bottom:20px!important}
+#tab-hotspots .hotspot-menu-toggle{width:150px;height:56px;border-radius:32px;background:#073b54!important;border:2px solid #b4f4f6!important;box-shadow:0 8px 28px #001724aa}
+#tab-hotspots .hotspot-menu-items{bottom:calc(100% + 12px)!important}
+@media(max-width:700px){
+ #tab-hotspots{width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:0!important;padding:0!important}
+ #tab-hotspots .hotspot-stage{width:100%!important;height:calc(100dvh - 125px)!important;min-height:540px!important;max-height:none!important;overflow:hidden!important}
+ #tab-hotspots #hotspot-map{height:100%!important;min-height:0!important}
+ #tab-hotspots .fd-map-app-header{top:12px;width:calc(100% - 28px);padding:6px 7px 6px 14px}
+ #tab-hotspots .fd-map-app-header strong{font-size:13px}
+ #tab-hotspots .fd-map-app-header button{width:39px;height:39px}
+ #tab-hotspots .hotspot-stage>.hotspot-bubbles{bottom:max(18px,env(safe-area-inset-bottom))!important}
+ #tab-hotspots .hotspot-menu-toggle{height:53px;width:148px}
+ #tab-hotspots .hotspot-menu-items{max-height:min(56dvh,420px)!important}
+ #tab-hotspots .fishdex-field-tools,#tab-hotspots .fishdex-map-layer-menu{display:none!important}
+ #tab-hotspots .hotspot-stage>.hotspot-floating-panel:not([hidden]){max-height:calc(100dvh - 170px)!important}
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const stage=document.querySelector('#tab-hotspots .hotspot-stage');
+ if(!stage||stage.querySelector('.fd-map-app-header'))return;
+ const header=document.createElement('div');header.className='fd-map-app-header';
+ header.setAttribute('role','group');header.setAttribute('aria-label','Quick map actions');
+ const title=document.createElement('strong');title.textContent='📍 Explore Lowcountry waters';header.append(title);
+ for(const [label,symbol,target] of [['Tides','🌊','[data-hotspot-panel="tides"]'],['Map layers','▧','#fd-mobile-layers']]){
+  const button=document.createElement('button');button.type='button';button.title=label;button.setAttribute('aria-label',label);button.textContent=symbol;
+  button.addEventListener('click',()=>stage.querySelector(target)?.click());header.append(button);
+ }
+ stage.append(header);
+});
 </script></body></html>
