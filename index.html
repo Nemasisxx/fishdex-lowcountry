@@ -433,7 +433,7 @@ header .site-nav button[aria-selected=true]{border-color:#04f0f1!important;backg
   <span id="hotspot-count" aria-live="polite"></span>
  </div>
  <div class="hotspot-floating-panel" id="hotspot-panel-tides" hidden><div class="hotspot-panel-heading"><strong>Tides &amp; weather</strong><button type="button" class="hotspot-close" aria-label="Close tides">✕</button></div><p style="margin:8px 0">Pin a point on the map to see predicted tides from its nearest available NOAA tide station.</p><button type="button" id="hotspot-tide-pin" style="padding:9px 12px;border-radius:10px;cursor:pointer">📍 Pin tide location</button><div id="hotspot-tide-result" aria-live="polite" style="margin-top:10px"></div><div id="hotspot-conditions" aria-live="polite"><p>Loading NOAA tide predictions and weather…</p></div></div>
- <div class="hotspot-floating-panel" id="hotspot-panel-tackle" hidden><div class="hotspot-panel-heading"><strong>Nearby bait &amp; tackle shops</strong><button type="button" class="hotspot-close" aria-label="Close tackle">✕</button></div><div id="hotspot-tackle"><p>Find tackle shops and possible live-bait suppliers around the map area.</p><button type="button" id="hotspot-find-shops">Find shops in this map area</button><p id="hotspot-shops-status" role="status" aria-live="polite">Shop listings are sourced from OpenStreetMap. Call ahead to confirm live bait and stock.</p><div id="hotspot-shop-list"></div></div></div>
+ <div class="hotspot-floating-panel" id="hotspot-panel-tackle" hidden><div class="hotspot-panel-heading"><strong>Nearby bait &amp; tackle shops</strong><button type="button" class="hotspot-close" aria-label="Close tackle">✕</button></div><div id="hotspot-tackle"><p>Shops near the center of your map appear automatically. Move the map to explore another area.</p><button type="button" id="hotspot-find-shops">Refresh nearby shops</button><p id="hotspot-shops-status" role="status" aria-live="polite">Shop listings are sourced from OpenStreetMap. Call ahead to confirm live bait and stock.</p><div id="hotspot-shop-list"></div></div></div>
  <div class="hotspot-floating-panel" id="hotspot-panel-saved" hidden><div class="hotspot-panel-heading"><strong>My private hotspots</strong><button type="button" class="hotspot-close" aria-label="Close saved spots">✕</button></div><p>Drop a pin anywhere on the map to save your own fishing spot.</p><button type="button" id="hotspot-add-personal">📍 Pin a new spot</button><button type="button" id="hotspot-show-personal">Hide my spots</button><p id="hotspot-personal-status" aria-live="polite"></p><hr><button type="button" id="hotspot-my-location">◎ Show my current location</button><div id="hotspot-tracking-controls" hidden style="margin-top:8px"><button type="button" id="hotspot-stop-tracking">■ Stop tracking</button><label style="display:flex;gap:8px;align-items:center;margin-top:8px"><input type="checkbox" id="hotspot-follow-location" checked> Follow my location on map</label></div><p id="hotspot-location-status" aria-live="polite">Location is only requested when you press the button.</p></div>
  <div class="hotspot-floating-panel hotspot-locations-panel" id="hotspot-panel-locations" hidden><div class="hotspot-panel-heading"><strong>Fishing locations</strong><button type="button" class="hotspot-close" aria-label="Close locations">✕</button></div><p class="hotspot-panel-hint">Tap a name for details and directions.</p><div id="hotspot-list" class="hotspot-location-list"></div></div>
 </div>
@@ -772,41 +772,20 @@ document.addEventListener('DOMContentLoaded',()=>{
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
 })();
 </script><style>
-/* FishDex Spot Map: app-style map-first layout, preserving existing map tools. */
-#tab-hotspots{position:relative}
+/* FishDex mobile: full-bleed map and legible, evenly spaced main navigation. */
 #tab-hotspots .hotspot-stage{border:0!important;border-radius:0!important;box-shadow:none!important}
-#tab-hotspots .fd-map-app-header{position:absolute;z-index:1000;top:16px;left:50%;transform:translateX(-50%);width:min(560px,calc(100% - 34px));display:flex;align-items:center;gap:9px;padding:8px 10px 8px 17px;border-radius:26px;background:rgba(249,254,255,.96);color:#103847;box-shadow:0 6px 24px #001c2a55;pointer-events:auto}
-#tab-hotspots .fd-map-app-header strong{font-size:14px;font-weight:800;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#tab-hotspots .fd-map-app-header button{width:42px;height:42px;flex:none;display:grid;place-items:center;border:0;border-radius:50%;background:#e3f3f6;color:#07516b;font-size:19px;cursor:pointer}
-#tab-hotspots .fd-map-app-header button:focus-visible{outline:3px solid #0cb4c5;outline-offset:2px}
-#tab-hotspots .hotspot-stage>.hotspot-bubbles{bottom:20px!important}
-#tab-hotspots .hotspot-menu-toggle{width:150px;height:56px;border-radius:32px;background:#073b54!important;border:2px solid #b4f4f6!important;box-shadow:0 8px 28px #001724aa}
-#tab-hotspots .hotspot-menu-items{bottom:calc(100% + 12px)!important}
 @media(max-width:700px){
+ .site-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important;padding:8px 10px 10px!important;width:100%!important;box-sizing:border-box;overflow:visible!important}
+ .site-nav>[role="tab"]{min-width:0!important;width:100%!important;padding:8px 2px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;white-space:normal!important;text-align:center!important;line-height:1.2!important;font-size:clamp(9px,2.55vw,12px)!important}
+ .site-nav>[role="tab"] .fd-nav-icon{display:flex!important;justify-content:center!important;align-items:center!important;flex-shrink:0!important}
+ .site-nav>[role="tab"]>span:last-child{display:block!important;width:100%!important;overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important}
  #tab-hotspots{width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:0!important;padding:0!important}
  #tab-hotspots .hotspot-stage{width:100%!important;height:calc(100dvh - 125px)!important;min-height:540px!important;max-height:none!important;overflow:hidden!important}
  #tab-hotspots #hotspot-map{height:100%!important;min-height:0!important}
- #tab-hotspots .fd-map-app-header{top:12px;width:calc(100% - 28px);padding:6px 7px 6px 14px}
- #tab-hotspots .fd-map-app-header strong{font-size:13px}
- #tab-hotspots .fd-map-app-header button{width:39px;height:39px}
  #tab-hotspots .hotspot-stage>.hotspot-bubbles{bottom:max(18px,env(safe-area-inset-bottom))!important}
  #tab-hotspots .hotspot-menu-toggle{height:53px;width:148px}
  #tab-hotspots .hotspot-menu-items{max-height:min(56dvh,420px)!important}
  #tab-hotspots .fishdex-field-tools,#tab-hotspots .fishdex-map-layer-menu{display:none!important}
- #tab-hotspots .hotspot-stage>.hotspot-floating-panel:not([hidden]){max-height:calc(100dvh - 170px)!important}
 }
 </style>
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
- const stage=document.querySelector('#tab-hotspots .hotspot-stage');
- if(!stage||stage.querySelector('.fd-map-app-header'))return;
- const header=document.createElement('div');header.className='fd-map-app-header';
- header.setAttribute('role','group');header.setAttribute('aria-label','Quick map actions');
- const title=document.createElement('strong');title.textContent='📍 Explore Lowcountry waters';header.append(title);
- for(const [label,symbol,target] of [['Tides','🌊','[data-hotspot-panel="tides"]'],['Map layers','▧','#fd-mobile-layers']]){
-  const button=document.createElement('button');button.type='button';button.title=label;button.setAttribute('aria-label',label);button.textContent=symbol;
-  button.addEventListener('click',()=>stage.querySelector(target)?.click());header.append(button);
- }
- stage.append(header);
-});
-</script></body></html>
+</body></html>
