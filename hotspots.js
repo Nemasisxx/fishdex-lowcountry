@@ -496,7 +496,38 @@ async function tideStationFor(lat,lng){
  }
  return tideStationsCache.map(v=>({station:v,distance:tideDistance(lat,lng,Number(v.lat),Number(v.lng))})).sort((a,b)=>a.distance-b.distance).slice(0,12);
 }
-function renderThreeDayTides(output,predictions,highLowPredictions=[]){
+const fdFishProfiles={
+ 'Red Drum':{season:[3,4,5,9,10,11],wind:15,temperature:[60,82]},
+ 'Spotted Seatrout':{season:[4,5,9,10,11],wind:12,temperature:[58,78]},
+ 'Southern Flounder':{season:[5,6,9,10,11],wind:14,temperature:[60,80]},
+ 'Sheepshead':{season:[2,3,4,10,11,12],wind:15,temperature:[52,75]},
+ 'Largemouth Bass':{season:[3,4,5,9,10],wind:15,temperature:[58,80]}
+};
+async function fdFetchWeather(lat,lng){
+ const params=new URLSearchParams({latitude:String(lat),longitude:String(lng),hourly:'temperature_2m,precipitation,wind_speed_10m,wind_direction_10m,pressure_msl,cloud_cover',temperature_unit:'fahrenheit',wind_speed_unit:'mph',timezone:'America/New_York',forecast_days:'3',past_days:'2'});
+ const response=await fetch('https://api.open-meteo.com/v1/forecast?'+params);
+ if(!response.ok)throw Error('Weather unavailable');
+ const data=await response.json();if(!data.hourly?.time?.length)throw Error('No weather forecast');
+ return data.hourly;
+}
+function fdScoreWindow(date,minute,weather,profile){
+ const index=weather?.time?.findIndex(t=>t.slice(0,10)===date&&Number(t.slice(11,13))===Math.floor(minute/60))??-1;
+ if(index<0)return null;
+ const num=(key)=>Number(weather[key]?.[index]);
+ const wind=num('wind_speed_10m'),rain=num('precipitation'),temp=num('temperature_2m'),cloud=num('cloud_cover'),pressure=num('pressure_msl');
+ let score=65;const notes=[];
+ if(Number.isFinite(wind)){if(wind>22){score-=30;notes.push('Strong wind')}else if(wind>15){score-=15;notes.push('Windy')}else{score+=5;notes.push('Manageable wind')}}
+ if(Number.isFinite(rain)){if(rain>0.3){score-=20;notes.push('Heavy rain')}else if(rain>0.05){score-=7;notes.push('Rain possible')}}
+ const idx=weather.time.findIndex(t=>t.slice(0,10)===date&&Number(t.slice(11,13))===Math.floor(minute/60));
+ const prior=idx>=3?Number(weather.pressure_msl?.[idx-3]):NaN;
+ if(Number.isFinite(pressure)&&Number.isFinite(prior)&&Math.abs(pressure-prior)>3){score-=6;notes.push('Pressure changing')}
+ if(Number.isFinite(temp)&&profile?.temperature){if(temp<profile.temperature[0]||temp>profile.temperature[1]){score-=9;notes.push('Temperature less favorable')}else score+=5}
+ const month=Number(date.slice(5,7));if(profile?.season&&!profile.season.includes(month)){score-=7;notes.push('Outside typical season')}
+ const hour=minute/60;if(hour>=5&&hour<=9||hour>=17&&hour<=20){score+=8;notes.push('Morning/evening')}
+ if(Number.isFinite(cloud)&&cloud>45&&cloud<95){score+=3}
+ return {score:Math.max(0,Math.min(100,score)),notes,wind,rain,temp,cloud};
+}
+function renderThreeDayTides(output,predictions,highLowPredictions=[],weather=null,fishName="Red Drum"){
  const rows=predictions.map(p=>({stamp:p.t,height:Number(p.v),date:p.t.slice(0,10),minute:Number(p.t.slice(11,13))*60+Number(p.t.slice(14,16))})).filter(p=>Number.isFinite(p.height));
  const fmt=m=>{const h=Math.floor(m/60)%24;return (h%12||12)+':'+String(m%60).padStart(2,'0')+(h<12?' AM':' PM')};
  const fmtDate=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
@@ -539,10 +570,15 @@ function renderThreeDayTides(output,predictions,highLowPredictions=[]){
   const axis=document.createElement('div');axis.className='fd-tide-axis';axis.innerHTML='<span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span>';card.append(axis);
   const bite=document.createElement('div');bite.className='fd-tide-bite';
   const usable=extremes.filter(e=>e.type==='HIGH');
-  bite.textContent='🎣 BEST TIMES TO TRY: '+(usable.length?usable.map(e=>fmt(Math.max(0,e.minute-90))+' – '+fmt(Math.min(1439,e.minute+90))).join('  •  '):'No high tide shown');
+  const profile=fdFishProfiles[fishName]||fdFishProfiles['Red Drum'];
+  const candidates=usable.map(e=>({minute:e.minute,...(fdScoreWindow(date,e.minute,weather,profile)||{score:50,notes:[]})})).sort((a,b)=>b.score-a.score);
+  const best=candidates[0];
+  bite.textContent='🎣 BEST TIME TO TRY: '+(best?fmt(Math.max(0,best.minute-90))+' – '+fmt(Math.min(1439,best.minute+90)):'Check tide times');
+  if(best&&weather){const summary=document.createElement('div');summary.className='fd-fishing-weather';summary.textContent=(best.score>=75?'🟢 Favorable':best.score>=55?'🟡 Mixed conditions':'🟠 Challenging')+' · '+Math.round(best.temp)+'°F · Wind '+Math.round(best.wind)+' mph · Rain '+best.rain.toFixed(2)+' in'+(best.notes.length?' · '+best.notes.slice(0,2).join(', '):'');card.append(summary)}
+  else if(!weather){const summary=document.createElement('small');summary.textContent='Weather unavailable — tide-only suggestion';card.append(summary)}
   card.insertBefore(bite,chips);output.append(card);
  }
- const note=document.createElement('small');note.className='fd-tide-disclaimer';note.textContent='NOAA station predictions (exact NOAA high/low timestamps where available; otherwise 6-minute estimates) • Eastern local time • Bite windows are estimates around high tide (±90 min), not a fish activity forecast. Conditions and species affect feeding.';output.append(note);
+ const note=document.createElement('small');note.className='fd-tide-disclaimer';note.textContent='NOAA station predictions (exact NOAA high/low timestamps where available; otherwise 6-minute estimates) • Eastern local time • Bite windows are heuristic estimates around high tide (±90 min), adjusted for forecast wind, rain, air temperature, pressure trend, season and selected fish. Not a validated bite prediction. Air temperature is not water temperature.';output.append(note);
 }
 async function showPinnedTides(lat,lng){
  const output=document.getElementById('hotspot-tide-result');if(!output)return;
@@ -571,7 +607,14 @@ async function showPinnedTides(lat,lng){
   const station=found.station;output.replaceChildren();
   const title=document.createElement('strong');title.className='fd-tide-station';title.textContent='🌊 '+station.name;output.append(title);
   const detail=document.createElement('small');detail.textContent='NOAA station '+station.id+' · '+found.distance.toFixed(1)+' km from your pin · Eastern Time';output.append(detail);
-  renderThreeDayTides(output,found.predictions,found.highLow);
+  let weather=null;try{weather=await fdFetchWeather(lat,lng)}catch(_){}
+  if(request!==tidePinRequest)return;
+  const chooser=document.createElement('label');chooser.className='fd-fish-chooser';chooser.textContent='🎣 Fishing for ';
+  const select=document.createElement('select');for(const name of Object.keys(fdFishProfiles)){const option=document.createElement('option');option.value=name;option.textContent=name;select.append(option)}
+  chooser.append(select);output.append(chooser);
+  const forecast=document.createElement('div');output.append(forecast);
+  function redraw(){forecast.replaceChildren();renderThreeDayTides(forecast,found.predictions,found.highLow,weather,select.value)}
+  select.addEventListener('change',redraw);redraw();
   const note=document.createElement('small');note.textContent='Tides can differ at your exact pin, especially in creeks and inlets. Not for navigation.';output.append(note);
  }catch(e){if(request===tidePinRequest){status.textContent='Could not retrieve NOAA tides for this point. Try another location.';console.warn('Pinned tide lookup:',e)}}
 }
