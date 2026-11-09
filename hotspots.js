@@ -496,7 +496,7 @@ async function tideStationFor(lat,lng){
  }
  return tideStationsCache.map(v=>({station:v,distance:tideDistance(lat,lng,Number(v.lat),Number(v.lng))})).sort((a,b)=>a.distance-b.distance).slice(0,12);
 }
-function renderThreeDayTides(output,predictions){
+function renderThreeDayTides(output,predictions,highLowPredictions=[]){
  const rows=predictions.map(p=>({stamp:p.t,height:Number(p.v),date:p.t.slice(0,10),minute:Number(p.t.slice(11,13))*60+Number(p.t.slice(14,16))})).filter(p=>Number.isFinite(p.height));
  const fmt=m=>{const h=Math.floor(m/60)%24;return (h%12||12)+':'+String(m%60).padStart(2,'0')+(h<12?' AM':' PM')};
  const fmtDate=d=>new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
@@ -505,8 +505,8 @@ function renderThreeDayTides(output,predictions){
   const day=rows.filter(p=>p.date===date);if(day.length<3)continue;
   const card=document.createElement('section');card.className='fd-tide-day';
   const head=document.createElement('div');head.className='fd-tide-day-head';head.textContent=fmtDate(date);card.append(head);
-  const extremes=[];
-  for(let i=1;i<rows.length-1;i++){
+  const extremes=highLowPredictions.filter(p=>p.t.slice(0,10)===date).map(p=>({date,minute:Number(p.t.slice(11,13))*60+Number(p.t.slice(14,16)),height:Number(p.v),type:p.type==='H'?'HIGH':'LOW'})).filter(p=>Number.isFinite(p.height)&&Number.isFinite(p.minute));
+  if(!extremes.length)for(let i=1;i<rows.length-1;i++){
    const p=rows[i];if(p.date!==date)continue;
    const prev=rows[i-1].height,next=rows[i+1].height;
    if(p.height>=prev&&p.height>next)extremes.push({...p,type:'HIGH'});
@@ -528,7 +528,7 @@ function renderThreeDayTides(output,predictions){
   bite.textContent='🐟 Tide-based bite windows: '+(usable.length?usable.map(e=>fmt(Math.max(0,e.minute-90))+' – '+fmt(Math.min(1439,e.minute+90))).join(' · '):'No high tide shown');
   card.append(bite);output.append(card);
  }
- const note=document.createElement('small');note.className='fd-tide-disclaimer';note.textContent='NOAA station predictions • Eastern local time • Bite windows are estimates around high tide (±90 min), not a fish activity forecast. Conditions and species affect feeding.';output.append(note);
+ const note=document.createElement('small');note.className='fd-tide-disclaimer';note.textContent='NOAA station predictions (exact NOAA high/low timestamps where available; otherwise 6-minute estimates) • Eastern local time • Bite windows are estimates around high tide (±90 min), not a fish activity forecast. Conditions and species affect feeding.';output.append(note);
 }
 async function showPinnedTides(lat,lng){
  const output=document.getElementById('hotspot-tide-result');if(!output)return;
@@ -547,7 +547,9 @@ async function showPinnedTides(lat,lng){
     if(!response.ok)throw Error('Station prediction unavailable');
     const data=await response.json();
     if(!data.predictions?.length)throw Error(data.error?.message||'No predictions');
-    found={...candidate,predictions:data.predictions};break;
+    const hlParams=new URLSearchParams({begin_date:date(0),end_date:date(2),station:station.id,product:'predictions',datum:'MLLW',time_zone:'lst_ldt',units:'english',interval:'hilo',format:'json'});
+    let highLow=[];try{const hlResponse=await fetch('https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?'+hlParams);if(hlResponse.ok){const hlData=await hlResponse.json();highLow=hlData.predictions||[]}}catch(_){}
+    found={...candidate,predictions:data.predictions,highLow};break;
    }catch(e){lastError=e}
   }
   if(request!==tidePinRequest)return;
@@ -555,7 +557,7 @@ async function showPinnedTides(lat,lng){
   const station=found.station;output.replaceChildren();
   const title=document.createElement('strong');title.className='fd-tide-station';title.textContent='🌊 '+station.name;output.append(title);
   const detail=document.createElement('small');detail.textContent='NOAA station '+station.id+' · '+found.distance.toFixed(1)+' km from your pin · Eastern Time';output.append(detail);
-  renderThreeDayTides(output,found.predictions);
+  renderThreeDayTides(output,found.predictions,found.highLow);
   const note=document.createElement('small');note.textContent='Tides can differ at your exact pin, especially in creeks and inlets. Not for navigation.';output.append(note);
  }catch(e){if(request===tidePinRequest){status.textContent='Could not retrieve NOAA tides for this point. Try another location.';console.warn('Pinned tide lookup:',e)}}
 }
