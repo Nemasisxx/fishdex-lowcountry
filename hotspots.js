@@ -521,12 +521,26 @@ function renderThreeDayTides(output,predictions,highLowPredictions=[]){
   const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 '+w+' '+h);svg.setAttribute('role','img');svg.setAttribute('aria-label','Predicted tide curve for '+fmtDate(date));
   const path=document.createElementNS(svg.namespaceURI,'path');path.setAttribute('d',day.map((p,i)=>(i?'L':'M')+x(p.minute).toFixed(1)+' '+y(p.height).toFixed(1)).join(' '));path.setAttribute('stroke','#3ce2ef');path.setAttribute('stroke-width','4');path.setAttribute('stroke-linecap','round');path.setAttribute('fill','none');svg.append(path);
   for(const e of extremes){const c=document.createElementNS(svg.namespaceURI,'circle');c.setAttribute('cx',x(e.minute));c.setAttribute('cy',y(e.height));c.setAttribute('r','6');c.setAttribute('fill',e.type==='HIGH'?'#8bf2b3':'#ffc47e');svg.append(c)}
-  card.append(svg);
+  const selected=document.createElement('div');selected.className='fd-tide-selected';selected.setAttribute('aria-live','polite');
+  const slider=document.createElement('input');slider.type='range';slider.className='fd-tide-scrubber';slider.min='0';slider.max='1439';slider.step='1';slider.value='720';slider.setAttribute('aria-label','Choose a time to see the predicted tide level on '+fmtDate(date));
+  const cursor=document.createElementNS(svg.namespaceURI,'line');cursor.setAttribute('stroke','#ffffff');cursor.setAttribute('stroke-width','2');cursor.setAttribute('stroke-dasharray','5 5');svg.append(cursor);
+  const dot=document.createElementNS(svg.namespaceURI,'circle');dot.setAttribute('r','7');dot.setAttribute('fill','#fff');dot.setAttribute('stroke','#075367');dot.setAttribute('stroke-width','3');svg.append(dot);
+  function updateTime(){
+   const minute=Number(slider.value),before=day.reduce((last,p)=>p.minute<=minute?p:last,day[0]),after=day.find(p=>p.minute>=minute)||day[day.length-1];
+   const fraction=after.minute===before.minute?0:Math.max(0,Math.min(1,(minute-before.minute)/(after.minute-before.minute)));
+   const level=before.height+(after.height-before.height)*fraction;
+   const px=x(minute),py=y(level);
+   cursor.setAttribute('x1',px);cursor.setAttribute('x2',px);cursor.setAttribute('y1',8);cursor.setAttribute('y2',h-8);
+   dot.setAttribute('cx',px);dot.setAttribute('cy',py);
+   selected.textContent='🕒 '+fmt(minute)+'  •  🌊 '+level.toFixed(2)+' ft predicted';
+  }
+  slider.addEventListener('input',updateTime);updateTime();
+  card.append(svg,selected,slider);
   const axis=document.createElement('div');axis.className='fd-tide-axis';axis.innerHTML='<span>12 AM</span><span>6 AM</span><span>12 PM</span><span>6 PM</span><span>12 AM</span>';card.append(axis);
   const bite=document.createElement('div');bite.className='fd-tide-bite';
   const usable=extremes.filter(e=>e.type==='HIGH');
-  bite.textContent='🐟 Tide-based bite windows: '+(usable.length?usable.map(e=>fmt(Math.max(0,e.minute-90))+' – '+fmt(Math.min(1439,e.minute+90))).join(' · '):'No high tide shown');
-  card.append(bite);output.append(card);
+  bite.textContent='🎣 BEST TIMES TO TRY: '+(usable.length?usable.map(e=>fmt(Math.max(0,e.minute-90))+' – '+fmt(Math.min(1439,e.minute+90))).join('  •  '):'No high tide shown');
+  card.insertBefore(bite,chips);output.append(card);
  }
  const note=document.createElement('small');note.className='fd-tide-disclaimer';note.textContent='NOAA station predictions (exact NOAA high/low timestamps where available; otherwise 6-minute estimates) • Eastern local time • Bite windows are estimates around high tide (±90 min), not a fish activity forecast. Conditions and species affect feeding.';output.append(note);
 }
