@@ -247,7 +247,50 @@ function imageFor(g){
 // Uniform print-style diagrams for the entire knot library.
 // Preserve the original SVG geometry, but present a single black fishing line
 // on a white instructional sheet rather than decorative neon overlays.
+
+// Improved Clinch: five individually authored instructional drawings.
+// One black line, one hook, and distinct progression rather than generic coils.
+function clinchInstruction(step=-1){
+ const ns='http://www.w3.org/2000/svg',S=document.createElementNS(ns,'svg');
+ S.setAttribute('viewBox','0 0 800 320');S.setAttribute('role','img');
+ const n=step<0?4:Math.min(4,Math.max(0,step));
+ S.setAttribute('aria-label','Improved Clinch Knot, '+(step<0?'finished connection':'step '+(n+1)));
+ S.classList.add('kr-diagram','kr-print-knot');
+ const add=(tag,a,txt)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,String(v)));if(txt)e.textContent=txt;S.append(e);return e};
+ add('rect',{width:800,height:320,fill:'#fff'});
+ const path=(d,w=3)=>add('path',{d,fill:'none',stroke:'#202020','stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round'});
+ const note=(x,y,t)=>add('text',{x,y,fill:'#333','font-size':17,'font-family':'system-ui','text-anchor':'middle'},t);
+ // Single hook with the eye centered at 160,160, and the shank curving left.
+ path('M153 166 C118 190 78 210 58 181 C39 155 55 122 82 132',7);
+ add('ellipse',{cx:160,cy:160,rx:13,ry:11,fill:'#fff',stroke:'#202020','stroke-width':5});
+ // Standing line runs continuously from the hook eye toward the reel.
+ const standing='M173 156 C280 148 460 151 736 151';
+ if(n===0){
+  path(standing);
+  path('M160 169 C232 198 338 202 461 196');
+  note(480,245,'Pass the free end through the eye');
+ }else if(n===1){
+  path(standing);
+  // Five successive turns, each crossing the standing line.
+  path('M160 169 C206 205 265 205 285 170 C298 140 264 121 249 148 C230 183 292 201 318 169 C334 139 299 119 284 148 C267 184 330 199 353 169 C370 139 334 118 320 148 C303 182 364 200 387 168 C403 139 368 119 354 148 C338 183 399 199 422 168 C439 139 404 119 390 148 C380 175 423 187 459 188');
+  note(475,246,'Wrap the free end around the main line');
+ }else if(n===2){
+  path(standing);
+  path('M160 169 C215 205 257 189 275 155 C289 129 262 126 255 151 C246 180 293 188 307 157 C319 132 293 124 286 151 C278 180 325 188 340 157 C352 132 326 124 319 151 C310 180 358 188 373 157 C385 132 359 124 352 151 C344 180 391 187 406 157 C420 132 392 125 386 151 C379 179 421 187 436 161 C451 185 372 220 275 217 C221 215 196 183 174 167');
+  note(488,253,'Feed the end through the small loop at the eye');
+ }else if(n===3){
+  path(standing);
+  path('M160 169 C208 204 257 194 275 157 C287 131 261 125 254 151 C245 180 291 188 307 157 C319 131 293 124 286 151 C278 179 325 188 340 157 C352 132 326 124 319 151 C310 180 358 188 373 157 C385 132 359 124 352 151 C344 180 390 188 405 158 C421 131 393 124 386 151 C382 174 424 181 438 166 C485 195 449 244 391 239 C339 236 307 197 269 190 C228 180 198 171 174 167');
+  note(494,276,'Pass the end through the new larger loop');
+ }else{
+  path('M173 156 C203 152 217 150 230 151 C246 151 251 149 262 150 C273 149 277 151 286 150 C298 149 302 150 316 150 C440 150 575 151 736 151');
+  path('M176 171 C202 177 220 171 231 160 C245 177 260 174 266 159 C281 176 291 172 298 157 C313 173 324 170 328 155 C345 170 352 166 357 153 L377 180');
+  note(470,231,'Moisten, tighten, then trim the short end');
+ }
+ return S;
+}
 function printKnotDiagram(g,step=-1,hero=false){
+ if(g.name==='Improved Clinch Knot')return clinchInstruction(step);
  const source=hero?imageFor(g):svg(g,step);
  if(g.type!=='Knot')return source;
  source.classList.add('kr-print-knot');
