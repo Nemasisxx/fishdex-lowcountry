@@ -375,6 +375,22 @@ header .site-nav button[aria-selected=true]{border-color:#04f0f1!important;backg
  #tab-hotspots .hotspot-menu-items>.hotspot-bubble,#tab-hotspots .hotspot-bubbles.is-open .hotspot-menu-items>.hotspot-bubble{position:static!important;transform:none!important;min-width:0!important;width:100%;min-height:44px;justify-content:center;font-size:12px!important;padding:8px 6px!important;white-space:normal}
  #tab-hotspots .hotspot-menu-items>.hotspot-bubble span{display:inline!important;font-size:11px!important}
 }
+</style><style>
+/* Mobile map: one centered modal at a time, map remains visible behind. */
+.fd-map-backdrop{display:none}
+.fd-tide-selected{margin-top:8px;font-size:16px;font-weight:900;text-align:center;color:#e9ffff;background:#104355;border-radius:9px;padding:10px}
+.fd-tide-scrubber{display:block;width:100%;height:32px;margin:6px 0;accent-color:#3de3ef;touch-action:pan-y;cursor:ew-resize}
+.fd-tide-bite{font-size:16px!important;line-height:1.5!important;padding:12px!important;background:#115540!important;color:#e5ffeb!important}
+@media(max-width:700px){
+ #tab-hotspots .fd-map-backdrop:not([hidden]){display:block;position:fixed;inset:0;z-index:10990;background:#00131cb5;backdrop-filter:blur(3px)}
+ #tab-hotspots .hotspot-stage>.hotspot-floating-panel:not([hidden]){position:fixed!important;z-index:11020!important;top:50%!important;bottom:auto!important;left:50%!important;right:auto!important;transform:translate(-50%,-50%)!important;width:min(94vw,540px)!important;max-height:76dvh!important;overflow-y:auto!important;border-radius:18px!important;padding:16px!important;box-shadow:0 15px 55px #000b!important}
+ #tab-hotspots .fishdex-field-tools,#tab-hotspots .fishdex-map-layer-menu{z-index:11030!important}
+ #tab-hotspots #fishdex-field-panel:not([hidden]),#tab-hotspots #fishdex-layer-content:not([hidden]){position:fixed!important;z-index:11030!important;top:50%!important;bottom:auto!important;left:50%!important;right:auto!important;transform:translate(-50%,-50%)!important;width:min(94vw,540px)!important;max-height:76dvh!important;overflow-y:auto!important;border-radius:18px!important;padding:16px!important}
+ #tab-hotspots .hotspot-stage>.hotspot-bubbles{z-index:11000!important}
+ #tab-hotspots .fd-tide-day{padding:10px}
+ #tab-hotspots .fd-tide-event strong{font-size:17px}
+ #tab-hotspots .fd-tide-bite{font-size:15px!important}
+}
 </style></head><body><svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" style="position:absolute;overflow:hidden"><defs><symbol id="fishdex-emblem-symbol" viewBox="0 0 64 64"><path d="M3 48c6-4 11-4 17 0s12 4 18 0 13-4 23 0" fill="none" stroke="#66e9ff" stroke-width="2.6" stroke-linecap="round"/><path d="M7 54c8-3 13-2 20 1 7 3 14 2 22-1 4-2 8-2 12-1" fill="none" stroke="#1599c3" stroke-width="2" stroke-linecap="round"/><path d="M16 44l-8-11 12 5 6 7" fill="#061b2b" stroke="#7feeff" stroke-width="1.2"/><path d="M17 42c3-9 13-16 22-22 8-5 15-7 20-8-6 5-11 8-15 12l-7 10c-5 8-10 12-16 13Z" fill="#041723" stroke="#a7f3ff" stroke-width="1.4"/><path d="M24 38C25 21 36 10 47 5c-1 8-2 15-5 20-7 1-13 7-18 13Z" fill="#061b2b" stroke="#8deaff" stroke-width="1.2"/><path d="M28 31l4-13m0 10 5-15m-1 12 6-16" stroke="#44b9d7" stroke-width="1" stroke-linecap="round"/><path d="M46 21c5-4 9-7 16-9-6 5-10 8-14 11" fill="#041723" stroke="#b9f8ff" stroke-width="1.1"/><path d="M26 43l-1 11-5-8m12-9 4 11-8-6" fill="#061b2b" stroke="#7feeff" stroke-width="1.1"/><circle cx="45" cy="23" r="1.15" fill="#c8fbff"/><path d="M12 44l-3-4m9 10-3-3m24 4 3-5m10 5 4-5" stroke="#8deeff" stroke-width="1.7" stroke-linecap="round"/></symbol></defs></svg><header><h1 class="fishdex-brand"><img class="fishdex-logo" src="fishdex-logo.svg" alt="FishDex"></h1><div class="fishdex-account"><span id="fishdex-account-name">Browsing as guest</span><button type="button" id="fishdex-auth-open">Log in / Sign up</button><button type="button" id="fishdex-auth-logout" hidden>Log out</button></div><nav class="site-nav" role="tablist" aria-label="Main menu">
 <button role="tab" aria-selected="true" data-tab="fishdex"><span class="fd-nav-icon"><img src="assets/nav-home-clean.png?v=20261106-clean" alt="" loading="eager"></span><span>Home</span></button>
 <button role="tab" aria-selected="false" data-tab="hub"><span class="fd-nav-icon"><img src="assets/nav-collection-clean.png?v=20261106-clean" alt="" loading="eager"></span><span>My Collection</span></button>
@@ -397,7 +413,7 @@ header .site-nav button[aria-selected=true]{border-color:#04f0f1!important;backg
 <div class="feature-card mp-wide" id="mp-room-detail" hidden><h3 id="mp-room-title">Room</h3><p>Members</p><div id="mp-room-members"></div><h4>Fishing challenges</h4><div id="mp-challenges"></div><form id="mp-create-challenge"><input type="hidden" id="mp-active-room"><label>Challenge name<input id="mp-challenge-title" minlength="3" maxlength="80" placeholder="Weekend Catch Contest" required></label><label>Score by<select id="mp-challenge-metric"><option value="catches">Verified catches</option><option value="species">Unique verified species caught during challenge</option></select></label><label>Duration (hours)<input id="mp-challenge-hours" type="number" min="1" max="2160" value="48" required></label><button type="submit">Start challenge</button></form></div>
 </div></section><section id="tab-hotspots" class="tab-panel" role="tabpanel" hidden>
 
-<div class="hotspot-stage">
+<div class="hotspot-stage"><div class="fd-map-backdrop" id="fd-map-backdrop" hidden aria-label="Close map panel"></div>
  <div id="hotspot-map" aria-label="Interactive Charleston public fishing access map"></div>
  <div class="fishdex-field-tools" id="fishdex-field-tools"><button type="button" id="fishdex-field-toggle" aria-expanded="false">🎣 Fishing Tools ▾</button><div id="fishdex-field-panel" hidden><strong>Fishing intelligence</strong><label><input type="checkbox" id="fishdex-depth-enabled"> Tap map for NOAA chart depth</label><label><input type="checkbox" id="fishdex-oysters-enabled"> Show mapped oyster reefs</label><label><input type="checkbox" id="fishdex-weather-enabled"> Show wind & weather</label><label><input type="checkbox" id="fishdex-catch-enabled"> Tap map to log a catch</label><p id="fishdex-field-status" aria-live="polite">Choose a tool. Depth and oyster coverage vary by location.</p><div id="fishdex-weather-info" hidden></div><div id="fishdex-catch-history"></div></div></div>
  <div class="fishdex-map-layer-menu" id="fishdex-map-layer-menu"><button type="button" id="fishdex-layer-toggle" aria-expanded="false" aria-controls="fishdex-layer-content">🗺️ Map Layers ▾</button><div id="fishdex-layer-content" hidden><strong>Map style & water detail</strong><label for="hotspot-basemap">Choose a map layer</label><select id="hotspot-basemap"><option value="streets">Street map</option><option value="satellite" selected>Satellite imagery</option><option value="nautical">Water depth / NOAA nautical charts</option><option value="terrain">Land topography (terrain)</option><option value="coastal-dem">NOAA coastal depth relief</option><option value="sonar">NOAA surveyed sonar relief</option></select><p>NOAA depth and sonar coverage varies by location. Sonar is limited to surveyed areas; missing coverage is not a map error.</p></div></div>
@@ -689,4 +705,40 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
  }
 });
+</script><script>
+/* Map mobile modal coordination, including outside-tap and Escape dismissal. */
+(function(){
+ function setup(){
+  const tab=document.getElementById('tab-hotspots'),stage=tab?.querySelector('.hotspot-stage'),backdrop=document.getElementById('fd-map-backdrop');
+  if(!stage||!backdrop)return;
+  const panels=[...stage.querySelectorAll('.hotspot-floating-panel'),document.getElementById('fishdex-field-panel'),document.getElementById('fishdex-layer-content')].filter(Boolean);
+  const menu=stage.querySelector('.hotspot-bubbles'),toggle=document.getElementById('hotspot-menu-toggle'),items=document.getElementById('hotspot-menu-items');
+  function closeAll(){
+   panels.forEach(p=>p.hidden=true);
+   ['fishdex-field-toggle','fishdex-layer-toggle'].forEach(id=>document.getElementById(id)?.setAttribute('aria-expanded','false'));
+   stage.querySelectorAll('button[data-hotspot-panel]').forEach(b=>b.setAttribute('aria-expanded','false'));
+   menu?.classList.remove('is-open');toggle?.setAttribute('aria-expanded','false');items?.setAttribute('aria-hidden','true');
+   backdrop.hidden=true;
+  }
+  function refresh(){
+   if(!window.matchMedia('(max-width:700px)').matches){backdrop.hidden=true;return}
+   const open=panels.filter(p=>!p.hidden);
+   if(open.length>1)open.slice(0,-1).forEach(p=>p.hidden=true);
+   backdrop.hidden=open.length===0;
+  }
+  const observer=new MutationObserver(refresh);
+  panels.forEach(p=>observer.observe(p,{attributes:true,attributeFilter:['hidden']}));
+  backdrop.addEventListener('click',closeAll);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+  document.addEventListener('pointerdown',e=>{
+   if(!window.matchMedia('(max-width:700px)').matches||backdrop.hidden)return;
+   if(e.target.closest('.hotspot-floating-panel,#fishdex-field-panel,#fishdex-layer-content,#hotspot-menu-items,#hotspot-menu-toggle'))return;
+   if(e.target.closest('#hotspot-map'))return; // pin-placement needs the map
+   closeAll();
+  });
+  window.addEventListener('resize',refresh);
+  refresh();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup);else setup();
+})();
 </script></body></html>
