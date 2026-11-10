@@ -379,40 +379,6 @@ function init(){const list=$('kr-list'),detail=$('kr-detail'),search=$('kr-searc
 const grid=document.createElement('div');grid.className='kr-step-grid';
 g.steps.forEach((instruction,i)=>{const tile=document.createElement('article');const art=document.createElement('div');art.className='kr-step-art';art.append(instructionalArt(g,i));const num=document.createElement('span');num.className='kr-step-num';num.textContent=i+1;art.append(num);const p=document.createElement('p');p.textContent=instruction;tile.append(art,p);grid.append(tile)});
 steps.append(grid);
- // An interactive progression: one instructional drawing at a time, with
- // controls to play/pause or manually advance. This does not claim to be
- // a physically accurate animation of the tying process.
- const player=document.createElement('section');player.className='kr-step-player';
- const playerTitle=document.createElement('h4');playerTitle.textContent=g.name==='Palomar Knot'?'Palomar — 12-stage guided walkthrough':'Follow the steps';
- const stage=document.createElement('div');stage.className='kr-player-stage';
- const palomarFrames=[
-'Fold the line to make a loop, leaving a long tag end.',
-'Feed the folded loop completely through the hook eye.',
-'Pull enough of the doubled line through the eye to work comfortably.',
-'Cross the doubled loop over the two parallel strands.',
-'Bring the folded loop under the strands to make a loose overhand knot.',
-'Pull the folded loop through the overhand knot without tightening it.',
-'Open the large folded loop wide enough to fit over the hook.',
-'Pass the entire hook through the large folded loop.',
-'Move the loop past the hook point and around the bend.',
-'Slide the loop back toward the eye, keeping the strands uncrossed.',
-'Moisten and pull the standing line and tag end to seat the knot.',
-'Check the knot at the hook eye, then trim the tag end.'
-];
-const palomarKeyframes=[0,0,0,1,1,1,2,2,2,3,3,4];
-const playerText=document.createElement('p');playerText.className='kr-player-caption';
- const controls=document.createElement('div');controls.className='kr-player-controls';
- const previous=document.createElement('button'),play=document.createElement('button'),next=document.createElement('button');
- previous.type=play.type=next.type='button';
- previous.textContent='← Previous';play.textContent='▶ Play';next.textContent='Next →';
- controls.append(previous,play,next);player.append(playerTitle,stage,playerText,controls);steps.insertBefore(player,grid);
- let frame=0,timer=null;const totalFrames=g.name==='Palomar Knot'?palomarFrames.length:g.name==='FG Knot'?13:g.steps.length;
- const renderFrame=()=>{stage.replaceChildren(instructionalArt(g,g.name==='Palomar Knot'?palomarKeyframes[frame]:Math.min(frame,g.steps.length-1)));playerText.textContent='Step '+(frame+1)+' of '+totalFrames+': '+(g.name==='Palomar Knot'?palomarFrames[frame]:g.name==='FG Knot'?(g.steps[Math.min(g.steps.length-1,Math.floor(frame*g.steps.length/13))]||'Follow the illustrated sequence'):g.steps[frame]);previous.disabled=frame===0;next.disabled=frame===totalFrames-1};
- const stop=()=>{if(timer!==null){clearInterval(timer);timer=null}play.textContent='▶ Play'};
- previous.onclick=()=>{stop();frame=Math.max(0,frame-1);renderFrame()};
- next.onclick=()=>{stop();frame=Math.min(totalFrames-1,frame+1);renderFrame()};
- play.onclick=()=>{if(timer!==null){stop();return}if(frame===totalFrames-1)frame=0;renderFrame();play.textContent='Ⅱ Pause';timer=setInterval(()=>{if(!player.isConnected){stop();return}if(frame===totalFrames-1){stop();return}frame++;renderFrame()},2400)};
- renderFrame();
- if(g.type==='Knot'){const reference=document.createElement('a');reference.href=netKnotsUrl(g);reference.target='_blank';reference.rel='noopener noreferrer';reference.textContent='Open NetKnots illustrated tutorial ↗';reference.style.cssText='display:inline-block;margin-top:14px;color:#70e9e2;text-decoration:underline';steps.append(reference)}detail.append(steps);const tip=document.createElement('div');tip.className='kr-tip-panel';const h=document.createElement('h3');h.textContent='✧ Pro Tip';const p=document.createElement('p');p.textContent=g.tip;tip.append(h,p);detail.append(tip)}
+if(g.type==='Knot'){const reference=document.createElement('a');reference.href=netKnotsUrl(g);reference.target='_blank';reference.rel='noopener noreferrer';reference.textContent='Open NetKnots illustrated tutorial ↗';reference.style.cssText='display:inline-block;margin-top:14px;color:#70e9e2;text-decoration:underline';steps.append(reference)}detail.append(steps);const tip=document.createElement('div');tip.className='kr-tip-panel';const h=document.createElement('h3');h.textContent='✧ Pro Tip';const p=document.createElement('p');p.textContent=g.tip;tip.append(h,p);detail.append(tip)}
 search.addEventListener('input',()=>{query=search.value.toLowerCase().trim();draw()});sel.addEventListener('change',()=>{filter=sel.value;draw()});document.querySelectorAll('[data-kr-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.krFilter;sel.value=filter;draw()});draw()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();})();
