@@ -337,7 +337,8 @@ const knotArtwork={
  'Trilene Knot':'660e46c4-467b-4bfb-91c5-6e510afc718d.png',
  'Bimini Twist':'04266d6d-f488-4b9d-a24c-fec34f8bed90.png',
  'Dropper Loop Knot':'c13582b0-dc0e-40f6-8f23-082114d3c814.png',
- 'Perfection Loop':'5ceed0ca-c239-4f0a-9efe-548318c3855c.png'
+ 'Perfection Loop':'5ceed0ca-c239-4f0a-9efe-548318c3855c.png',
+ 'Arbor Knot':'7ed08364-afc4-4be4-a5b4-77f70d4b4798.png'
 };
 function knotSheet(g,priority=false){const el=document.createElement('img');el.src='./'+knotArtwork[g.name];el.alt=g.name+' full illustrated tying guide';el.loading=priority?'eager':'lazy';el.decoding='async';el.fetchPriority=priority?'high':'low';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 const fgSheet=knotArtwork['FG Knot'];
