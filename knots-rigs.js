@@ -326,7 +326,7 @@ function netKnotsUrl(g){return 'https://www.netknots.com/fishing_knots/'+(netKno
 const knotArtwork={
  'Palomar Knot':'585cf1e8-4541-4966-8ebb-eabdb6984374.png',
  'Improved Clinch Knot':'2ed464d2-22f3-4d1d-aa78-eddf26ce8006.png',
- 'Uni Knot':'7fc2fb4a-304c-4071-9c9c-a23a5a234a04.png',
+ 'Uni Knot':'81c89d37-9993-439e-b9c2-51817d67ef03.png',
  'Non-Slip Loop Knot':'952a338a-f636-4338-864b-b9b2a137f86c.png',
  'FG Knot':'98ce0684-f744-4e76-96ca-0fd1b0a648db.png'
 };
