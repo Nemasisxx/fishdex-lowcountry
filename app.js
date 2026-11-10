@@ -198,7 +198,10 @@ function renderTank(){
 }
 
 $('#player').addEventListener('change',()=>{const name=location.hash.slice(1);if(name==='achievements')renderAchievements();if(name==='leaderboards')renderLeaderboard();if(name==='fishtank')renderTank()});
-const initialTab=location.hash.slice(1);if(['fishdex','multiplayer','hotspots','hub','fishtank'].includes(initialTab))showTab(initialTab);
+const validTabs=['fishdex','multiplayer','hotspots','hub','knots-rigs'];
+const restoreTab=()=>{const tab=decodeURIComponent(location.hash.slice(1));if(validTabs.includes(tab))showTab(tab);else showTab('fishdex')};
+restoreTab();
+window.addEventListener('hashchange',restoreTab);
 
 $('#tank-change').onclick=()=>{$('#tank-picker').hidden=!$('#tank-picker').hidden;renderTank()};
 $('#tank-settings-toggle').onclick=()=>{$('#tank-settings').hidden=!$('#tank-settings').hidden};
