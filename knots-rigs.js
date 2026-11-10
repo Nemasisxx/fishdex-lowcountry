@@ -342,7 +342,8 @@ const knotArtwork={
  'Carolina Rig':'7ca762ce-5947-4aa7-9dd7-77433ab42e86.png',
  'Texas Rig':'3862b0e8-38bb-42e7-b61e-3466b3fb4978.png',
  'Fish Finder Rig':'f79f4981-dce4-4e28-a40a-44c9655a2055.png',
- 'Popping Cork Rig':'f9da498a-b04d-4ec7-8ac8-9f48e2f75d7a.png'
+ 'Popping Cork Rig':'f9da498a-b04d-4ec7-8ac8-9f48e2f75d7a.png',
+ 'Drop Shot Rig':'download.png'
 };
 function knotSheet(g,priority=false){const el=document.createElement('img');el.src='./'+knotArtwork[g.name];el.alt=g.name+' full illustrated tying guide';el.loading=priority?'eager':'lazy';el.decoding='async';el.fetchPriority=priority?'high':'low';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 const fgSheet=knotArtwork['FG Knot'];
