@@ -344,7 +344,7 @@ const knotArtwork={
  'Fish Finder Rig':'f79f4981-dce4-4e28-a40a-44c9655a2055.png',
  'Popping Cork Rig':'6aba28c8-e07d-477f-b140-a8c1119ee287.png',
  'Drop Shot Rig':'download.png',
- 'Ned Rig':'1452646a-757a-4963-ab95-dbc5807b05d6.png',
+ 'Ned Rig':'f7481739-bb96-4922-8320-9bb105fa3327.png',
  'Wacky Rig':'e13e1c24-b611-4278-a857-a4625790cd2a.png',
  'Neko Rig':'3b504e05-da3b-43ee-8393-b1cd75064e24.png',
  'Free Rig':'505527f3-fb7a-4265-920f-d9d77f28e037.png',
