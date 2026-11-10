@@ -342,7 +342,7 @@ const knotArtwork={
  'Carolina Rig':'7ca762ce-5947-4aa7-9dd7-77433ab42e86.png',
  'Texas Rig':'3862b0e8-38bb-42e7-b61e-3466b3fb4978.png',
  'Fish Finder Rig':'f79f4981-dce4-4e28-a40a-44c9655a2055.png',
- 'Popping Cork Rig':'effaef69-c548-46f2-9bf3-02b7e85facdc.png',
+ 'Popping Cork Rig':'6aba28c8-e07d-477f-b140-a8c1119ee287.png',
  'Drop Shot Rig':'download.png',
  'Ned Rig':'1452646a-757a-4963-ab95-dbc5807b05d6.png',
  'Wacky Rig':'e13e1c24-b611-4278-a857-a4625790cd2a.png'
