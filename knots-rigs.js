@@ -331,7 +331,8 @@ const knotArtwork={
  'FG Knot':'d1d7169c-4bc7-479e-924f-5e9766ed4429.png',
  'Double Uni Knot':'cc8a163a-1966-4506-923f-52c4b5479337.png',
  'Alberto Knot':'55c1beff-2672-4a4a-a25f-33c1b73d648c.png',
- 'Blood Knot':'b1d2fb13-7b2e-4f9a-a33d-3e0cddfdbb09.png'
+ 'Blood Knot':'b1d2fb13-7b2e-4f9a-a33d-3e0cddfdbb09.png',
+ 'Surgeon\'s Knot':'4f30e0ce-8bc2-44d2-b825-8c4afc3a2fc7.png'
 };
 function knotSheet(g){const el=document.createElement('img');el.src='./'+knotArtwork[g.name]+'?v=20261110';el.alt=g.name+' full illustrated tying guide';el.loading='lazy';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 const fgSheet=knotArtwork['FG Knot'];
