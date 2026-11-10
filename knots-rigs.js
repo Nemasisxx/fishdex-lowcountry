@@ -327,7 +327,7 @@ const knotArtwork={
  'Palomar Knot':'585cf1e8-4541-4966-8ebb-eabdb6984374.png',
  'Improved Clinch Knot':'2ed464d2-22f3-4d1d-aa78-eddf26ce8006.png',
  'Uni Knot':'81c89d37-9993-439e-b9c2-51817d67ef03.png',
- 'Non-Slip Loop Knot':'793835d9-2c27-43e8-a222-3ebbf5f7a48c.png',
+ 'Non-Slip Loop Knot':'4d8a3cef-ca3a-4bf6-8b8d-93e3cb653dce.png',
  'FG Knot':'d1d7169c-4bc7-479e-924f-5e9766ed4429.png',
  'Double Uni Knot':'0ca14c68-ebb7-472b-bb4c-bd40c2656e9a.png'
 };
