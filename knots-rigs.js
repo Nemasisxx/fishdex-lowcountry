@@ -328,7 +328,8 @@ const knotArtwork={
  'Improved Clinch Knot':'2ed464d2-22f3-4d1d-aa78-eddf26ce8006.png',
  'Uni Knot':'81c89d37-9993-439e-b9c2-51817d67ef03.png',
  'Non-Slip Loop Knot':'793835d9-2c27-43e8-a222-3ebbf5f7a48c.png',
- 'FG Knot':'d1d7169c-4bc7-479e-924f-5e9766ed4429.png'
+ 'FG Knot':'d1d7169c-4bc7-479e-924f-5e9766ed4429.png',
+ 'Double Uni Knot':'0ca14c68-ebb7-472b-bb4c-bd40c2656e9a.png'
 };
 function knotSheet(g){const el=document.createElement('img');el.src='./'+knotArtwork[g.name]+'?v=20261110';el.alt=g.name+' full illustrated tying guide';el.loading='lazy';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 const fgSheet='0a1abb56-ba59-43a7-96f0-e1c01eee5b11.png';
