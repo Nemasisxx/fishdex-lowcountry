@@ -330,7 +330,7 @@ const knotArtwork={
  'Non-Slip Loop Knot':'952a338a-f636-4338-864b-b9b2a137f86c.png',
  'FG Knot':'98ce0684-f744-4e76-96ca-0fd1b0a648db.png'
 };
-function knotSheet(g){const el=document.createElement('img');el.src='./'+knotArtwork[g.name]+'?v=20261110';el.alt=g.name+' full illustrated tying guide';el.loading='lazy';el.style.cssText='display:block;width:100%;max-width:520px;max-height:620px;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
+function knotSheet(g){const el=document.createElement('img');el.src='./'+knotArtwork[g.name]+'?v=20261110';el.alt=g.name+' full illustrated tying guide';el.loading='lazy';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 const fgSheet='0a1abb56-ba59-43a7-96f0-e1c01eee5b11.png';
 function fgImage(i){
  const el=document.createElement('img');el.src=fgSheet;el.alt='FG Knot illustrated sequence, full reference sheet';el.loading='lazy';el.className='kr-fg-sheet';el.style.cssText='display:block;width:100%;height:auto;max-height:none;object-fit:contain;background:#0b1c26;border-radius:10px';
