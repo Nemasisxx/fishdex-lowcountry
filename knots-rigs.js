@@ -329,7 +329,7 @@ const knotArtwork={
  'Uni Knot':'81c89d37-9993-439e-b9c2-51817d67ef03.png',
  'Non-Slip Loop Knot':'4d8a3cef-ca3a-4bf6-8b8d-93e3cb653dce.png',
  'FG Knot':'d1d7169c-4bc7-479e-924f-5e9766ed4429.png',
- 'Double Uni Knot':'a2f0e894-4578-4180-87a7-119a709a83be.png',
+ 'Double Uni Knot':'cc8a163a-1966-4506-923f-52c4b5479337.png',
  'Alberto Knot':'55c1beff-2672-4a4a-a25f-33c1b73d648c.png',
  'Blood Knot':'b1d2fb13-7b2e-4f9a-a33d-3e0cddfdbb09.png'
 };
