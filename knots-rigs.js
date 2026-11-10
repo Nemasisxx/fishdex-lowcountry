@@ -324,7 +324,7 @@ const netKnotsSlugs={
  'Improved Clinch Knot':'improved-clinch-knot','Palomar Knot':'palomar-knot','Uni Knot':'uni-knot','FG Knot':'fg-knot','Double Uni Knot':'double-uni-knot','Alberto Knot':'alberto-knot','Blood Knot':'blood-knot','Surgeon\'s Knot':'surgeons-knot','Snell Knot':'snell-knot-uni-version','Trilene Knot':'trilene-knot','Bimini Twist':'bimini-twist','Non-Slip Loop Knot':'non-slip-loop-knot','Albright Knot':'albright-special','Arbor Knot':'arbor-knot','Dropper Loop':'dropper-loop','Perfection Loop':'perfection-loop','Rapala Knot':'rapala-knot','San Diego Jam Knot':'san-diego-jam-knot'};
 function netKnotsUrl(g){return 'https://www.netknots.com/fishing_knots/'+(netKnotsSlugs[g.name]||g.name.toLowerCase().replace(/[^a-z0-9 ]/g,'').replace(/ +/g,'-'))}
 const knotArtwork={
- 'Palomar Knot':'1df42aa6-d484-41e8-a77a-ca9caefb7061.png',
+ 'Palomar Knot':'585cf1e8-4541-4966-8ebb-eabdb6984374.png',
  'Improved Clinch Knot':'2ed464d2-22f3-4d1d-aa78-eddf26ce8006.png',
  'Uni Knot':'7fc2fb4a-304c-4071-9c9c-a23a5a234a04.png',
  'Non-Slip Loop Knot':'952a338a-f636-4338-864b-b9b2a137f86c.png',
