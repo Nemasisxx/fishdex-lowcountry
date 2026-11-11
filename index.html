@@ -731,7 +731,50 @@ header .site-nav button[aria-selected=true]{border-color:#04f0f1!important;backg
 @media(max-width:1200px){.kr-tile-grid{gap:10px}.kr-tile-art{aspect-ratio:5/4}.kr-tile strong{font-size:13px!important}}
 @media(max-width:560px){.kr-tile-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-height:none;overflow:visible;gap:10px}.kr-tile{padding:7px!important}.kr-tile-art{aspect-ratio:4/3;padding:4px}.kr-tile strong{font-size:12px!important;margin:8px 2px 3px!important}.kr-tile-summary{font-size:10px;min-height:30px}.kr-tile-open{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.kr-tile{transition:none}.kr-tile:hover{transform:none}}
-</style><script src="knots-rigs.js?v=20261111-library-cards" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
+</style><style id="kr-premium-tackle-guide">
+/* FishDex Premium Tackle Guide: isolated final layout overrides */
+#tab-knots-rigs{width:min(100% - 24px,1660px)!important;max-width:1660px!important;left:auto!important;transform:none!important;margin:12px auto 40px!important}
+#tab-knots-rigs .kr-workspace{display:grid!important;grid-template-columns:205px minmax(350px,500px) minmax(0,1fr)!important;gap:16px!important;align-items:start}
+#tab-knots-rigs .kr-sidebar,#tab-knots-rigs .kr-library,#tab-knots-rigs .kr-detail{min-height:0!important;border:1px solid #315767!important;border-radius:20px!important;background:#071b26!important;box-shadow:0 10px 30px #0003}
+#tab-knots-rigs .kr-sidebar{position:sticky;top:14px;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;padding:22px 14px!important}
+#tab-knots-rigs .kr-sidebar h2{font-size:23px!important;line-height:1.2;margin:0 0 18px!important;font-style:normal!important;color:#f1fbff!important;text-shadow:none!important}
+#tab-knots-rigs .kr-sidebar button{width:100%!important;text-align:left!important;margin:0!important;padding:13px 14px!important;border:1px solid transparent!important;border-radius:11px!important;background:transparent!important;color:#b8d3dc!important;box-shadow:none!important;font-size:14px!important}
+#tab-knots-rigs .kr-sidebar button:hover,#tab-knots-rigs .kr-sidebar button.kr-nav-active{background:#123744!important;border-color:#317e8b!important;color:#e6feff!important}
+#tab-knots-rigs .kr-sidebar-scene{display:none!important}
+#tab-knots-rigs .kr-library{padding:22px!important;background:#071b26!important}
+#tab-knots-rigs .kr-library h2{font-size:24px!important;letter-spacing:0!important;text-transform:none!important;text-shadow:none!important;color:#f2fbff!important}
+#tab-knots-rigs .kr-library>p{font-size:13px!important;color:#a9c3cb!important}
+#tab-knots-rigs #kr-search{min-height:46px;border-radius:11px;background:#102d39;border:1px solid #376170;color:#f5fdff;padding:10px 14px}
+#tab-knots-rigs .kr-library-toolbar{margin:14px 0!important}
+#tab-knots-rigs #kr-filter{background:#102d39;color:#e7f8fc;border:1px solid #376170;border-radius:10px;padding:9px}
+#tab-knots-rigs .kr-tile-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;max-height:calc(100vh - 290px)!important;min-height:280px;overflow-y:auto!important;padding:5px 5px 16px!important;scrollbar-color:#376b77 transparent}
+#tab-knots-rigs .kr-tile{display:flex!important;flex-direction:column!important;padding:10px!important;min-width:0;border:1px solid #305663!important;border-radius:15px!important;background:#0c2632!important;box-shadow:none!important;transition:border-color .16s ease,transform .16s ease}
+#tab-knots-rigs .kr-tile:hover{transform:translateY(-2px);border-color:#66bac2!important}
+#tab-knots-rigs .kr-tile.active{border-color:#75d4d9!important;background:#123440!important;box-shadow:inset 0 0 0 1px #75d4d955!important}
+#tab-knots-rigs .kr-tile-art{display:grid!important;place-items:center!important;width:100%;height:auto!important;min-height:0!important;aspect-ratio:4/3!important;padding:9px!important;overflow:hidden!important;border-radius:10px!important;border:1px solid #264b59!important;background:#061722!important}
+#tab-knots-rigs .kr-tile-art>img,#tab-knots-rigs .kr-tile-art>svg{width:100%!important;height:100%!important;object-fit:contain!important}
+#tab-knots-rigs .kr-tile-art .kr-rig-panel{width:100%!important;aspect-ratio:1536/250!important;max-height:100%}
+#tab-knots-rigs .kr-tile strong{font-size:15px!important;margin:12px 2px 4px!important;color:#f2fcff!important;line-height:1.25}
+#tab-knots-rigs .kr-tile small{font-size:11px!important;color:#7fd4d8!important;margin:0 2px 8px!important}
+#tab-knots-rigs .kr-tile-summary{font-size:11px;line-height:1.5;color:#b8ced5;min-height:34px;margin:0 2px 10px}
+#tab-knots-rigs .kr-tile-open{color:#9de9e9;font-size:11px;font-weight:800;margin:auto 2px 3px}
+#tab-knots-rigs .kr-detail{padding:20px!important;background:#071b26!important;min-width:0}
+#tab-knots-rigs .kr-detail-head{min-height:0!important;padding:22px!important;border:1px solid #345d69;border-radius:15px;background:linear-gradient(115deg,#102f3c,#0b2531)!important}
+#tab-knots-rigs .kr-detail-head h2{font-size:clamp(25px,2.5vw,36px)!important;color:#f3fcff!important}
+#tab-knots-rigs .kr-detail-head p{color:#bdd4dd!important}
+#tab-knots-rigs .kr-favorite{border:1px solid #4b8591!important;border-radius:10px!important;background:#123946!important;color:#e5fbff!important}
+#tab-knots-rigs .kr-badges span{border-color:#397c88!important;color:#c7edf1!important;background:#0d3441!important}
+#tab-knots-rigs .kr-big-diagram,#tab-knots-rigs .kr-info article,#tab-knots-rigs .kr-tip-panel{background:#0b2632!important;border:1px solid #315c69!important;border-radius:15px!important;padding:18px!important;margin-top:14px!important}
+#tab-knots-rigs .kr-big-diagram>img{max-width:100%;height:auto;object-fit:contain;background:#061720!important}
+#tab-knots-rigs .kr-detail h3{color:#e8fbff!important}
+#tab-knots-rigs .kr-tip-panel{border-left:3px solid #4cb6bc!important}
+#tab-knots-rigs .kr-tile:focus-visible,#tab-knots-rigs .kr-sidebar button:focus-visible{outline:3px solid #e8c778!important;outline-offset:2px}
+@media(max-width:1250px){#tab-knots-rigs .kr-workspace{grid-template-columns:175px minmax(300px,410px) minmax(0,1fr)!important;gap:10px!important}#tab-knots-rigs .kr-sidebar{padding:16px 10px!important}#tab-knots-rigs .kr-library{padding:15px!important}#tab-knots-rigs .kr-detail{padding:15px!important}}
+@media(max-width:1050px){#tab-knots-rigs .kr-workspace{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)!important}#tab-knots-rigs .kr-sidebar{grid-column:1/-1;position:static;flex-direction:row!important;flex-wrap:wrap!important;align-items:center!important;gap:7px!important}#tab-knots-rigs .kr-sidebar h2{width:100%;margin:0 0 5px!important}#tab-knots-rigs .kr-sidebar button{width:auto!important;flex:1 1 auto}#tab-knots-rigs .kr-tile-grid{max-height:calc(100vh - 340px)!important}}
+@media(max-width:700px){#tab-knots-rigs{width:calc(100% - 16px)!important;margin:8px auto 24px!important}#tab-knots-rigs .kr-workspace{grid-template-columns:minmax(0,1fr)!important;gap:12px!important}#tab-knots-rigs .kr-sidebar{padding:14px!important}#tab-knots-rigs .kr-sidebar h2{font-size:22px!important}#tab-knots-rigs .kr-sidebar button{font-size:12px!important;padding:10px!important}#tab-knots-rigs .kr-library,#tab-knots-rigs .kr-detail{padding:14px!important}#tab-knots-rigs .kr-tile-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;max-height:none!important;overflow:visible!important;min-height:0}#tab-knots-rigs .kr-tile{padding:7px!important}#tab-knots-rigs .kr-tile-art{aspect-ratio:4/3!important;padding:4px!important}#tab-knots-rigs .kr-tile strong{font-size:13px!important;margin:9px 2px 4px!important}#tab-knots-rigs .kr-tile-summary{font-size:10px}#tab-knots-rigs .kr-detail-head{padding:15px!important}#tab-knots-rigs .kr-info{grid-template-columns:1fr!important}}
+@media(max-width:380px){#tab-knots-rigs .kr-tile-grid{gap:8px!important}#tab-knots-rigs .kr-tile strong{font-size:12px!important}}
+@media(prefers-reduced-motion:reduce){#tab-knots-rigs .kr-tile{transition:none!important}#tab-knots-rigs .kr-tile:hover{transform:none!important}}
+</style><script src="knots-rigs.js?v=20261111-premium-tackle" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
 /* Shared illustrated icon language across navigation and shortcut actions */
 .site-nav .fd-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none}
 .site-nav .fd-nav-icon img{display:block;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 3px #0009)}
