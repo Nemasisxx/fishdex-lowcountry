@@ -351,7 +351,8 @@ const knotArtwork={
  'Jig Head Rig':'982baf9e-995f-4f8f-b89e-ba1835a9f0a3.png',
  'Knocker Rig':'131d85f0-b91e-4107-8995-49f18210a63a.png',
  'Three-Way Rig':'9803c264-659f-4e0a-a304-efd05096d23f.png',
- 'High-Low Rig':'960d39f6-64a5-418c-9a6e-8673981f9e59.png'
+ 'High-Low Rig':'960d39f6-64a5-418c-9a6e-8673981f9e59.png',
+ 'Fish Finder Slider Rig':'ec3efeaa-475d-4b72-98f0-74e0c142cb21.png'
 };
 function knotSheet(g,priority=false){const el=document.createElement('img');el.src='./'+knotArtwork[g.name];el.alt=g.name+' full illustrated tying guide';el.loading=priority?'eager':'lazy';el.decoding='async';el.fetchPriority=priority?'high':'low';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 
