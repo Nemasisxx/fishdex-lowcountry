@@ -893,7 +893,31 @@ body.kr-lightbox-open{overflow:hidden}
 </style>
 <script id="kr-sticky-bottom-script">
 (()=>{const update=()=>{const panel=document.querySelector('#tab-knots-rigs .kr-detail');if(!panel)return;const height=panel.getBoundingClientRect().height;const topBar=110;const offset=Math.max(topBar,window.innerHeight-height-18);panel.style.setProperty('--kr-sticky-top',offset+'px')};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();function start(){const panel=document.querySelector('#tab-knots-rigs .kr-detail');if(!panel)return;const ro=new ResizeObserver(update);ro.observe(panel);window.addEventListener('resize',update,{passive:true});update()}})();
-</script><script src="knots-rigs.js?v=20261111-simplified-navigation" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
+</script><style id="kr-desktop-fit-guide">
+@media(min-width:1051px){
+ #tab-knots-rigs .kr-detail{box-sizing:border-box!important;max-height:calc(100vh - 125px)!important;height:auto!important;overflow:visible!important;padding:10px!important;display:flex!important;flex-direction:column!important;gap:7px!important}
+ #tab-knots-rigs .kr-detail-head{padding:10px 14px!important;flex:0 0 auto}
+ #tab-knots-rigs .kr-detail-head h2{font-size:clamp(19px,1.7vw,28px)!important;line-height:1.2!important;margin:3px 0!important}
+ #tab-knots-rigs .kr-detail-head p{font-size:12px!important;margin:3px 0!important;line-height:1.35!important}
+ #tab-knots-rigs .kr-badges{margin-top:5px!important;gap:5px!important}
+ #tab-knots-rigs .kr-badges span{font-size:10px!important;padding:4px 7px!important}
+ #tab-knots-rigs .kr-big-diagram{flex:1 1 auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:center!important;padding:8px!important;margin:0!important;overflow:visible!important}
+ #tab-knots-rigs .kr-big-diagram h3{font-size:13px!important;margin:0 0 5px!important;flex:0 0 auto}
+ #tab-knots-rigs .kr-big-diagram img{display:block!important;width:100%!important;height:auto!important;max-width:100%!important;max-height:min(52vh,680px)!important;object-fit:contain!important;object-position:center!important;flex:0 1 auto!important}
+ #tab-knots-rigs .kr-enlarge{flex:0 0 auto!important;min-height:34px!important;margin-top:5px!important;padding:5px!important;font-size:12px!important}
+ #tab-knots-rigs .kr-info{gap:7px!important;margin:0!important;flex:0 0 auto}
+ #tab-knots-rigs .kr-info article{padding:9px!important}
+ #tab-knots-rigs .kr-info h3{font-size:12px!important;margin:0 0 4px!important}
+ #tab-knots-rigs .kr-info p{font-size:11px!important;line-height:1.35!important;margin:0!important}
+ #tab-knots-rigs .kr-kit,#tab-knots-rigs .kr-species{padding:10px!important;margin:0!important;flex:0 0 auto}
+ #tab-knots-rigs .kr-kit h3,#tab-knots-rigs .kr-species h3{font-size:12px!important;margin:0 0 5px!important}
+ #tab-knots-rigs .kr-kit label{display:inline-flex!important;width:auto!important;padding:4px 9px 4px 0!important;margin-right:6px!important;border:0!important;font-size:11px!important}
+ #tab-knots-rigs .kr-kit input{width:15px!important;height:15px!important}
+ #tab-knots-rigs .kr-species p{margin:0!important}
+ #tab-knots-rigs .kr-species-chip{font-size:10px!important;padding:4px 7px!important;margin:3px!important}
+ #tab-knots-rigs .kr-species button{min-height:30px!important;margin-top:5px!important;padding:4px 9px!important;font-size:11px!important}
+}
+</style><script src="knots-rigs.js?v=20261111-compact-guide" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
 /* Shared illustrated icon language across navigation and shortcut actions */
 .site-nav .fd-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none}
 .site-nav .fd-nav-icon img{display:block;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 3px #0009)}
