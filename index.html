@@ -821,7 +821,13 @@ header .site-nav button[aria-selected=true]{border-color:#04f0f1!important;backg
 #tab-knots-rigs .kr-info{grid-template-columns:1fr!important}
 }
 @media(max-width:390px){#tab-knots-rigs .kr-tile{grid-template-columns:minmax(90px,35%) minmax(0,1fr)!important;gap:8px!important}#tab-knots-rigs .kr-tile strong{font-size:15px!important}}
-</style><script src="knots-rigs.js?v=20261111-responsive-mockups" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
+</style><style id="kr-artwork-visibility-fix">
+/* Keep uploaded instructional artwork visible inside responsive preview cards. */
+#tab-knots-rigs .kr-tile-art{display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;min-height:110px!important}
+#tab-knots-rigs .kr-tile-art>.kr-knot-sheet{display:block!important;position:static!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important}
+#tab-knots-rigs .kr-big-diagram>.kr-knot-sheet{display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important}
+@media(max-width:720px){#tab-knots-rigs .kr-tile-art{min-height:90px!important}}
+</style><script src="knots-rigs.js?v=20261111-rig-image-fix" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
 /* Shared illustrated icon language across navigation and shortcut actions */
 .site-nav .fd-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none}
 .site-nav .fd-nav-icon img{display:block;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 3px #0009)}
