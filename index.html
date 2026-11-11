@@ -827,6 +827,31 @@ header .site-nav button[aria-selected=true]{border-color:#04f0f1!important;backg
 #tab-knots-rigs .kr-tile-art>.kr-knot-sheet{display:block!important;position:static!important;width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;margin:0!important}
 #tab-knots-rigs .kr-big-diagram>.kr-knot-sheet{display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important}
 @media(max-width:720px){#tab-knots-rigs .kr-tile-art{min-height:90px!important}}
+</style><style id="kr-sticky-desktop-guide">
+/* Desktop: keep selected guide centered in the viewport while library scrolls. */
+@media(min-width:1051px){
+ #tab-knots-rigs .kr-detail{
+  position:sticky!important;
+  top:50vh!important;
+  transform:translateY(-50%)!important;
+  align-self:start!important;
+  max-height:calc(100vh - 32px)!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;
+  scrollbar-color:#427c89 #071b26;
+ }
+ #tab-knots-rigs .kr-detail:focus-within{scrollbar-color:#6cced1 #071b26}
+}
+@media(max-width:1050px){
+ #tab-knots-rigs .kr-detail{
+  position:static!important;
+  top:auto!important;
+  transform:none!important;
+  max-height:none!important;
+  overflow:visible!important;
+ }
+}
 </style><script src="knots-rigs.js?v=20261111-rig-image-fix" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
 /* Shared illustrated icon language across navigation and shortcut actions */
 .site-nav .fd-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none}
