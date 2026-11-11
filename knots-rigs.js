@@ -355,7 +355,8 @@ const knotArtwork={
  'Fish Finder Slider Rig':'ec3efeaa-475d-4b72-98f0-74e0c142cb21.png',
  'Float Rig':'d46f1127-4aca-4896-a9fa-08e47308a691.png',
  'Sabiki Rig':'97808ee8-82e9-4ad3-8172-ea6166447c88.png',
- 'Trolling Planer Rig':'a77fe91d-ca9b-4b39-8d7c-489d3a032997.png'
+ 'Trolling Planer Rig':'a77fe91d-ca9b-4b39-8d7c-489d3a032997.png',
+ 'Live Bait Under Cork Rig':'3789304b-5d31-40f0-91fd-36ed47c254ba.png'
 };
 function knotSheet(g,priority=false){const el=document.createElement('img');el.src='./'+knotArtwork[g.name];el.alt=g.name+' full illustrated tying guide';el.loading=priority?'eager':'lazy';el.decoding='async';el.fetchPriority=priority?'high':'low';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 
