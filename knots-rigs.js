@@ -359,7 +359,8 @@ const knotArtwork={
  'Live Bait Under Cork':'3789304b-5d31-40f0-91fd-36ed47c254ba.png',
  'Double Fluke Rig':'f9b306c4-f2bd-4508-8047-93b6f472e172.png',
  'Umbrella Rig':'5248bec2-d519-4a16-b933-725f8894ec78.png',
- 'Bottom Bouncer Rig':'001e1178-4f73-4f06-a39e-0333dcf0bcde.png'
+ 'Bottom Bouncer Rig':'001e1178-4f73-4f06-a39e-0333dcf0bcde.png',
+ 'Tokyo Rig':'90419f27-44d6-4d1a-a1b7-f6228ba7d22d.png'
 };
 function knotSheet(g,priority=false){const el=document.createElement('img');el.src='./'+knotArtwork[g.name];el.alt=g.name+' full illustrated tying guide';el.loading=priority?'eager':'lazy';el.decoding='async';el.fetchPriority=priority?'high':'low';el.classList.add('kr-knot-sheet');el.style.cssText='display:block;width:100%;height:auto;object-fit:contain;margin:0 auto;border-radius:12px;background:#071b29';return el}
 
