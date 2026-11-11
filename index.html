@@ -873,7 +873,27 @@ body.kr-lightbox-open{overflow:hidden}
 .kr-lightbox-stage:active{cursor:grabbing}
 .kr-lightbox-stage>.kr-lightbox-art{display:block!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;background:transparent!important;border-radius:0!important;user-select:none}
 @media(max-width:720px){#tab-knots-rigs .kr-kit,#tab-knots-rigs .kr-species{padding:13px}.kr-lightbox{padding:6px}.kr-lightbox-controls{gap:5px}.kr-lightbox-controls button{font-size:12px;padding:9px 10px;flex:1 1 auto}}
-</style><script src="knots-rigs.js?v=20261111-all-guide-features" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
+</style><style id="kr-single-page-scroll">
+/* One shared page scrollbar: allow tall guides to scroll with the document.
+   Sticky positioning engages once the guide's bottom is visible. */
+@media(min-width:1051px){
+ #tab-knots-rigs .kr-detail{
+  position:sticky!important;
+  top:var(--kr-sticky-top, 110px)!important;
+  bottom:auto!important;
+  transform:none!important;
+  max-height:none!important;
+  height:max-content!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+  scrollbar-width:auto!important;
+ }
+ #tab-knots-rigs .kr-workspace{align-items:start!important}
+}
+</style>
+<script id="kr-sticky-bottom-script">
+(()=>{const update=()=>{const panel=document.querySelector('#tab-knots-rigs .kr-detail');if(!panel)return;const height=panel.getBoundingClientRect().height;const topBar=110;const offset=Math.max(topBar,window.innerHeight-height-18);panel.style.setProperty('--kr-sticky-top',offset+'px')};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();function start(){const panel=document.querySelector('#tab-knots-rigs .kr-detail');if(!panel)return;const ro=new ResizeObserver(update);ro.observe(panel);window.addEventListener('resize',update,{passive:true});update()}})();
+</script><script src="knots-rigs.js?v=20261111-all-guide-features" defer></script><script src="lowcountry-regulations-data.js?v=20261106-audit1" defer></script><script src="lowcountry-regulations-extra.js?v=20261106" defer></script><script src="lowcountry-regulations.js?v=20261106-inchfix" defer></script><style>
 /* Shared illustrated icon language across navigation and shortcut actions */
 .site-nav .fd-nav-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;flex:none}
 .site-nav .fd-nav-icon img{display:block;width:42px;height:42px;object-fit:contain;filter:drop-shadow(0 2px 3px #0009)}
